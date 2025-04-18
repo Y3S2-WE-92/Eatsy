@@ -84,7 +84,7 @@
 
 input {
   border-radius: var(--radius-field);
-  background-color: var(--color-base-200);
+  background-color: var(--color-base-100);
   color: var(--color-base-content);
 }
 
