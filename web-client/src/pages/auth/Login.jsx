@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ThemeButton, CloseButton } from "../../components";
+import { ThemeButton, CloseButton, ThemeLogo } from "../../components";
 import { Link, useNavigate } from "react-router-dom"; 
 import axios from "axios";
 import { apiEndpoints } from "../../services/api-services";
@@ -72,10 +72,7 @@ function Login() {
 
       <div className="card card-xl bg-base-300 shadow-sm w-full max-w-sm mx-auto">
         <div className="card-body">
-          <div className="text-4xl text-primary font-bold text-center">
-            Eatsy
-          </div>
-          {/* <img src={} alt="logo" className="w-28 mx-auto mb-8" /> */}
+          <ThemeLogo width={32} />
           <div className="card-title text-lg mt-4">Welcome back!</div>
           <form
             onSubmit={handleSubmit}
