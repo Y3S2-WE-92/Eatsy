@@ -72,7 +72,7 @@ function ComponentHealth() {
     <>
       <div className="card">
         <div className="card-body">
-          <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 m-12 mx-auto shadow-sm border-2 border-base-content/10">
+          <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 mx-auto shadow-sm border-2 border-base-content/10">
             <table className="table table-bordered table-zebra text-center">
               <thead>
                 <tr>

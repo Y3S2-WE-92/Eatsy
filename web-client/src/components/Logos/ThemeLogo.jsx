@@ -2,13 +2,13 @@ import React, { useContext } from "react";
 import { logos } from "../../assets/logos";
 import { ThemeContext } from "../../theme/ThemeContext";
 
-function ThemeLogo({ width="[200px]" }) {
+function ThemeLogo({ style }) {
   const { theme } = useContext(ThemeContext);
   return (
     <img
       src={theme == "dark" ? logos.eatsyfullwhite : logos.eatsyfullblack}
       alt="logo"
-      className={`w-${width} mx-auto`}
+      className={`${style}`}
     />
   );
 }

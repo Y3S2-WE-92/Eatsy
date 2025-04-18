@@ -72,7 +72,7 @@ function Login() {
 
       <div className="card card-xl bg-base-300 shadow-sm w-full max-w-sm mx-auto">
         <div className="card-body">
-          <ThemeLogo width={32} />
+          <ThemeLogo style={"w-48 mx-auto"}/>
           <div className="card-title text-lg mt-4">Welcome back!</div>
           <form
             onSubmit={handleSubmit}
