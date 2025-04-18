@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  restaurant-service:
+    build: ./services/restaurant-service
+    ports:
+      - "4001:3000"
+    networks:
+      - eatsy-network
+
+  order-service:
+    build: ./services/order-service
+    ports:
+      - "4002:3000"
+    networks:
+      - eatsy-network
+
+  delivery-service:
+    build: ./services/delivery-service
+    ports:
+      - "4003:3000"
+    networks:
+      - eatsy-network
+
+  payment-service:
+    build: ./services/payment-service
+    ports:
+      - "4004:3000"
+    networks:
+      - eatsy-network
+
+  notification-service:
+    build: ./services/notification-service
+    ports:
+      - "4005:3000"
+    networks:
+      - eatsy-network
+
+  web-client:
+    build: ./web-client
+    ports:
+      - "3000:80"
+    depends_on:
+      - restaurant-service
+      - order-service
+      - delivery-service
+      - payment-service
+      - notification-service
+    networks:
+      - eatsy-network
+
+networks:
+  eatsy-network:
+    driver: bridge
