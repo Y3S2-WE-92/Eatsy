@@ -1,6 +1,7 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
 import { apiEndpoints } from "./services/api-services";
+import { styles } from "./styles/styles";
 
 function App() {
   const [restaurantsAPIhealth, setRestaurantsAPIhealth] = useState(null);
@@ -66,7 +67,7 @@ function App() {
   return (
     <>
       <div>
-        <h1>
+        <h1 className="bg-primary text-white text-center p-4">
           Eatsy - Cloud-Native Food Ordering & Delivery System using
           Microservices
         </h1>
