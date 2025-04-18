@@ -1,7 +1,7 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
 import { apiEndpoints } from "./services/api-services";
-import { styles } from "./styles/styles";
+import { logos } from "./assets/logos";
 
 function App() {
   const [restaurantsAPIhealth, setRestaurantsAPIhealth] = useState(null);
