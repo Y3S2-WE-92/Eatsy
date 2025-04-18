@@ -3,6 +3,7 @@ services/**/node_modules/
 services/**/logs/
 services/**/npm-debug.log
 services/**/yarn-error.log
+services/**/package-lock.json
 
 # React Frontend (web-client)
 web-client/node_modules/
