@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { logos } from "../../assets/logos";
 import { ThemeContext } from "../../theme/ThemeContext";
 
-function ThemeLogo({ width }) {
+function ThemeLogo({ width="[200px]" }) {
   const { theme } = useContext(ThemeContext);
   return (
     <img
