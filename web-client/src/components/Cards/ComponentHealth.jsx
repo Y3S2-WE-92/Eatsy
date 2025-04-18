@@ -62,6 +62,12 @@ function ComponentHealth() {
     fetchNotificationsAPIhealth();
   }, []);
 
+  const statusIndicator = (status) => {
+    return (
+      <div className={`${status==="OK"?"bg-success":"bg-error"} w-4 h-4 rounded-full`} />
+    )
+  }
+
   return (
     <>
       <div className="card">
@@ -76,24 +82,24 @@ function ComponentHealth() {
               </thead>
               <tbody>
                 <tr>
-                  <td className="px-12">Restaurants API</td>
-                  <td className="px-32">{restaurantsAPIhealth}</td>
+                  <td className="px-24">Restaurants API</td>
+                  <td className="px-32">{statusIndicator(restaurantsAPIhealth)}</td>
                 </tr>
                 <tr>
                   <td>Delivery API</td>
-                  <td>{deliveryAPIhealth}</td>
+                  <td className="px-32">{statusIndicator(deliveryAPIhealth)}</td>
                 </tr>
                 <tr>
                   <td>Orders API</td>
-                  <td>{ordersAPIhealth}</td>
+                  <td className="px-32">{statusIndicator(ordersAPIhealth)}</td>
                 </tr>
                 <tr>
                   <td>Payment API</td>
-                  <td>{paymentAPIhealth}</td>
+                  <td className="px-32">{statusIndicator(paymentAPIhealth)}</td>
                 </tr>
                 <tr>
                   <td>Notifications API</td>
-                  <td>{notificationsAPIhealth}</td>
+                  <td className="px-32">{statusIndicator(notificationsAPIhealth)}</td>
                 </tr>
               </tbody>
             </table>
