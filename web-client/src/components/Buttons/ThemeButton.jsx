@@ -10,6 +10,7 @@ function ThemeButton() {
         type="checkbox"
         onChange={toggleTheme}
         checked={theme === "dark"}
+        className="sr-only"
       />
 
       {/* sun icon */}
