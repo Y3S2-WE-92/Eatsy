@@ -2,8 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import ThemeLogo from "../Logos/ThemeLogo";
 import ThemeButton from "../Buttons/ThemeButton";
+import { useNavigate } from "react-router-dom";
 
 function Sidebar() {
+  const navigate = useNavigate();
+
   const items = [
     {
       name: "Dashboard",
@@ -31,6 +34,11 @@ function Sidebar() {
       link: "/admin-panel/reports",
     },
   ];
+
+  const handleLogout = () => {
+    navigate("/");
+  }
+
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -63,8 +71,17 @@ function Sidebar() {
         </ul>
         {/* Footer */}
         <div className="divider"></div>
-        <div className="card mx-auto flex items-center justify-between p-4">
+        <div className="card mx-auto flex flex-row items-center justify-center gap-2 p-4">
           <ThemeButton />
+          <button
+            className="btn btn-ghost text-error border border-error rounded-full"
+            onClick={() => {
+              handleLogout();
+            }}
+          >
+            <i className="fas fa-sign-out-alt"></i>
+            Logout
+          </button>
         </div>
       </div>
     </div>

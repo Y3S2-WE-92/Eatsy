@@ -9,7 +9,7 @@ function ThemeButton() {
       <input
         type="checkbox"
         onChange={toggleTheme}
-        checked={theme === "dark"}
+        checked={theme === "light"}
         className="sr-only"
       />
 
