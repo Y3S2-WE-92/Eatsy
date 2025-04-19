@@ -1,17 +1,24 @@
-import React from 'react'
-import { RestaurantLandingNavbar } from '../../components'
+import React from "react";
+import { RestaurantLandingNavbar, RestaurantLogin } from "../../components";
 
 function RestaurantLanding() {
   return (
-    <div>
-        <RestaurantLandingNavbar />
-        <div className="relative flex flex-col items-center justify-center">
-            <h1 className="text-4xl font-bold mt-8">Eatsy for Restaurants</h1>
-            <p className="mt-4">Manage your restaurant with ease.</p>
-            <p className="mt-2">Sign up to get started!</p>
+    <section>
+      <RestaurantLandingNavbar />
+      <div className="flex flex-col md:flex-row justify-center">
+        <div className="hidden md:flex flex-1 w-3/4">
+          <img
+            src="https://images.unsplash.com/photo-1670819916552-67698b1c86ae?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Restaurant Landing"
+            className="w-full overflow-hidden max-h-screen object-cover"
+          />
         </div>
-    </div>
-  )
+        <div className="w-full md:w-1/4">
+          <RestaurantLogin />
+        </div>
+      </div>
+    </section>
+  );
 }
 
-export default RestaurantLanding
+export default RestaurantLanding;
