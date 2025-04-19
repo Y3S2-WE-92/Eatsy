@@ -5,6 +5,7 @@ import RestaurantLandingNavbar from "./Navbars/RestaurantLandingNavbar";
 import DeliveryLandingNavbar from "./Navbars/DeliveryLandingNavbar";
 
 import RestaurantLogin from "./Forms/Auth/RestaurantLogin";
+import DeliveryLogin from "./Forms/Auth/DeliveryLogin";
 
 import ThemeButton from "./Buttons/ThemeButton";
 import CloseButton from "./Buttons/CloseButton";
@@ -21,6 +22,7 @@ export {
 
   //Forms
   RestaurantLogin,
+  DeliveryLogin,
   
   //Buttons
   ThemeButton,

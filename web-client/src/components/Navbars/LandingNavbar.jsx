@@ -11,9 +11,9 @@ function LandingNavbar() {
             Eatsy for Restaurants
           </button>
         </Link>
-        <Link to={"/restaurant"}>
+        <Link to={"/delivery"}>
           <button className="btn btn-ghost text-error border border-error rounded-r-full">
-            Eatsy Delivery
+            Join Eatsy Delivery
           </button>
         </Link>
       </div>
