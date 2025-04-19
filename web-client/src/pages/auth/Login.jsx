@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ThemeButton, CloseButton, ThemeLogo } from "../../components";
 import { Link, useNavigate } from "react-router-dom"; 
 import axios from "axios";
-import { apiEndpoints } from "../../services/api-services";
+import { apiEndpoints } from "../../services";
 import { jwtDecode } from "jwt-decode";
 
 function Login() {
@@ -29,7 +29,7 @@ function Login() {
     }
 
     try {
-      const response = await axios.post(apiEndpoints.UserLogin, {
+      const response = await axios.post(apiEndpoints.userAPI.UserLogin, {
         username: loginData.username,
         password: loginData.password,
       });

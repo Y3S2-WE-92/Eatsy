@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { apiEndpoints } from "../../services/api-services";
+import { fetchDeliveryAPIhealth, fetchHealthStatus, fetchNotificationsAPIhealth, fetchOrdersAPIhealth, fetchPaymentAPIhealth, fetchUserAPIhealth } from "../../utils/fetch-utils/FetchAPIHealth";
 
 function ComponentHealth() {
   const [userAPIhealth, setUserAPIhealth] = useState(null);
@@ -9,69 +9,25 @@ function ComponentHealth() {
   const [paymentAPIhealth, setPaymentAPIhealth] = useState(null);
   const [notificationsAPIhealth, setNotificationsAPIhealth] = useState(null);
 
-  const fetchUserAPIhealth = async () => {
-    try {
-      const response = await fetch(apiEndpoints.UserAPIhealth);
-      const data = await response.json();
-      setUserAPIhealth(data.status);
-    } catch (error) {
-      console.error("Error fetching User API health:", error);
-    }
-  };
-  const fetchHealthStatus = async () => {
-    try {
-      const response = await fetch(apiEndpoints.RestaurantsAPIhealth);
-      const data = await response.json();
-      setRestaurantsAPIhealth(data.status);
-    } catch (error) {
-      console.error("Error fetching Restaurants API health:", error);
-    }
-  };
-  const fetchDeliveryAPIhealth = async () => {
-    try {
-      const response = await fetch(apiEndpoints.DeliveryAPIhealth);
-      const data = await response.json();
-      setDeliveryAPIhealth(data.status);
-    } catch (error) {
-      console.error("Error fetching Delivery API health:", error);
-    }
-  };
-  const fetchOrdersAPIhealth = async () => {
-    try {
-      const response = await fetch(apiEndpoints.OrdersAPIhealth);
-      const data = await response.json();
-      setOrdersAPIhealth(data.status);
-    } catch (error) {
-      console.error("Error fetching Orders API health:", error);
-    }
-  };
-  const fetchPaymentAPIhealth = async () => {
-    try {
-      const response = await fetch(apiEndpoints.PaymentAPIhealth);
-      const data = await response.json();
-      setPaymentAPIhealth(data.status);
-    } catch (error) {
-      console.error("Error fetching Payment API health:", error);
-    }
-  };
-  const fetchNotificationsAPIhealth = async () => {
-    try {
-      const response = await fetch(apiEndpoints.NotificationsAPIhealth);
-      const data = await response.json();
-      setNotificationsAPIhealth(data.status);
-    } catch (error) {
-      console.error("Error fetching Notifications API health:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchUserAPIhealth();
-    fetchHealthStatus();
-    fetchDeliveryAPIhealth();
-    fetchOrdersAPIhealth();
-    fetchPaymentAPIhealth();
-    fetchNotificationsAPIhealth();
-  }, []);
+    const fetchHealthStatuses = async () => {
+      const userHealth = await fetchUserAPIhealth();
+      const restaurantHealth = await fetchHealthStatus();
+      const deliveryHealth = await fetchDeliveryAPIhealth();
+      const ordersHealth = await fetchOrdersAPIhealth();
+      const paymentHealth = await fetchPaymentAPIhealth();
+      const notificationsHealth = await fetchNotificationsAPIhealth();
+  
+      setUserAPIhealth(userHealth);
+      setRestaurantsAPIhealth(restaurantHealth);
+      setDeliveryAPIhealth(deliveryHealth);
+      setOrdersAPIhealth(ordersHealth);
+      setPaymentAPIhealth(paymentHealth);
+      setNotificationsAPIhealth(notificationsHealth);
+    };
+  
+    fetchHealthStatuses();
+  }, []);  
 
   const statusIndicator = (status) => {
     return (
