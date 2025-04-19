@@ -5,7 +5,7 @@ function ThemeButton() {
   const { theme, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <label className="swap swap-rotate border border-primary/30 btn btn-ghost rounded-full">
+    <label className="swap swap-rotate border border-accent btn btn-ghost rounded-full">
       <input
         type="checkbox"
         onChange={toggleTheme}
