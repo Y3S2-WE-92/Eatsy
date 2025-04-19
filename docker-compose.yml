@@ -1,6 +1,13 @@
 version: '3.8'
 
 services:
+  user-service:
+    build: ./services/user-service
+    ports:
+      - "4000:3000"
+    networks:
+      - eatsy-network
+      
   restaurant-service:
     build: ./services/restaurant-service
     ports:

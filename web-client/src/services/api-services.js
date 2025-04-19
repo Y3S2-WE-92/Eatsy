@@ -1,4 +1,5 @@
 // local development - Docker
+const USER_API_URL = "http://localhost:4000/api";
 const RESTAURANTS_API_URL = "http://localhost:4001/api";
 const DELIVERY_API_URL = "http://localhost:4002/api";
 const ORDERS_API_URL = "http://localhost:4003/api";
@@ -6,6 +7,9 @@ const PAYMENT_API_URL = "http://localhost:4004/api";
 const NOTIFICATIONS_API_URL = "http://localhost:4005/api";
 
 export const apiEndpoints = {
+    //User
+    UserAPIhealth: `${USER_API_URL}/health`,
+    
     //Restaurants
     RestaurantsAPIhealth: `${RESTAURANTS_API_URL}/health`,
 
