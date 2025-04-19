@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { ThemeButton, CloseButton, ThemeLogo } from "../../components";
-import { Link, useNavigate } from "react-router-dom"; 
+import { ThemeButton, CloseButton, ThemeLogo } from "../../../components";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { apiEndpoints } from "../../services";
+import { apiEndpoints } from "../../../services";
 
 function SignUp() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [signupData, setSignupData] = useState({
     name: "",
     email: "",
@@ -25,7 +25,7 @@ function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (
       !signupData.name ||
       !signupData.email ||
@@ -71,7 +71,7 @@ function SignUp() {
       </div>
       <div className="card card-xl bg-base-300 shadow-sm w-full max-w-sm mx-auto">
         <div className="card-body">
-        <ThemeLogo style={"w-48 mx-auto"} />
+          <ThemeLogo style={"w-48 mx-auto"} />
           <div className="card-title text-lg mt-4">Create an Account</div>
           <form
             onSubmit={handleSubmit}
@@ -79,7 +79,7 @@ function SignUp() {
           >
             <input
               type="text"
-              name="name" 
+              name="name"
               value={signupData.name}
               onChange={handleChange}
               placeholder="Name"
@@ -87,9 +87,9 @@ function SignUp() {
             />
             <input
               type="email"
-              name="email" 
-              value={signupData.email} 
-              onChange={handleChange} 
+              name="email"
+              value={signupData.email}
+              onChange={handleChange}
               placeholder="Email"
               className="input"
             />
@@ -102,18 +102,18 @@ function SignUp() {
               className="input"
             />
             <input
-              type="password" 
-              name="password" 
-              value={signupData.password} 
-              onChange={handleChange} 
+              type="password"
+              name="password"
+              value={signupData.password}
+              onChange={handleChange}
               placeholder="Password"
               className="input"
             />
             <input
-              type="password" 
+              type="password"
               name="confirmPassword"
-              value={signupData.confirmPassword} 
-              onChange={handleChange} 
+              value={signupData.confirmPassword}
+              onChange={handleChange}
               placeholder="Confirm Password"
               className="input"
             />
