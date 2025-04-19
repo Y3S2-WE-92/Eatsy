@@ -11,7 +11,8 @@ function SignUp() {
     email: "",
     username: "",
     password: "",
-    confirmPassword: "", 
+    confirmPassword: "",
+    role: "customer",
   });
 
   const handleChange = (e) => {
@@ -30,7 +31,8 @@ function SignUp() {
       !signupData.email ||
       !signupData.username ||
       !signupData.password ||
-      !signupData.confirmPassword
+      !signupData.confirmPassword ||
+      !signupData.role
     ) {
       alert("Please fill all fields");
       return;
@@ -41,13 +43,14 @@ function SignUp() {
     }
 
     try {
-      const response = await axios.post(apiEndpoints.register, {
+      const response = await axios.post(apiEndpoints.UserRegister, {
         name: signupData.name,
         email: signupData.email,
         username: signupData.username,
         password: signupData.password,
+        role: signupData.role,
       });
-      if (response.status === 200) {
+      if (response.status === 201) {
         console.log("Sign up successful", response.data);
         alert("Sign up successful!");
         navigate("/auth/login");
@@ -114,6 +117,16 @@ function SignUp() {
               placeholder="Confirm Password"
               className="input"
             />
+            <select
+              name="role"
+              value={signupData.role}
+              onChange={handleChange}
+              className="select select-bordered w-full"
+            >
+              <option value="customer">Customer</option>
+              <option value="delivery">Delivery</option>
+            </select>
+
             <div className="card-actions justify-end mt-3">
               <button type="submit" className="btn btn-primary w-full">
                 Sign Up

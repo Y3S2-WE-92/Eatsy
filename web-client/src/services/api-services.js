@@ -9,6 +9,8 @@ const NOTIFICATIONS_API_URL = "http://localhost:4005/api";
 export const apiEndpoints = {
     //User
     UserAPIhealth: `${USER_API_URL}/health`,
+    UserRegister: `${USER_API_URL}/auth/register`,
+    UserLogin: `${USER_API_URL}/auth/login`,
     
     //Restaurants
     RestaurantsAPIhealth: `${RESTAURANTS_API_URL}/health`,
