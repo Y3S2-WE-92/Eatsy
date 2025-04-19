@@ -2,12 +2,22 @@ import React, { useEffect, useState } from "react";
 import { apiEndpoints } from "../../services/api-services";
 
 function ComponentHealth() {
+  const [userAPIhealth, setUserAPIhealth] = useState(null);
   const [restaurantsAPIhealth, setRestaurantsAPIhealth] = useState(null);
   const [deliveryAPIhealth, setDeliveryAPIhealth] = useState(null);
   const [ordersAPIhealth, setOrdersAPIhealth] = useState(null);
   const [paymentAPIhealth, setPaymentAPIhealth] = useState(null);
   const [notificationsAPIhealth, setNotificationsAPIhealth] = useState(null);
 
+  const fetchUserAPIhealth = async () => {
+    try {
+      const response = await fetch(apiEndpoints.UserAPIhealth);
+      const data = await response.json();
+      setUserAPIhealth(data.status);
+    } catch (error) {
+      console.error("Error fetching User API health:", error);
+    }
+  };
   const fetchHealthStatus = async () => {
     try {
       const response = await fetch(apiEndpoints.RestaurantsAPIhealth);
@@ -55,6 +65,7 @@ function ComponentHealth() {
   };
 
   useEffect(() => {
+    fetchUserAPIhealth();
     fetchHealthStatus();
     fetchDeliveryAPIhealth();
     fetchOrdersAPIhealth();
@@ -81,6 +92,10 @@ function ComponentHealth() {
                 </tr>
               </thead>
               <tbody>
+                <tr>
+                  <td className="px-24">User API</td>
+                  <td className="px-32">{statusIndicator(userAPIhealth)}</td>
+                </tr>
                 <tr>
                   <td className="px-24">Restaurants API</td>
                   <td className="px-32">{statusIndicator(restaurantsAPIhealth)}</td>
