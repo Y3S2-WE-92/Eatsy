@@ -14,6 +14,19 @@ web-client/.env.test.local
 web-client/.env.production.local
 web-client/npm-debug.log
 web-client/yarn-error.log
+web-client/package-lock.json
+
+# React Frontend (admin-panel)
+admin-panel/node_modules/
+admin-panel/build/
+admin-panel/.env.local
+admin-panel/.env.development.local
+admin-panel/.env.test.local
+admin-panel/.env.production.local
+admin-panel/npm-debug.log
+admin-panel/yarn-error.log
+admin-panel/package-lock.json
+
 
 # Docker
 **/.dockerignore

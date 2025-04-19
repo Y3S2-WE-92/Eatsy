@@ -1,0 +1,98 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default, dark --default;
+}
+
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(100% 0.0135 92.98);
+  --color-base-200: oklch(0.96 0.0135 92.98);
+  --color-base-300: oklch(0.92 0.0135 92.98);
+  --color-base-content: oklch(21% 0.006 56.043);
+  --color-primary: oklch(0.52 0.2019 25.94);
+  --color-primary-content: oklch(97% 0.014 308.299);
+  --color-secondary: oklch(0.36 0.147571 29.2339);
+  --color-secondary-content: oklch(97% 0.014 343.198);
+  --color-accent: oklch(55% 0.013 58.071);
+  --color-accent-content: oklch(98% 0.001 106.423);
+  --color-neutral: oklch(0.27 0.0237 121.87);
+  --color-neutral-content: oklch(98% 0.001 106.423);
+  --color-info: oklch(0.4 0.1251 254.53);
+  --color-info-content: oklch(97% 0.013 236.62);
+  --color-success: oklch(0.66 0.1834 140.88);
+  --color-success-content: oklch(97% 0.021 166.113);
+  --color-warning: oklch(0.83 0.1706 79.94);
+  --color-warning-content: oklch(98% 0.026 102.212);
+  --color-error: oklch(57% 0.245 27.325);
+  --color-error-content: oklch(97% 0.013 17.38);
+  --radius-selector: 2rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(15% 0.02 270);
+  --color-base-200: oklch(20% 0.02 270);
+  --color-base-300: oklch(25% 0.02 270);
+  --color-base-content: oklch(90% 0.005 270);
+  --color-primary: oklch(0.52 0.2019 25.94);
+  --color-primary-content: oklch(97% 0.014 308.299);
+  --color-secondary: oklch(0.36 0.147571 29.2339);
+  --color-secondary-content: oklch(97% 0.014 343.198);
+  --color-accent: oklch(55% 0.013 58.071);
+  --color-accent-content: oklch(98% 0.001 106.423);
+  --color-neutral: oklch(0.27 0.0237 121.87);
+  --color-neutral-content: oklch(98% 0.001 106.423);
+  --color-info: oklch(0.4 0.1251 254.53);
+  --color-info-content: oklch(97% 0.013 236.62);
+  --color-success: oklch(0.66 0.1834 140.88);
+  --color-success-content: oklch(97% 0.021 166.113);
+  --color-warning: oklch(0.83 0.1706 79.94);
+  --color-warning-content: oklch(98% 0.026 102.212);
+  --color-error: oklch(57% 0.245 27.325);
+  --color-error-content: oklch(97% 0.013 17.38);
+  --radius-selector: 2rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+
+.signup,
+.login {
+  display: flex;
+  place-items: center;
+  place-content: center;
+  height: 100vh;
+}
+
+input {
+  border-radius: var(--radius-field);
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+}
+
+input:focus {
+  outline: none;
+  border: var(--border) solid var(--color-primary);
+}
+
+body {
+  font-family: "UberMove", sans-serif;
+}
