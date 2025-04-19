@@ -24,4 +24,11 @@ router.get(
     deliveryController.getDriverTasks
 );
 
+router.put(
+    '/driver/:driverId/location', 
+    // authMiddleware('driver'), 
+    deliveryController.updateDriverLocation
+);
+
+
 module.exports = router;

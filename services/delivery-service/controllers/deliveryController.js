@@ -119,19 +119,56 @@ exports.updateDeliveryStatus = async (req, res) => {
 };
 
 exports.getDriverTasks = async (req, res) => {
-  console.log('getDriverTasks called with params:', req.params);
-  try {
-    const { driverId } = req.params;
-    if (driverId !== req.user.id) {
-      console.log('Unauthorized access by driverId:', req.user.id);
-      return res.status(403).json({ error: 'Unauthorized' });
+    console.log('getDriverTasks called with params:', req.params);
+    try {
+      const { driverId } = req.params;
+      if (driverId !== req.user.id) {
+        console.log('Unauthorized access by driverId:', req.user.id);
+        return res.status(403).json({ error: 'Unauthorized' });
+      }
+      console.log('Fetching tasks for driverId:', driverId);
+      const orders = await Order.find({ driverId, status: { $ne: 'delivered' } });
+      console.log('Driver tasks fetched:', orders);
+      res.json(orders);
+    } catch (error) {
+      console.error('Error in getDriverTasks:', error);
+      res.status(500).json({ error: error.message });
     }
-    console.log('Fetching tasks for driverId:', driverId);
-    const orders = await Order.find({ driverId, status: { $ne: 'delivered' } });
-    console.log('Driver tasks fetched:', orders);
-    res.json(orders);
-  } catch (error) {
-    console.error('Error in getDriverTasks:', error);
-    res.status(500).json({ error: error.message });
-  }
-};
+  };
+  
+  exports.updateDriverLocation = async (req, res) => {
+    console.log('updateDriverLocation called with params:', req.params, 'and body:', req.body);
+    try {
+      const { driverId } = req.params;
+      const { location } = req.body; // Expect { type: 'Point', coordinates: [longitude, latitude] }
+  
+      // Validate authentication
+      if (driverId !== req.user.id) {
+        console.log('Unauthorized access by driverId:', req.user.id);
+        return res.status(403).json({ error: 'Unauthorized' });
+      }
+  
+      // Validate location format
+      if (!location || location.type !== 'Point' || !Array.isArray(location.coordinates) || location.coordinates.length !== 2) {
+        console.log('Invalid location format');
+        return res.status(400).json({ error: 'Invalid location format' });
+      }
+  
+      // Update driver's location
+      const driver = await Driver.findById(driverId);
+      if (!driver) {
+        console.log('Driver not found');
+        return res.status(404).json({ error: 'Driver not found' });
+      }
+  
+      driver.location = location;
+      driver.updatedAt = new Date(); // Track when location was last updated
+      await driver.save();
+      console.log('Driver location updated:', location);
+  
+      res.json({ message: 'Location updated', location });
+    } catch (error) {
+      console.error('Error in updateDriverLocation:', error);
+      res.status(500).json({ error: error.message });
+    }
+  };
