@@ -12,7 +12,7 @@ function RestaurantLogin() {
         <div className="card-body">
           <ThemeLogo style={"w-32 md:w-48 mx-auto"} />
             <h2 className="text-2xl font-bold text-center mt-4">
-                Welcome back, Restaurant Owner!
+                Welcome back,<br/>Restaurant Owner!
             </h2>
           <p className="text-sm text-center">
             Please enter your credentials to access your restaurant dashboard.
