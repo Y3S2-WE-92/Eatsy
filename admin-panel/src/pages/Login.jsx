@@ -1,13 +1,18 @@
 import React from 'react'
-import { CloseButton, ThemeButton, ThemeLogo } from '../components'
-import { Link } from 'react-router-dom'
+import { ThemeButton, ThemeLogo } from '../components'
+import { useNavigate } from 'react-router-dom'
 
 function Login() {
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    // Logic to handle login
+    navigate('/admin-panel/');
+  }
+
   return (
     <div className="login min-h-screen flex items-center justify-center">
-      <div className="absolute top-0 left-0 p-4">
-        <CloseButton link={"/"} />
-      </div>
       <div className="absolute top-0 right-0 p-4">
         <ThemeButton />
       </div>
@@ -32,7 +37,7 @@ function Login() {
               className="input"
             />
             <div className="card-actions justify-end mt-3">
-              <button type="submit" className="btn btn-primary w-full">
+              <button onClick={handleLogin} type="button" className="btn btn-primary w-full">
                 Login
               </button>
             </div>
