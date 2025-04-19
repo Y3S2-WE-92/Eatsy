@@ -5,10 +5,15 @@ import { Link } from "react-router-dom";
 function LandingNavbar() {
   return (
     <div className="navbar bg-base-100">
-      <div className="flex-1">
+      <div className="flex-1 btn-group">
         <Link to={"/restaurant"}>
-          <button className="btn btn-error rounded-full me-2">
+          <button className="btn btn-ghost text-error border border-error rounded-l-full">
             Eatsy for Restaurants
+          </button>
+        </Link>
+        <Link to={"/restaurant"}>
+          <button className="btn btn-ghost text-error border border-error rounded-r-full">
+            Eatsy Delivery
           </button>
         </Link>
       </div>
