@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { ThemeButton, CloseButton, ThemeLogo } from "../../components";
-import { Link, useNavigate } from "react-router-dom"; 
+import { ThemeButton, CloseButton, ThemeLogo } from "../../../components";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { apiEndpoints } from "../../services";
+import { apiEndpoints } from "../../../services";
 import { jwtDecode } from "jwt-decode";
 
 function Login() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
     username: "",
     password: "",
@@ -45,11 +45,14 @@ function Login() {
 
         localStorage.setItem("token", token);
 
-        localStorage.setItem("user", JSON.stringify({
-          id: decodedToken.id,
-          name: response.data.user.name,
-          username: response.data.user.username,
-        }));
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            id: decodedToken.id,
+            name: response.data.user.name,
+            username: response.data.user.username,
+          })
+        );
 
         console.log("Login successful", response.data);
         alert("Login successful!");
@@ -57,7 +60,9 @@ function Login() {
       }
     } catch (error) {
       console.error("Error logging in:", error);
-      alert(error.response?.data?.message || "Error logging in. Please try again.");
+      alert(
+        error.response?.data?.message || "Error logging in. Please try again."
+      );
     }
   };
 
@@ -72,7 +77,7 @@ function Login() {
 
       <div className="card card-xl bg-base-300 shadow-sm w-full max-w-sm mx-auto">
         <div className="card-body">
-          <ThemeLogo style={"w-48 mx-auto"}/>
+          <ThemeLogo style={"w-48 mx-auto"} />
           <div className="card-title text-lg mt-4">Welcome back!</div>
           <form
             onSubmit={handleSubmit}
@@ -80,24 +85,21 @@ function Login() {
           >
             <input
               type="text"
-              name="username" 
-              value={loginData.username} 
-              onChange={handleChange} 
+              name="username"
+              value={loginData.username}
+              onChange={handleChange}
               placeholder="Username"
               className="input"
             />
             <input
               type="password"
-              name="password" 
+              name="password"
               value={loginData.password}
               onChange={handleChange}
               placeholder="Password"
               className="input"
             />
-            <Link
-              to="/auth/forgot-password"
-              className="text-sm text-right"
-            >
+            <Link to="/auth/forgot-password" className="text-sm text-right">
               <small>Forgot Password?</small>
             </Link>
             <div className="card-actions justify-end mt-3">

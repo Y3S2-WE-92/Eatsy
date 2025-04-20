@@ -56,6 +56,20 @@ services:
     networks:
       - eatsy-network
 
+  admin-panel:
+    build: ./admin-panel
+    ports:
+      - "3001:80"
+    depends_on:
+      - user-service
+      - restaurant-service
+      - order-service
+      - delivery-service
+      - payment-service
+      - notification-service
+    networks:
+      - eatsy-network
+
 networks:
   eatsy-network:
     driver: bridge

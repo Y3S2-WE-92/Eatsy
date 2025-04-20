@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { fetchDeliveryAPIhealth, fetchHealthStatus, fetchNotificationsAPIhealth, fetchOrdersAPIhealth, fetchPaymentAPIhealth, fetchUserAPIhealth } from "../../utils/fetch-utils/FetchAPIHealth";
+import {
+  fetchDeliveryAPIhealth,
+  fetchHealthStatus,
+  fetchNotificationsAPIhealth,
+  fetchOrdersAPIhealth,
+  fetchPaymentAPIhealth,
+  fetchUserAPIhealth,
+} from "../../utils/fetch-utils/FetchAPIHealth";
 
 function ComponentHealth() {
   const [userAPIhealth, setUserAPIhealth] = useState(null);
@@ -17,7 +24,7 @@ function ComponentHealth() {
       const ordersHealth = await fetchOrdersAPIhealth();
       const paymentHealth = await fetchPaymentAPIhealth();
       const notificationsHealth = await fetchNotificationsAPIhealth();
-  
+
       setUserAPIhealth(userHealth);
       setRestaurantsAPIhealth(restaurantHealth);
       setDeliveryAPIhealth(deliveryHealth);
@@ -25,21 +32,25 @@ function ComponentHealth() {
       setPaymentAPIhealth(paymentHealth);
       setNotificationsAPIhealth(notificationsHealth);
     };
-  
+
     fetchHealthStatuses();
-  }, []);  
+  }, []);
 
   const statusIndicator = (status) => {
     return (
-      <div className={`${status==="OK"?"bg-success":"bg-error"} w-4 h-4 rounded-full`} />
-    )
-  }
+      <div
+        className={`${
+          status === "OK" ? "bg-success" : "bg-error"
+        } w-4 h-4 rounded-full`}
+      />
+    );
+  };
 
   return (
     <>
       <div className="card">
         <div className="card-body">
-          <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 mx-auto shadow-sm border-2 border-base-content/10">
+          <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 shadow-sm border-2 border-base-content/10">
             <table className="table table-bordered table-zebra text-center">
               <thead>
                 <tr>
@@ -49,28 +60,28 @@ function ComponentHealth() {
               </thead>
               <tbody>
                 <tr>
-                  <td className="px-24">User API</td>
-                  <td className="px-32">{statusIndicator(userAPIhealth)}</td>
+                  <td>User API</td>
+                  <td>{statusIndicator(userAPIhealth)}</td>
                 </tr>
                 <tr>
-                  <td className="px-24">Restaurants API</td>
-                  <td className="px-32">{statusIndicator(restaurantsAPIhealth)}</td>
+                  <td>Restaurants API</td>
+                  <td>{statusIndicator(restaurantsAPIhealth)}</td>
                 </tr>
                 <tr>
                   <td>Delivery API</td>
-                  <td className="px-32">{statusIndicator(deliveryAPIhealth)}</td>
+                  <td>{statusIndicator(deliveryAPIhealth)}</td>
                 </tr>
                 <tr>
                   <td>Orders API</td>
-                  <td className="px-32">{statusIndicator(ordersAPIhealth)}</td>
+                  <td>{statusIndicator(ordersAPIhealth)}</td>
                 </tr>
                 <tr>
                   <td>Payment API</td>
-                  <td className="px-32">{statusIndicator(paymentAPIhealth)}</td>
+                  <td>{statusIndicator(paymentAPIhealth)}</td>
                 </tr>
                 <tr>
                   <td>Notifications API</td>
-                  <td className="px-32">{statusIndicator(notificationsAPIhealth)}</td>
+                  <td>{statusIndicator(notificationsAPIhealth)}</td>
                 </tr>
               </tbody>
             </table>
