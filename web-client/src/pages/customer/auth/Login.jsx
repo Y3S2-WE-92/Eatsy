@@ -56,7 +56,7 @@ function Login() {
 
         console.log("Login successful", response.data);
         alert("Login successful!");
-        navigate("/");
+        navigate("/customer");
       }
     } catch (error) {
       console.error("Error logging in:", error);
