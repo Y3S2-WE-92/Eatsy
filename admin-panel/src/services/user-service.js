@@ -1,8 +1,4 @@
-// local development - Docker
-const USER_API_URL = "http://localhost:4000/api";
-
-// local development
-// const USER_API_URL = "http://localhost:3000/api";
+const USER_API_URL = import.meta.env.VITE_USER_API_URL;
 
 export const userAPI = {
     UserAPIhealth: `${USER_API_URL}/health`,
