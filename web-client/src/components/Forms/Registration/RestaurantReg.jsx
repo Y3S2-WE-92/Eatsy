@@ -1,14 +1,80 @@
-import React from 'react'
+import React, {useState} from 'react'
 import ThemeLogo from '../../Logos/ThemeLogo';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { userAPI } from '../../../services';
+
 
 function RestaurantReg() {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    address: "",
+    ownerName: "",
+    ownerContactNo: "",
+    username: "",
+    password: "",
+    confirmPassword: ""
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.address ||
+      !formData.ownerName ||
+      !formData.ownerContactNo ||
+      !formData.username ||
+      !formData.password ||
+      !formData.confirmPassword
+    ) {
+      alert("Please fill all fields");
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    try {
+      const response = await axios.post(userAPI.RestaurantRegister, {
+        name: formData.name,
+        email: formData.email,
+        address: formData.address,
+        ownerName: formData.ownerName,
+        ownerContactNo: formData.ownerContactNo,
+        username: formData.username,
+        password: formData.password,
+      });
+      if (response.status === 201) {
+        console.log("Sign up successful", response.data);
+        alert("Sign up successful!");
+        navigate("/restaurant");
+      }
+    } catch (error) {
+      console.error("Error signing up:", error);
+      alert("Error signing up. Please try again.");
+    }
+  };
+
   return (
     <div className="card card-xl bg-base-300 shadow-sm w-full max-w-sm mx-auto">
         <div className="card-body">
         <ThemeLogo style={"w-48 mx-auto"} />
           <div className="card-title text-lg mt-4">Register Your Restaurant</div>
           <form
+            onSubmit={handleSubmit}
             className="form-control flex flex-col gap-2"
           >
             <input
@@ -16,30 +82,64 @@ function RestaurantReg() {
               name="name" 
               placeholder="Name"
               className="input"
+              value={formData.name}
+              onChange={handleChange}
             />
             <input
               type="email"
               name="email" 
               placeholder="Email"
               className="input"
+              value={formData.email}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="address" 
+              placeholder="Address"
+              className="input"
+              value={formData.address}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="ownerName" 
+              placeholder="Owner Name"
+              className="input"
+              value={formData.ownerName}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="ownerContactNo" 
+              placeholder="Owner Contact No"
+              className="input"
+              value={formData.ownerContactNo}
+              onChange={handleChange}
             />
             <input
               type="text"
               name="username"
               placeholder="Username"
               className="input"
+              value={formData.username}
+              onChange={handleChange}
             />
             <input
               type="password" 
               name="password"  
               placeholder="Password"
               className="input"
+              value={formData.password}
+              onChange={handleChange}
             />
             <input
               type="password" 
               name="confirmPassword"
               placeholder="Confirm Password"
               className="input"
+              value={formData.confirmPassword}
+              onChange={handleChange}
             />
 
             <div className="card-actions justify-end mt-3">
