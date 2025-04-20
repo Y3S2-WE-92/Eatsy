@@ -4,7 +4,7 @@ const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
 const dotenv = require("dotenv");
-const deliveryRoutes = require("./routes/deliveryRoutes");
+const deliveryRoutes = require("./routes/delivery.routes");
 const socketHandler = require("./socket");
 
 dotenv.config();

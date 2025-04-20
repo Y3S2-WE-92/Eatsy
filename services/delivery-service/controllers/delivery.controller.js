@@ -1,6 +1,6 @@
-const Driver = require('../models/Driver');
-const Order = require('../models/Order'); // Correct import from delivery-service
-const { sendSMS, sendEmail } = require('../services/notificationService');
+const Driver = require('../models/driver.model');
+const Order = require('../models/order.model'); // Correct import from delivery-service
+const { sendSMS, sendEmail } = require('../services/notification.service');
 
 exports.assignDriver = async (req, res) => {
   try {
