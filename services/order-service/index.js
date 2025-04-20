@@ -4,7 +4,12 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const orderRoutes = require("./routes/order.routes");
 
-dotenv.config();
+if (process.env.NODE_ENV === 'production') {
+  dotenv.config({ path: '.env.production' });
+} else {
+  dotenv.config({ path: '.env' });
+}
+
 const app = express();
 
 app.use(cors());

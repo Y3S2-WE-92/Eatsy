@@ -1,8 +1,4 @@
-// local development - Docker
-const NOTIFICATIONS_API_URL = "http://localhost:4005/api";
-
-// local development
-// const NOTIFICATIONS_API_URL = "http://localhost:3000/api";
+const NOTIFICATIONS_API_URL = import.meta.env.VITE_NOTIFICATIONS_API_URL;
 
 export const notificationAPI = {
     NotificationsAPIhealth: `${NOTIFICATIONS_API_URL}/health`,
