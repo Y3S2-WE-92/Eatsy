@@ -1,6 +1,6 @@
-const Order = require('../models/Order');
+const Order = require('../models/order.model');
 const axios = require('axios');
-const { sendSMS, sendEmail } = require('../services/notificationService');
+const { sendSMS, sendEmail } = require('../services/notification.service');
 
 exports.placeOrder = async (req, res) => {
     console.log('placeOrder called with body:', req.body);
