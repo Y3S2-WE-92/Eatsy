@@ -119,6 +119,13 @@ docker-compose up --build
 
 ---
 
+# ✅ Notes:
+- Don't forget to add your `.env` files **manually** — they are not versioned inside Git.
+- Always run services individually during local development to save build time.
+- Use Docker only when you want to test full system orchestration.
+
+---
+
 ### 2. Accessing the App
 
 | Component         | URL                                  |
@@ -178,13 +185,6 @@ This will stop and remove all running containers.
 ✅ Docker containerized  
 ✅ Frontend and Admin Panels separated  
 ✅ Ready for further production optimizations (Kubernetes, CI/CD pipelines)
-
----
-
-# ✅ Notes:
-- Don't forget to add your `.env` files **manually** — they are not versioned inside Git.
-- Always run services individually during local development to save build time.
-- Use Docker only when you want to test full system orchestration.
 
 ---
 
