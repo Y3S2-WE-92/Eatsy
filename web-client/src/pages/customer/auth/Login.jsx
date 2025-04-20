@@ -29,7 +29,7 @@ function Login() {
     }
 
     try {
-      const response = await axios.post(apiEndpoints.userAPI.UserLogin, {
+      const response = await axios.post(apiEndpoints.userAPI.CustomerLogin, {
         username: loginData.username,
         password: loginData.password,
       });
