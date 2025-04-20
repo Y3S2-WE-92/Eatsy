@@ -30,7 +30,7 @@ Each service is isolated, independently deployable, and communicates over REST A
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/eatsy.git
+git clone https://github.com/Y3S2-WE-92/Eatsy.git
 cd eatsy
 ```
 
