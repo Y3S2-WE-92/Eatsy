@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ThemeButton, CloseButton, ThemeLogo } from "../../../components";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { apiEndpoints } from "../../../services";
+import { userAPI } from "../../../services";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ function SignUp() {
     }
 
     try {
-      const response = await axios.post(apiEndpoints.userAPI.CustomerRegister, {
+      const response = await axios.post(userAPI.CustomerRegister, {
         name: signupData.name,
         email: signupData.email,
         phone: signupData.phone,
