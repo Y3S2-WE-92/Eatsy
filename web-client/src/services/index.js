@@ -5,7 +5,7 @@ import { orderAPI } from "./order-service";
 import { paymentAPI } from "./payment-service";
 import { notificationAPI } from "./notification-service";
 
-export const apiEndpoints = {
+export {
     userAPI,
     restaurantAPI,
     deliveryAPI,

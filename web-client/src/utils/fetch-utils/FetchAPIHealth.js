@@ -1,8 +1,15 @@
-import { apiEndpoints } from "../../services";
+import {
+  userAPI,
+  restaurantAPI,
+  deliveryAPI,
+  orderAPI,
+  paymentAPI,
+  notificationAPI,
+} from "../../services";
 
 export const fetchUserAPIhealth = async () => {
   try {
-    const response = await fetch(apiEndpoints.userAPI.UserAPIhealth);
+    const response = await fetch(userAPI.UserAPIhealth);
     const data = await response.json();
     return data.status;
   } catch (error) {
@@ -12,9 +19,7 @@ export const fetchUserAPIhealth = async () => {
 
 export const fetchHealthStatus = async () => {
   try {
-    const response = await fetch(
-      apiEndpoints.restaurantAPI.RestaurantsAPIhealth
-    );
+    const response = await fetch(restaurantAPI.RestaurantsAPIhealth);
     const data = await response.json();
     return data.status;
   } catch (error) {
@@ -24,7 +29,7 @@ export const fetchHealthStatus = async () => {
 
 export const fetchDeliveryAPIhealth = async () => {
   try {
-    const response = await fetch(apiEndpoints.deliveryAPI.DeliveryAPIhealth);
+    const response = await fetch(deliveryAPI.DeliveryAPIhealth);
     const data = await response.json();
     return data.status;
   } catch (error) {
@@ -34,7 +39,7 @@ export const fetchDeliveryAPIhealth = async () => {
 
 export const fetchOrdersAPIhealth = async () => {
   try {
-    const response = await fetch(apiEndpoints.orderAPI.OrdersAPIhealth);
+    const response = await fetch(orderAPI.OrdersAPIhealth);
     const data = await response.json();
     return data.status;
   } catch (error) {
@@ -44,7 +49,7 @@ export const fetchOrdersAPIhealth = async () => {
 
 export const fetchPaymentAPIhealth = async () => {
   try {
-    const response = await fetch(apiEndpoints.paymentAPI.PaymentAPIhealth);
+    const response = await fetch(paymentAPI.PaymentAPIhealth);
     const data = await response.json();
     return data.status;
   } catch (error) {
@@ -54,7 +59,7 @@ export const fetchPaymentAPIhealth = async () => {
 
 export const fetchNotificationsAPIhealth = async () => {
   try {
-    const response = await fetch(apiEndpoints.notificationAPI.NotificationsAPIhealth);
+    const response = await fetch(notificationAPI.NotificationsAPIhealth);
     const data = await response.json();
     return data.status;
   } catch (error) {

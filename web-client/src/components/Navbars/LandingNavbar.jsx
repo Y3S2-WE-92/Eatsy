@@ -6,12 +6,12 @@ function LandingNavbar() {
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1 btn-group">
-        <Link to={"/restaurant"}>
+        <Link to={"/for-restaurant"}>
           <button className="btn btn-ghost text-error border border-error rounded-l-full">
             Eatsy for Restaurants
           </button>
         </Link>
-        <Link to={"/delivery"}>
+        <Link to={"/for-delivery"}>
           <button className="btn btn-ghost text-error border border-error rounded-r-full">
             Eatsy Food Delivery
           </button>

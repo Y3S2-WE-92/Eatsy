@@ -8,6 +8,8 @@ export const userAPI = {
     UserAPIhealth: `${USER_API_URL}/health`,
 
     //Authentication
-    UserRegister: `${USER_API_URL}/auth/register`,
-    UserLogin: `${USER_API_URL}/auth/login`,
+    AdminRegister: `${USER_API_URL}/register/admin`,
+
+    //Login
+    AdminLogin: `${USER_API_URL}/auth/admin`,
 }

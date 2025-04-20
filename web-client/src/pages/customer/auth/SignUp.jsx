@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { ThemeButton, CloseButton, ThemeLogo } from "../../../components";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { apiEndpoints } from "../../../services";
+import { userAPI } from "../../../services";
 
 function SignUp() {
   const navigate = useNavigate();
   const [signupData, setSignupData] = useState({
     name: "",
     email: "",
+    phone: "",
     username: "",
     password: "",
     confirmPassword: "",
-    role: "customer",
   });
 
   const handleChange = (e) => {
@@ -29,10 +29,10 @@ function SignUp() {
     if (
       !signupData.name ||
       !signupData.email ||
+      !signupData.phone ||
       !signupData.username ||
       !signupData.password ||
-      !signupData.confirmPassword ||
-      !signupData.role
+      !signupData.confirmPassword
     ) {
       alert("Please fill all fields");
       return;
@@ -43,12 +43,12 @@ function SignUp() {
     }
 
     try {
-      const response = await axios.post(apiEndpoints.userAPI.UserRegister, {
+      const response = await axios.post(userAPI.CustomerRegister, {
         name: signupData.name,
         email: signupData.email,
+        phone: signupData.phone,
         username: signupData.username,
         password: signupData.password,
-        role: signupData.role,
       });
       if (response.status === 201) {
         console.log("Sign up successful", response.data);
@@ -95,6 +95,14 @@ function SignUp() {
             />
             <input
               type="text"
+              name="phone"
+              value={signupData.phone}
+              onChange={handleChange}
+              placeholder="Phone"
+              className="input"
+            />
+            <input
+              type="text"
               name="username"
               value={signupData.username}
               onChange={handleChange}
@@ -117,16 +125,6 @@ function SignUp() {
               placeholder="Confirm Password"
               className="input"
             />
-            <select
-              name="role"
-              value={signupData.role}
-              onChange={handleChange}
-              className="select select-bordered w-full"
-            >
-              <option value="customer">Customer</option>
-              <option value="delivery">Delivery</option>
-            </select>
-
             <div className="card-actions justify-end mt-3">
               <button type="submit" className="btn btn-primary w-full">
                 Sign Up

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ThemeButton, CloseButton, ThemeLogo } from "../../../components";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { apiEndpoints } from "../../../services";
+import { userAPI } from "../../../services";
 import { jwtDecode } from "jwt-decode";
 
 function Login() {
@@ -29,7 +29,7 @@ function Login() {
     }
 
     try {
-      const response = await axios.post(apiEndpoints.userAPI.UserLogin, {
+      const response = await axios.post(userAPI.CustomerLogin, {
         username: loginData.username,
         password: loginData.password,
       });
@@ -56,7 +56,7 @@ function Login() {
 
         console.log("Login successful", response.data);
         alert("Login successful!");
-        navigate("/");
+        navigate("/customer");
       }
     } catch (error) {
       console.error("Error logging in:", error);
