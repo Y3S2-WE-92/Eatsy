@@ -8,7 +8,6 @@ const RestaurantSchema = new mongoose.Schema({
   ownerContactNo: String,
   username: { type: String, unique: true },
   password: String,
-  role: { type: String, default: "restaurant" },
 });
 
 module.exports = mongoose.model("Restaurant", RestaurantSchema);

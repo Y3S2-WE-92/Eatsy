@@ -8,7 +8,6 @@ const DeliveryPersonSchema = new mongoose.Schema({
   vehicleNumber: String,
   username: { type: String, unique: true },
   password: String,
-  role: { type: String, default: "delivery" },
 });
 
 module.exports = mongoose.model("DeliveryPerson", DeliveryPersonSchema);
