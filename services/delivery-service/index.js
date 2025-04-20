@@ -7,7 +7,12 @@ const dotenv = require("dotenv");
 const deliveryRoutes = require("./routes/delivery.routes");
 const socketHandler = require("./socket");
 
-dotenv.config();
+if (process.env.NODE_ENV === 'production') {
+  dotenv.config({ path: '.env.production' });
+} else {
+  dotenv.config({ path: '.env' });
+}
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
