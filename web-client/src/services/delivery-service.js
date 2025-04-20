@@ -1,8 +1,4 @@
-// local development - Docker
-const DELIVERY_API_URL = "http://localhost:4002/api";
-
-// local development
-// const DELIVERY_API_URL = "http://localhost:3000/api";
+const DELIVERY_API_URL = import.meta.env.VITE_DELIVERY_API_URL;
 
 export const deliveryAPI = {
     DeliveryAPIhealth: `${DELIVERY_API_URL}/health`,

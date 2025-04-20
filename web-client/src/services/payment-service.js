@@ -1,8 +1,4 @@
-// local development - Docker
-const PAYMENT_API_URL = "http://localhost:4004/api";
-
-// local development
-// const PAYMENT_API_URL = "http://localhost:3000/api";
+const PAYMENT_API_URL = import.meta.env.VITE_PAYMENT_API_URL;
 
 export const paymentAPI = {
     PaymentAPIhealth: `${PAYMENT_API_URL}/health`,
