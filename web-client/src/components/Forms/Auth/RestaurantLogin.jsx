@@ -58,7 +58,7 @@ function RestaurantLogin() {
 
         console.log("Login successful", response.data);
         alert("Login successful!");
-        navigate("/");
+        navigate("/restaurant");
       }
     } catch (error) {
       console.error("Error logging in:", error);

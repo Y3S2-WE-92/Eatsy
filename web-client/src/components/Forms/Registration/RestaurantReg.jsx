@@ -60,7 +60,7 @@ function RestaurantReg() {
       if (response.status === 201) {
         console.log("Sign up successful", response.data);
         alert("Sign up successful!");
-        navigate("/restaurant");
+        navigate("/for-restaurant");
       }
     } catch (error) {
       console.error("Error signing up:", error);
@@ -152,7 +152,7 @@ function RestaurantReg() {
             <small>
               Already have an account?{" "}
               <Link
-                to="/auth/login"
+                to="/for-restaurant"
                 className="text-primary font-bold cursor-pointer"
               >
                 Login

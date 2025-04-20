@@ -10,7 +10,7 @@ function DeliveryLandingNavbar() {
         <CloseButton link={"/"} />
       </div>
       <div className="flex-none">
-        <Link to={"/delivery/register"}>
+        <Link to={"/for-delivery/register"}>
           <button className="btn btn-ghost border border-error text-error rounded-full me-4">
             Become a Delivery Partner
           </button>

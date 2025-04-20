@@ -59,7 +59,7 @@ function DeliveryReg() {
       if (response.status === 201) {
         alert("Registration successful");
 
-        navigate("/delivery");
+        navigate("/for-delivery");
       }
     } catch (error) {
       console.error(error);
@@ -150,7 +150,7 @@ function DeliveryReg() {
           <small>
             Already have an account?{" "}
             <Link
-              to="/auth/login"
+              to="/for-delivery"
               className="text-primary font-bold cursor-pointer"
             >
               Login

@@ -10,7 +10,7 @@ function RestaurantLandingNavbar() {
         <CloseButton link={"/"} />
       </div>
       <div className="flex-none">
-        <Link to={"/restaurant/register"}>
+        <Link to={"/for-restaurant/register"}>
           <button className="btn btn-ghost border border-error text-error rounded-full me-4">
             Register a Restaurant
           </button>
