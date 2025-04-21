@@ -17,6 +17,8 @@ import ProfileButton from "./Buttons/ProfileButton";
 import NotificationsButton from "./Buttons/NotificationsButton";
 import SeeMoreButton from "./Buttons/SeemoreButton";
 
+import RestaurantCard from "./Cards/Customer/RestaurantCard";
+
 import Footer from "./Footer/Footer";
 import ThemeLogo from "./Logos/ThemeLogo";
 import ThemeTextLogo from "./Logos/ThemeTextLogo";
@@ -45,6 +47,9 @@ export {
   ProfileButton,
   NotificationsButton,
   SeeMoreButton,
+
+  //Cards
+  RestaurantCard,
 
   //Common
   Footer,
