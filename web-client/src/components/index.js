@@ -6,6 +6,7 @@ import DeliveryLandingNavbar from "./Navbars/DeliveryLandingNavbar";
 
 import DeliveryNavBar from "./UserNavbars/DeliveryNavBar";
 import RestaurantNavbar from "./UserNavbars/RestaurantNavbar";
+import CustomerNavBar from "./UserNavbars/CustomerNavBar";
 
 import RestaurantLogin from "./Forms/Auth/RestaurantLogin";
 import DeliveryLogin from "./Forms/Auth/DeliveryLogin";
@@ -27,9 +28,10 @@ export {
   RestaurantLandingNavbar,
   DeliveryLandingNavbar,
 
-  //Bottom Navbars
+  //User Navbars
   DeliveryNavBar,
   RestaurantNavbar,
+  CustomerNavBar,
 
   //Forms
   RestaurantLogin,

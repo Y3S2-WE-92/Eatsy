@@ -19,9 +19,9 @@ const notifications = [
     message: "Order #1234 has been delivered",
     time: "10 minutes ago",
   },
-]
+];
 
-function RestaurantNavbar({ sections=[] }) {
+function CustomerNavBar({ sections=[] }) {
   return (
     <div className={`${styles.paddingX} navbar bg-base-300 shadow-sm`}>
       <div className="navbar-start">
@@ -40,11 +40,6 @@ function RestaurantNavbar({ sections=[] }) {
             ))}
           </ul>
         </div>
-        <Link to={"/restaurant/"} className="btn btn-ghost text-sm lg:text-lg">
-          <ThemeTextLogo style="w-12 md:w-16" />| <span className="text-error font-bold">Restaurant</span>
-        </Link>
-      </div>
-      <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 gap-2">
           {sections.map((section, index) => (
             <li key={index}>
@@ -52,6 +47,12 @@ function RestaurantNavbar({ sections=[] }) {
             </li>
           ))}
         </ul>
+      </div>
+      <div className="navbar-center hidden lg:flex">
+      <Link to={"/customer/"} className="btn btn-ghost text-sm lg:text-lg">
+          <ThemeTextLogo style="w-12 md:w-16" />
+        </Link>
+        
       </div>
       <div className="navbar-end gap-3">
         <NotificationsButton notifications={notifications} />
@@ -62,4 +63,4 @@ function RestaurantNavbar({ sections=[] }) {
   );
 }
 
-export default RestaurantNavbar;
+export default CustomerNavBar;
