@@ -29,7 +29,7 @@ function App() {
         {/* Customer Management */}
         <Route path={"/auth/login"} element={<Login />} />
         <Route path={"/auth/signup"} element={<SignUp />} />
-        <Route path={"/customer"} element={<CustomerLayout />} />
+        <Route path={"/customer/*"} element={<CustomerLayout />} />
       
         {/* Delivery Management */}
         <Route path={"/for-delivery"} element={<DeliveryLanding />} />
