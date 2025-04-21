@@ -1,5 +1,3 @@
-import ComponentHealth from "./Cards/ComponentHealth";
-
 import LandingNavbar from "./Navbars/LandingNavbar";
 import RestaurantLandingNavbar from "./Navbars/RestaurantLandingNavbar";
 import DeliveryLandingNavbar from "./Navbars/DeliveryLandingNavbar";
@@ -19,8 +17,9 @@ import ProfileButton from "./Buttons/ProfileButton";
 import NotificationsButton from "./Buttons/NotificationsButton";
 
 import Footer from "./Footer/Footer";
-
 import ThemeLogo from "./Logos/ThemeLogo";
+import ThemeTextLogo from "./Logos/ThemeTextLogo";
+import ComponentHealth from "./Cards/ComponentHealth";
 
 export {
   //Navbars
@@ -48,5 +47,6 @@ export {
   //Common
   Footer,
   ThemeLogo,
+  ThemeTextLogo,
   ComponentHealth,
 };
