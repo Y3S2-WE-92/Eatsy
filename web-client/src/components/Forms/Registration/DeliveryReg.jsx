@@ -3,9 +3,10 @@ import ThemeLogo from "../../Logos/ThemeLogo";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { userAPI } from "../../../services";
-import ToastUtil from "../../../utils/alert-utils/ToastUtil";
+import { useToast } from "../../../utils/alert-utils/ToastUtil";
 
 function DeliveryReg() {
+  const toast = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -39,11 +40,11 @@ function DeliveryReg() {
       !formData.password ||
       !formData.confirmPassword
     ) {
-      ToastUtil.error("Please fill all fields");
+      toast.error("Please fill all fields");
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      ToastUtil.error("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -58,16 +59,16 @@ function DeliveryReg() {
         password: formData.password,
       });
       if (response.status === 201) {
-        ToastUtil.success("Registration successful");
+        toast.success("Registration successful");
 
         navigate("/for-delivery");
       }
     } catch (error) {
       console.error(error);
       if (error.response && error.response.status === 400) {
-        ToastUtil.error("Username already exists");
+        toast.error("Username already exists");
       } else {
-        ToastUtil.error("Error signing up. Please try again.");
+        toast.error("Error signing up. Please try again.");
       }
     }
   };
