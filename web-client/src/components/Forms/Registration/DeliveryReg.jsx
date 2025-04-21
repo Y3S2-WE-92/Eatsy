@@ -3,6 +3,7 @@ import ThemeLogo from "../../Logos/ThemeLogo";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { userAPI } from "../../../services";
+import ToastUtil from "../../../utils/alert-utils/ToastUtil";
 
 function DeliveryReg() {
   const navigate = useNavigate();
@@ -38,11 +39,11 @@ function DeliveryReg() {
       !formData.password ||
       !formData.confirmPassword
     ) {
-      alert("Please fill all fields");
+      ToastUtil.error("Please fill all fields");
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
+      ToastUtil.error("Passwords do not match");
       return;
     }
 
@@ -57,12 +58,17 @@ function DeliveryReg() {
         password: formData.password,
       });
       if (response.status === 201) {
-        alert("Registration successful");
+        ToastUtil.success("Registration successful");
 
         navigate("/for-delivery");
       }
     } catch (error) {
       console.error(error);
+      if (error.response && error.response.status === 400) {
+        ToastUtil.error("Username already exists");
+      } else {
+        ToastUtil.error("Error signing up. Please try again.");
+      }
     }
   };
 

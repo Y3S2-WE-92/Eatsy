@@ -5,6 +5,7 @@ import { styles } from "../../../styles/styles";
 import { userAPI } from "../../../services";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import ToastUtil from "../../../utils/alert-utils/ToastUtil";
 
 function RestaurantLogin() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function RestaurantLogin() {
     e.preventDefault();
 
     if (!loginData.username || !loginData.password) {
-      alert("Please fill all fields");
+      ToastUtil.error("Please fill all fields");
       return;
     }
 
@@ -57,14 +58,12 @@ function RestaurantLogin() {
         );
 
         console.log("Login successful", response.data);
-        alert("Login successful!");
+        ToastUtil.success("Login successful");
         navigate("/restaurant");
       }
     } catch (error) {
       console.error("Error logging in:", error);
-      alert(
-        error.response?.data?.message || "Error logging in. Please try again."
-      );
+      ToastUtil.error("Error logging in. Please try again.");
     }
   };
 
