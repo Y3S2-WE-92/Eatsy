@@ -36,7 +36,7 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 
-const PORT = process.env.PORT || 3003;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Order Service running on port ${PORT}`);
 });
