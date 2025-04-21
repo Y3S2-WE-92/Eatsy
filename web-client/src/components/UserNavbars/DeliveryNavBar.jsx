@@ -2,10 +2,24 @@ import React from "react";
 import ThemeButton from "../Buttons/ThemeButton";
 import ThemeTextLogo from "../Logos/ThemeTextLogo";
 import ProfileButton from "../Buttons/ProfileButton";
+import NotificationsButton from "../Buttons/NotificationsButton";
 import { Link } from "react-router-dom";
 import { styles } from "../../styles/styles";
 
 import { HiMenu } from "react-icons/hi";
+
+const notifications = [
+  {
+    id: 1,
+    message: "New order received",
+    time: "2 minutes ago",
+  },
+  {
+    id: 2,
+    message: "Order #1234 has been delivered",
+    time: "10 minutes ago",
+  },
+];
 
 function DeliveryNavBar({ sections }) {
   return (
@@ -40,6 +54,7 @@ function DeliveryNavBar({ sections }) {
         </ul>
       </div>
       <div className="navbar-end gap-3">
+        <NotificationsButton notifications={notifications} />
         <ProfileButton/>
         <ThemeButton />
       </div>

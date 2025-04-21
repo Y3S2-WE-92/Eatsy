@@ -4,7 +4,8 @@ import LandingNavbar from "./Navbars/LandingNavbar";
 import RestaurantLandingNavbar from "./Navbars/RestaurantLandingNavbar";
 import DeliveryLandingNavbar from "./Navbars/DeliveryLandingNavbar";
 
-import DeliveryNavBar from "./BottomNavbars/DeliveryNavBar";
+import DeliveryNavBar from "./UserNavbars/DeliveryNavBar";
+import RestaurantNavbar from "./UserNavbars/RestaurantNavbar";
 
 import RestaurantLogin from "./Forms/Auth/RestaurantLogin";
 import DeliveryLogin from "./Forms/Auth/DeliveryLogin";
@@ -14,6 +15,7 @@ import DeliveryReg from "./Forms/Registration/DeliveryReg";
 import ThemeButton from "./Buttons/ThemeButton";
 import CloseButton from "./Buttons/CloseButton";
 import ProfileButton from "./Buttons/ProfileButton";
+import NotificationsButton from "./Buttons/NotificationsButton";
 
 import Footer from "./Footer/Footer";
 
@@ -27,6 +29,7 @@ export {
 
   //Bottom Navbars
   DeliveryNavBar,
+  RestaurantNavbar,
 
   //Forms
   RestaurantLogin,
@@ -37,6 +40,8 @@ export {
   //Buttons
   ThemeButton,
   CloseButton,
+  ProfileButton,
+  NotificationsButton,
 
   //Common
   Footer,

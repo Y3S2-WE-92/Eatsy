@@ -1,10 +1,11 @@
 import React from "react";
 import ThemeButton from "../Buttons/ThemeButton";
 import { Link } from "react-router-dom";
+import { styles } from "../../styles/styles";
 
 function LandingNavbar() {
   return (
-    <div className="navbar bg-base-100">
+    <div className={`${styles.paddingX} navbar bg-base-100`}>
       <div className="flex-1 btn-group">
         <Link to={"/for-restaurant"}>
           <button className="btn btn-ghost text-error border border-error rounded-l-full">
