@@ -1,5 +1,5 @@
 const axios = require('axios');
-const Delivery = require('../models/Delivery');
+const Delivery = require('../models/delivery.model');
 const { sendSMS, sendEmail } = require('../services/notification.service');
 const ORDER_SERVICE_URL = process.env.ORDER_SERVICE_URL || 'http://localhost:4002';
 const USER_SERVICE_URL = process.env.USER_SERVICE_URL || 'http://localhost:4000';

@@ -1,5 +1,5 @@
 const axios = require('axios');
-const Delivery = require('../models/Delivery');
+const Delivery = require('../models/delivery.model');
 
 module.exports = (io) => {
 io.on('connection', (socket) => {
