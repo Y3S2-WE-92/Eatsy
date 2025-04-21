@@ -15,7 +15,8 @@ import ThemeButton from "./Buttons/ThemeButton";
 import CloseButton from "./Buttons/CloseButton";
 import ProfileButton from "./Buttons/ProfileButton";
 import NotificationsButton from "./Buttons/NotificationsButton";
-import SeeMoreButton from "./Buttons/SeemoreButton";
+import SeeMoreButton from "./Buttons/SeeMoreButton";
+import LikeButton from "./Buttons/Customer/LikeButton";
 
 import RestaurantCard from "./Cards/Customer/RestaurantCard";
 
@@ -47,6 +48,7 @@ export {
   ProfileButton,
   NotificationsButton,
   SeeMoreButton,
+  LikeButton,
 
   //Cards
   RestaurantCard,
