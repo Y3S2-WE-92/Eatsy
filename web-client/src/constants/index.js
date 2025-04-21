@@ -20,6 +20,7 @@ export const featuredRestaurants = [
   {
     id: 1,
     name: "Restaurant 1",
+    description: "A great place for burgers and pizza. Try our sushi too!",
     image:
       "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D",
     deliveryFee: 100,
@@ -34,6 +35,7 @@ export const featuredRestaurants = [
   {
     id: 2,
     name: "Restaurant 2",
+    description: "Fresh salads and delicious desserts.",
     image:
       "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D",
     deliveryFee: 150,
