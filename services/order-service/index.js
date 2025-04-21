@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const orderRoutes = require("./routes/order.routes");
+const deliveryOrderRoutes = require("./routes/delivery.order.route");
 
 if (process.env.NODE_ENV === 'production') {
   dotenv.config({ path: '.env.production' });
@@ -24,6 +25,7 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api/order", orderRoutes);
+app.use("/api/delivery/order", deliveryOrderRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -34,7 +36,7 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3003;
 app.listen(PORT, () => {
   console.log(`Order Service running on port ${PORT}`);
 });

@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 // Import routes
 const registerRoutes = require("./routes/register.route");
 const authRoutes = require("./routes/auth.route");
+const deliveryPersonRoutes = require("./routes/deliveryPersonRoutes");
 
 // Load environment variables
 if (process.env.NODE_ENV === 'production') {
@@ -15,14 +16,14 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 
 // Middlewares
 app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));
 
@@ -37,6 +38,7 @@ app.get('/api/health', (req, res) => {
 
 app.use("/api/register", registerRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/delivery-person", deliveryPersonRoutes);
 
 // Start server
 app.listen(PORT, () => {

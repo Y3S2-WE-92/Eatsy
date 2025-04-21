@@ -1,25 +1,26 @@
-const Driver = require('../models/driver.model');
-const Order = require('../models/order.model'); // Correct import from delivery-service
+const axios = require('axios');
+const Delivery = require('../models/Delivery');
 const { sendSMS, sendEmail } = require('../services/notification.service');
+const ORDER_SERVICE_URL = process.env.ORDER_SERVICE_URL || 'http://localhost:4002';
+const USER_SERVICE_URL = process.env.USER_SERVICE_URL || 'http://localhost:4000';
 
-exports.assignDriver = async (req, res) => {
+exports.assignDeliveryPerson = async (req, res) => {
   try {
-    const { id, restaurantId, customerId, deliveryAddress, status } = req.body; // Expect full order details
-    console.log('Assigning driver for order ID:', id);
+    const { id, restaurantId, customerId, deliveryAddress, status } = req.body;
+    console.log('Assigning delivery person for order ID:', id);
 
-    // Check if order exists, create if not
-    let order = await Order.findById(id);
-    if (!order) {
-      console.log('Order not found, creating new order in deliveryDB');
-      order = new Order({
-        _id: id,
-        restaurantId,
-        customerId,
-        deliveryAddress,
-        status: status || 'pending'
+    // Fetch order from Order Service
+    console.log('Fetching order from Order Service...', req.body);
+    let order;
+    try {
+      const response = await axios.get(`${ORDER_SERVICE_URL}/api/delivery/order/${id}`, {
+        // headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` }
       });
-      await order.save();
-      console.log('New order created:', id);
+      order = response.data;
+      console.log('Fetched order:', order);
+    } catch (error) {
+      console.log('Order not found:', error.message);
+      return res.status(404).json({ error: 'Order not found' });
     }
 
     if (order.status !== 'pending') {
@@ -27,59 +28,102 @@ exports.assignDriver = async (req, res) => {
       return res.status(400).json({ error: 'Invalid order' });
     }
 
-    console.log('Finding available drivers near the delivery address');
-    const drivers = await Driver.find({
-      available: true,
-      currentOrder: null,
-      location: {
-        $near: {
-          $geometry: order.deliveryAddress.location,
-          $maxDistance: 1000000 // 10km
-        }
-      }
-    }).limit(1);
-
-    if (!drivers.length) {
-      console.log('No available drivers found');
-      return res.status(404).json({ error: 'No available drivers' });
+    // Find available delivery person from User Service
+    const { coordinates } = deliveryAddress.location;
+  let deliveryPersons;
+    try {
+      const response = await axios.get(
+        `${USER_SERVICE_URL}/api/delivery-person/nearby?longitude=${coordinates[0]}&latitude=${coordinates[1]}`,
+        // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
+      );
+      deliveryPersons = response.data;
+    } catch (error) {
+      console.log('Error fetching delivery persons:', error.message);
+      return res.status(500).json({ error: 'Failed to find delivery persons' });
     }
 
-    const driver = drivers[0];
-    order.driverId = driver._id;
-    order.status = 'assigned';
-    driver.currentOrder = order._id;
-    driver.available = false;
+    if (!deliveryPersons.length) {
+      console.log('No available delivery persons found');
+      return res.status(404).json({ error: 'No available delivery persons' });
+    }
 
-    await order.save();
-    console.log('Order updated with driver assignment');
-    await driver.save();
-    console.log('Driver updated with current order');
+    const deliveryPerson = deliveryPersons[0];
 
-    // Send notification to driver
-    // await sendSMS(driver.phone, `New order assigned: ${id}. Pick up at ${order.deliveryAddress.address}`);
-    // console.log('SMS notification sent to driver');
-    // await sendEmail(driver.email, 'New Delivery Assignment', `You have been assigned order ${id}.`);
-    // console.log('Email notification sent to driver');
+    // Create Delivery document
+    const delivery = new Delivery({
+      orderId: id,
+      deliveryPersonId: deliveryPerson._id,
+      restaurantId,
+      customerId,
+      deliveryAddress,
+      status: 'assigned'
+    });
+    await delivery.save();
+    console.log('Delivery document created:', delivery._id);
 
-    res.json({ message: 'Driver assigned', driverId: driver._id });
+    // Update delivery person in User Service
+    try {
+      await axios.put(
+        `${USER_SERVICE_URL}/api/delivery-person/${deliveryPerson._id}`,
+        { available: false, currentOrder: id },
+        // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
+      );
+    } catch (error) {
+      console.error('Failed to update delivery person:', error.message);
+      await Delivery.deleteOne({ _id: delivery._id });
+      return res.status(500).json({ error: 'Failed to assign delivery person' });
+    }
+
+    // Update order status in Order Service
+    try {
+      await axios.put(
+        `${ORDER_SERVICE_URL}/api/delivery/order/${id}/status`,
+        { status: 'assigned' },
+        // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
+      );
+    } catch (error) {
+      console.error('Failed to update order status:', error.message);
+    }
+
+    // // Send notifications
+    // await sendSMS(deliveryPerson.telephone, `New order assigned: ${id}. Pick up at ${deliveryAddress.address}`);
+    // await sendEmail(deliveryPerson.email, 'New Delivery Assignment', `Assigned order ${id}.`);
+
+    res.json({ message: 'Delivery person assigned', deliveryPersonId: deliveryPerson._id, deliveryId: delivery._id });
   } catch (error) {
-    console.error('Error in assignDriver:', error);
+    console.error('Error in assignDeliveryPerson:', error);
     res.status(500).json({ error: error.message });
   }
 };
 
 exports.getDeliveryStatus = async (req, res) => {
-  console.log('getDeliveryStatus called with params:', req.params);
   try {
     const { id } = req.params;
-    const order = await Order.findById(id).populate('driverId', 'name location');
-    if (!order) {
-      console.log('Order not found');
-      return res.status(404).json({ error: 'Order not found' });
+    const delivery = await Delivery.findOne({ orderId: id });
+    if (!delivery) {
+      return res.status(404).json({ error: 'Delivery not found' });
     }
+
+    // Fetch delivery person details from User Service
+    let deliveryPerson;
+    try {
+      const response = await axios.get(
+        `${USER_SERVICE_URL}/api/delivery-person/${delivery.deliveryPersonId}`,
+        // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
+      );
+      deliveryPerson = response.data;
+    } catch (error) {
+      console.log('Error fetching delivery person:', error.message);
+      deliveryPerson = null;
+    }
+
     res.json({
-      status: order.status,
-      driver: order.driverId ? { name: order.driverId.name, location: order.driverId.location } : null
+      status: delivery.status,
+      deliveryPerson: deliveryPerson ? {
+        name: deliveryPerson.name,
+        location: deliveryPerson.location,
+        lastUpdated: deliveryPerson.updatedAt
+      } : null
     });
   } catch (error) {
     console.error('Error in getDeliveryStatus:', error);
@@ -88,29 +132,46 @@ exports.getDeliveryStatus = async (req, res) => {
 };
 
 exports.updateDeliveryStatus = async (req, res) => {
-  console.log('updateDeliveryStatus called with params:', req.params, 'and body:', req.body);
   try {
-    const { id } = req.params;
+    const { id } = req.params; // Use id from request parameters
     const { status } = req.body;
-    console.log('Fetching order with id:', id);
-    const order = await Order.findById(id);
-    if (!order) {
-      console.log('Unauthorized or order not found');
-      return res.status(403).json({ error: 'Unauthorized' });
+    const delivery = await Delivery.findOne({ orderId: id });
+    if (!delivery) {
+      return res.status(404).json({ error: 'Delivery not found' }); // Corrected error message
     }
 
-    order.status = status;
-    console.log('Order status updated to:', status);
+    delivery.status = status;
     if (status === 'delivered') {
-      const driver = await Driver.findById(order.driverId);
-      driver.currentOrder = null;
-      driver.available = true;
-      await driver.save();
-      console.log('Driver marked as available');
+      try {
+        await axios.put(
+          `${USER_SERVICE_URL}/api/delivery-person/${delivery.deliveryPersonId}`,
+          { available: true, currentOrder: null },
+          // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
+        );
+      } catch (error) {
+        console.error('Failed to update delivery person:', error.message);
+      }
     }
 
-    await order.save();
-    console.log('Order saved with updated status');
+    await delivery.save();
+
+    // Update order status in Order Service
+    try {
+      await axios.put(
+        `${ORDER_SERVICE_URL}/api/delivery/order/${id}/status`,
+        { status },
+        // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
+      );
+    } catch (error) {
+      console.error('Failed to update order status:', error.message);
+    }
+
+    // Emit status update via WebSocket
+    if (req.app.get('io')) {
+      const io = req.app.get('io');
+      io.to(id).emit('deliveryStatusUpdate', { orderId: id, status });
+    }
+
     res.json({ message: 'Status updated' });
   } catch (error) {
     console.error('Error in updateDeliveryStatus:', error);
@@ -118,57 +179,50 @@ exports.updateDeliveryStatus = async (req, res) => {
   }
 };
 
-exports.getDriverTasks = async (req, res) => {
-    console.log('getDriverTasks called with params:', req.params);
-    try {
-      const { driverId } = req.params;
-      if (driverId !== req.user.id) {
-        console.log('Unauthorized access by driverId:', req.user.id);
-        return res.status(403).json({ error: 'Unauthorized' });
-      }
-      console.log('Fetching tasks for driverId:', driverId);
-      const orders = await Order.find({ driverId, status: { $ne: 'delivered' } });
-      console.log('Driver tasks fetched:', orders);
-      res.json(orders);
-    } catch (error) {
-      console.error('Error in getDriverTasks:', error);
-      res.status(500).json({ error: error.message });
+exports.getDeliveryPersonTasks = async (req, res) => {
+  try {
+    const { deliveryPersonId } = req.params;
+    if (deliveryPersonId !== req.user.id) {
+      return res.status(403).json({ error: 'Unauthorized' });
     }
-  };
-  
-  exports.updateDriverLocation = async (req, res) => {
-    console.log('updateDriverLocation called with params:', req.params, 'and body:', req.body);
-    try {
-      const { driverId } = req.params;
-      const { location } = req.body; // Expect { type: 'Point', coordinates: [longitude, latitude] }
-  
-      // Validate authentication
-      if (driverId !== req.user.id) {
-        console.log('Unauthorized access by driverId:', req.user.id);
-        return res.status(403).json({ error: 'Unauthorized' });
-      }
-  
-      // Validate location format
-      if (!location || location.type !== 'Point' || !Array.isArray(location.coordinates) || location.coordinates.length !== 2) {
-        console.log('Invalid location format');
-        return res.status(400).json({ error: 'Invalid location format' });
-      }
-  
-      // Update driver's location
-      const driver = await Driver.findById(driverId);
-      if (!driver) {
-        console.log('Driver not found');
-        return res.status(404).json({ error: 'Driver not found' });
-      }
-  
-      driver.location = location;
-      driver.updatedAt = new Date(); // Track when location was last updated
-      await driver.save();
-      console.log('Driver location updated:', location);
-  
-      res.json({ message: 'Location updated', location });
-    } catch (error) {
-      console.error('Error in updateDriverLocation:', error);
-      res.status(500).json({ error: error.message });
+    const deliveries = await Delivery.find({ deliveryPersonId, status: { $ne: 'delivered' } });
+    res.json(deliveries);
+  } catch (error) {
+    console.error('Error in getDeliveryPersonTasks:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.updateDeliveryPersonLocation = async (req, res) => {
+  try {
+    const { deliveryPersonId } = req.params;
+    const { location } = req.body;
+    if (deliveryPersonId !== req.user.id) {
+      return res.status(403).json({ error: 'Unauthorized' });
     }
-  };
+    if (!location || location.type !== 'Point' || !Array.isArray(location.coordinates) || location.coordinates.length !== 2) {
+      return res.status(400).json({ error: 'Invalid location format' });
+    }
+
+    // Update location in User Service
+    try {
+      await axios.put(
+        `${USER_SERVICE_URL}/api/delivery-person/${deliveryPersonId}`,
+        { location },
+        { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
+      );
+    } catch (error) {
+      console.error('Error updating delivery person location:', error.message);
+      return res.status(500).json({ error: 'Failed to update location' });
+    }
+
+    // Emit location update via WebSocket (handled by socket/index.js)
+    // Note: WebSocket event is triggered by client-side socket.emit('updateDeliveryPersonLocation')
+    // This ensures consistency between HTTP and WebSocket updates
+
+    res.json({ message: 'Location updated', location });
+  } catch (error) {
+    console.error('Error in updateDeliveryPersonLocation:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
