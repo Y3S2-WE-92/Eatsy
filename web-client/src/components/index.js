@@ -19,11 +19,15 @@ import SeeMoreButton from "./Buttons/SeeMoreButton";
 import LikeButton from "./Buttons/Customer/LikeButton";
 
 import RestaurantCard from "./Cards/Customer/RestaurantCard";
+import FoodItemCard from "./Cards/Customer/FoodItemCard";
 
 import Footer from "./Footer/Footer";
 import ThemeLogo from "./Logos/ThemeLogo";
 import ThemeTextLogo from "./Logos/ThemeTextLogo";
 import ComponentHealth from "./Cards/ComponentHealth";
+
+import ShoppingCartButton from "./ShoppingCart/ShoppingCartButton";
+import Counter from "./ShoppingCart/Counter";
 
 export {
   //Navbars
@@ -52,10 +56,15 @@ export {
 
   //Cards
   RestaurantCard,
+  FoodItemCard,
 
   //Common
   Footer,
   ThemeLogo,
   ThemeTextLogo,
   ComponentHealth,
+
+  //Shopping Cart
+  ShoppingCartButton,
+  Counter
 };

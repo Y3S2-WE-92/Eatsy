@@ -3,8 +3,7 @@ import { FaLocationArrow } from "react-icons/fa6";
 import { IoSearchSharp } from "react-icons/io5";
 import { styles } from "../../styles/styles";
 
-import ShoppingCartButton from "../../components/ShoppingCart/ShoppingCartButton";
-import { RestaurantCard, SeeMoreButton } from "../../components";
+import { RestaurantCard, SeeMoreButton, ShoppingCartButton } from "../../components";
 
 import { featuredRestaurants, foodCategories } from "../../constants";
 
@@ -25,7 +24,7 @@ function Home() {
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full"
+            className="dropdown-content menu p-2 shadow bg-base-300 mt-2 rounded-box w-full"
           >
             <li>
               <a>Location 1</a>
@@ -61,7 +60,7 @@ function Home() {
           ))}
         </div>
 
-        <div className="card w-full rounded-none border-t border-t-accent/50">
+        <div className="card w-full rounded-none">
           <div className="card-body">
             <div className="card-header flex flex-row justify-between items-center">
               <h2 className="card-title">Featured Restaurants</h2>
