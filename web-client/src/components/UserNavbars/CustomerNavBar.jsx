@@ -33,7 +33,7 @@ function CustomerNavBar({ sections = [] }) {
           </ul>
         </div>
 
-        <ul className="menu menu-horizontal px-1 gap-2">
+        <ul className="menu menu-horizontal px-1 gap-2 hidden lg:flex">
           {sections.map((section, index) => (
             <li key={index}>
               <Link to={section.path}>{section.name}</Link>
@@ -43,7 +43,7 @@ function CustomerNavBar({ sections = [] }) {
       </div>
 
       {/* Center: Horizontal Menu (only on lg and up) */}
-      <div className="navbar-center hidden lg:flex">
+      <div className="navbar-center">
         {/* Logo */}
         <Link to={"/customer/"} className="btn btn-ghost text-lg">
           <ThemeTextLogo style="w-12 md:w-16" />
