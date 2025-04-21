@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { userAPI } from "../services";
 import { jwtDecode } from "jwt-decode";
+import { useToast } from "../utils/alert-utils/ToastUtil";
 
 function Login() {
+  const toast = useToast();
   const navigate = useNavigate();
-  
+
   const [loginData, setLoginData] = useState({
     username: "",
     password: "",
@@ -25,7 +27,7 @@ function Login() {
     e.preventDefault();
 
     if (!loginData.username || !loginData.password) {
-      alert("Please fill all fields");
+      toast.error("Please fill all fields");
       return;
     }
 
@@ -56,14 +58,12 @@ function Login() {
         );
 
         console.log("Login successful", response.data);
-        alert("Login successful!");
+        toast.success("Login successful");
         navigate("/admin-panel");
       }
     } catch (error) {
       console.error("Error logging in:", error);
-      alert(
-        error.response?.data?.message || "Error logging in. Please try again."
-      );
+      toast.error("Error logging in. Please try again.");
     }
   };
 
@@ -79,7 +79,10 @@ function Login() {
           <div className="text-xl mt-4 text-center font-bold mb-4">
             Admin Panel
           </div>
-          <form onSubmit={handleSubmit} className="form-control flex flex-col gap-2">
+          <form
+            onSubmit={handleSubmit}
+            className="form-control flex flex-col gap-2"
+          >
             <input
               type="text"
               name="username"
@@ -97,11 +100,7 @@ function Login() {
               value={loginData.password}
             />
             <div className="card-actions justify-end mt-3">
-              <button
-                className="btn btn-primary w-full"
-              >
-                Login
-              </button>
+              <button className="btn btn-primary w-full">Login</button>
             </div>
           </form>
         </div>

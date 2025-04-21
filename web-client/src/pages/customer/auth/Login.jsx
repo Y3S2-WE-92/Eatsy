@@ -4,8 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { userAPI } from "../../../services";
 import { jwtDecode } from "jwt-decode";
+import {useToast} from "../../../utils/alert-utils/ToastUtil";
 
 function Login() {
+  const toast = useToast();
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
     username: "",
@@ -24,7 +26,7 @@ function Login() {
     e.preventDefault();
 
     if (!loginData.username || !loginData.password) {
-      alert("Please fill all fields");
+      toast.error("Please fill all fields");
       return;
     }
 
@@ -55,14 +57,12 @@ function Login() {
         );
 
         console.log("Login successful", response.data);
-        alert("Login successful!");
+        toast.success("Login successful");
         navigate("/customer");
       }
     } catch (error) {
       console.error("Error logging in:", error);
-      alert(
-        error.response?.data?.message || "Error logging in. Please try again."
-      );
+      toast.error("Error logging in. Please try again.");
     }
   };
 

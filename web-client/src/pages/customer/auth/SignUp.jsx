@@ -3,8 +3,10 @@ import { ThemeButton, CloseButton, ThemeLogo } from "../../../components";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { userAPI } from "../../../services";
+import { useToast } from "../../../utils/alert-utils/ToastUtil";
 
 function SignUp() {
+  const toast = useToast();
   const navigate = useNavigate();
   const [signupData, setSignupData] = useState({
     name: "",
@@ -34,11 +36,11 @@ function SignUp() {
       !signupData.password ||
       !signupData.confirmPassword
     ) {
-      alert("Please fill all fields");
+      toast.error("Please fill all fields");
       return;
     }
     if (signupData.password !== signupData.confirmPassword) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -52,12 +54,16 @@ function SignUp() {
       });
       if (response.status === 201) {
         console.log("Sign up successful", response.data);
-        alert("Sign up successful!");
+        toast.success("Sign up successful");
         navigate("/auth/login");
       }
     } catch (error) {
       console.error("Error signing up:", error);
-      alert("Error signing up. Please try again.");
+      if (error.response && error.response.status === 400) {
+        toast.error("Username already exists");
+      } else {
+        toast.error("Error signing up. Please try again.");
+      }
     }
   };
 
