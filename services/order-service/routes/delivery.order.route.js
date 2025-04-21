@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const orderController = require('../controllers/order.controller');
+const orderController = require('../controllers/delivery.order.controller');
 const authMiddleware = require('../middleware/auth');
 
 router.post(
@@ -22,6 +22,16 @@ router.get(
     '/customer/:id', 
     // authMiddleware('customer'), 
     orderController.getCustomerOrders
+);
+router.put('/:id/status', 
+    // authMiddleware('admin', 'delivery'), 
+    orderController.updateOrderStatus
+);
+
+router.get(
+    '/:id', 
+    // authMiddleware('customer', 'restaurant'), 
+    orderController.getOrderById
 );
 
 

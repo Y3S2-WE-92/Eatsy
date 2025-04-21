@@ -3,32 +3,24 @@ const router = express.Router();
 const deliveryController = require('../controllers/delivery.controller');
 const authMiddleware = require('../middleware/auth');
 
-router.post(
-    '/assign', 
+router.post('/assign', 
     // authMiddleware('admin'), 
-    deliveryController.assignDriver
+    deliveryController.assignDeliveryPerson
 );
-router.get(
-    '/:id/status', 
-    // authMiddleware('customer', 'driver'), 
+router.get('/:id/status', 
+    // authMiddleware('customer', 'deliveryPerson'), 
     deliveryController.getDeliveryStatus
 );
-router.put(
-    '/:id/status', 
-    // authMiddleware('driver'), 
-    deliveryController.updateDeliveryStatus
+router.put('/:id/status', 
+    // authMiddleware('deliveryPerson'), 
+    deliveryController.updateDeliveryStatus);
+router.get('/deliveryPerson/:deliveryPersonId/tasks', 
+    // authMiddleware('deliveryPerson'), 
+    deliveryController.getDeliveryPersonTasks
 );
-router.get(
-    '/driver/:driverId/tasks', 
-    // authMiddleware('driver'), 
-    deliveryController.getDriverTasks
+router.put('/deliveryPerson/:deliveryPersonId/location', 
+    // authMiddleware('deliveryPerson'), 
+    deliveryController.updateDeliveryPersonLocation
 );
-
-router.put(
-    '/driver/:driverId/location', 
-    // authMiddleware('driver'), 
-    deliveryController.updateDriverLocation
-);
-
 
 module.exports = router;

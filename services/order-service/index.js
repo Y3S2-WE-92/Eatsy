@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const orderRoutes = require("./routes/order.routes");
+const deliveryOrderRoutes = require("./routes/delivery.order.route");
 
 if (process.env.NODE_ENV === 'production') {
   dotenv.config({ path: '.env.production' });
@@ -24,6 +25,7 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api/order", orderRoutes);
+app.use("/api/delivery/order", deliveryOrderRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)

@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 // Import routes
 const registerRoutes = require("./routes/register.route");
 const authRoutes = require("./routes/auth.route");
+const deliveryPersonRoutes = require("./routes/deliveryPersonRoutes");
 
 // Load environment variables
 if (process.env.NODE_ENV === 'production') {
@@ -37,6 +38,7 @@ app.get('/api/health', (req, res) => {
 
 app.use("/api/register", registerRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/delivery-person", deliveryPersonRoutes);
 
 // Start server
 app.listen(PORT, () => {
