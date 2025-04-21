@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { formatCurrency } from "../../../utils/format-utils/CurrencyUtil";
 
 function RestaurantCard({ restaurant }) {
   return (
@@ -17,7 +18,7 @@ function RestaurantCard({ restaurant }) {
         </figure>
         <div className="card-body">
           <h2 className="card-title">{restaurant.name}</h2>
-          <p>Delivery Fee: LKR {restaurant.deliveryFee.toFixed(2)}</p>
+          <p>Delivery Fee: {formatCurrency(restaurant.deliveryFee)}</p>
           <p>Rating: {restaurant.rating}</p>
           <p>Delivery Time: {restaurant.deliveryTime}</p>
         </div>
