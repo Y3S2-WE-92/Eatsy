@@ -3,7 +3,6 @@ import ThemeButton from "../Buttons/ThemeButton";
 import ThemeTextLogo from "../Logos/ThemeTextLogo";
 import ProfileButton from "../Buttons/ProfileButton";
 import NotificationsButton from "../Buttons/NotificationsButton";
-import ShoppingCartButton from "../ShoppingCart/ShoppingCartButton";
 import { Link } from "react-router-dom";
 import { styles } from "../../styles/styles";
 import { HiMenu } from "react-icons/hi";
@@ -15,7 +14,7 @@ const notifications = [
 
 function CustomerNavBar({ sections = [] }) {
   return (
-    <div className={`${styles.paddingX} navbar bg-base-300 shadow-sm`}>
+    <div className={`${styles.paddingX} navbar bg-base-300 shadow-sm sticky top-0 z-50`}>
       {/* Left: Dropdown on Mobile */}
       <div className="navbar-start">
         <div className="dropdown">
@@ -34,14 +33,6 @@ function CustomerNavBar({ sections = [] }) {
           </ul>
         </div>
 
-        {/* Logo */}
-        <Link to={"/customer/"} className="btn btn-ghost text-lg">
-          <ThemeTextLogo style="w-12 md:w-16" />
-        </Link>
-      </div>
-
-      {/* Center: Horizontal Menu (only on lg and up) */}
-      <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 gap-2">
           {sections.map((section, index) => (
             <li key={index}>
@@ -51,9 +42,16 @@ function CustomerNavBar({ sections = [] }) {
         </ul>
       </div>
 
+      {/* Center: Horizontal Menu (only on lg and up) */}
+      <div className="navbar-center hidden lg:flex">
+        {/* Logo */}
+        <Link to={"/customer/"} className="btn btn-ghost text-lg">
+          <ThemeTextLogo style="w-12 md:w-16" />
+        </Link>
+      </div>
+
       {/* Right: Buttons */}
       <div className="navbar-end gap-3">
-        <ShoppingCartButton />
         <NotificationsButton notifications={notifications} />
         <ProfileButton />
         <ThemeButton />

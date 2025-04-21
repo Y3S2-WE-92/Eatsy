@@ -96,3 +96,15 @@ input:focus {
 body {
   font-family: "UberMove", sans-serif;
 }
+
+.search {
+  background-color: transparent;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.search:focus {
+  outline: none;
+  border: none;
+  background-color: transparent;
+}

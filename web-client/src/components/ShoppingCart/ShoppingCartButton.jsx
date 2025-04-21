@@ -24,7 +24,7 @@ function ShoppingCartButton() {
       </button>
       <div
         tabIndex={0}
-        className="card card-compact dropdown-content bg-base-100 z-1 mt-3 w-52 shadow"
+        className="card card-compact dropdown-content bg-base-300 z-1 mt-4 w-52 shadow"
       >
         <div className="card-body">
           <span className="text-lg font-bold">8 Items</span>
