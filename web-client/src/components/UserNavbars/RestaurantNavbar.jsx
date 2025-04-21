@@ -21,7 +21,7 @@ const notifications = [
   },
 ]
 
-function RestaurantNavbar({ sections }) {
+function RestaurantNavbar({ sections=[] }) {
   return (
     <div className={`${styles.paddingX} navbar bg-base-300 shadow-sm`}>
       <div className="navbar-start">
@@ -40,7 +40,7 @@ function RestaurantNavbar({ sections }) {
             ))}
           </ul>
         </div>
-        <Link to={"/delivery/"} className="btn btn-ghost text-sm lg:text-lg">
+        <Link to={"/restaurant/"} className="btn btn-ghost text-sm lg:text-lg">
           <ThemeTextLogo style="w-12 md:w-16" />| <span className="text-error font-bold">Restaurant</span>
         </Link>
       </div>

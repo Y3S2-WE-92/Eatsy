@@ -21,7 +21,7 @@ const notifications = [
   },
 ];
 
-function DeliveryNavBar({ sections }) {
+function DeliveryNavBar({ sections=[] }) {
   return (
     <div className={`${styles.paddingX} navbar bg-base-300 shadow-sm`}>
       <div className="navbar-start">
