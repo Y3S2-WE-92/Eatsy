@@ -123,9 +123,9 @@ function Home() {
           <div className="card-body">
             <div className="card-header flex flex-row justify-between items-center">
               <div className="flex flex-row items-center justify-center gap-2">
-                <div className="card-title">Featured Restaurants</div>
+                <div className="card-title truncate">Featured Restaurants</div>
                 <span className="text-xs badge badge-soft badge-primary">
-                  {filteredRestaurants.length} Results
+                  {filteredRestaurants.length} <span className="hidden lg:inline-flex text-sm">Results</span>
                 </span>
                 {/* Clear Filters Button */}
                 {(searchQuery || selectedCategory || selectedLocation) && (
@@ -137,7 +137,7 @@ function Home() {
                     }
                   >
                     <FaFilterCircleXmark />
-                    <span>Clear Filters</span>
+                    <span className="hidden lg:inline-flex text-sm">Clear Filters</span>
                   </button>
                 )}
               </div>
