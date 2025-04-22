@@ -82,13 +82,13 @@
   height: 100vh;
 }
 
-input {
+input:not([type="checkbox"]) {
   border-radius: var(--radius-field);
   background-color: var(--color-base-100);
   color: var(--color-base-content);
 }
 
-input:focus {
+input:not([type="checkbox"]):focus {
   outline: none;
   border: var(--border) solid var(--color-primary);
 }
