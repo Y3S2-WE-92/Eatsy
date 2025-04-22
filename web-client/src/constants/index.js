@@ -243,3 +243,37 @@ export const featuredRestaurants = [
     ],
   },
 ];
+
+export const carts = [
+  {
+    id: 1,
+    restaurant: {
+      id: 1,
+      name: "Restaurant 1",
+      deliveryFee: 100,
+      rating: 4.5,
+      deliveryTime: "30-45 min",
+    },
+    items: [
+      { id: 1, name: "Item 1", quantity: 2, price: 100 },
+      { id: 2, name: "Item 2", quantity: 1, price: 200 },
+    ],
+  },
+  {
+    id: 2,
+    restaurant: {
+      id: 2,
+      name: "Restaurant 2",
+      deliveryFee: 200,
+      rating: 4.5,
+      deliveryTime: "30-45 min",
+    },
+    items: [
+      { id: 1, name: "Item 1", quantity: 1, price: 100 },
+      { id: 2, name: "Item 2", quantity: 2, price: 200 },
+      { id: 3, name: "Item 3", quantity: 1, price: 300 },
+      { id: 4, name: "Item 4", quantity: 1, price: 400 },
+      { id: 5, name: "Item 5", quantity: 1, price: 500 },
+    ],
+  },
+];

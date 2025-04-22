@@ -98,13 +98,20 @@ body {
 }
 
 .search {
-  background-color: transparent;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+  border-radius: 2rem;
+  border-color: var(--color-accent-100);
 }
 
 .search:focus {
   outline: none;
   border: none;
   background-color: transparent;
+}
+
+.glass {
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur( 4px );
+  -webkit-backdrop-filter: blur( 4px );
 }

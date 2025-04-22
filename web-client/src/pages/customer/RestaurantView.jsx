@@ -2,7 +2,13 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { featuredRestaurants } from "../../constants";
 import { styles } from "../../styles/styles";
-import { LikeButton, SeeMoreButton, FoodItemCard } from "../../components";
+import {
+  LikeButton,
+  SeeMoreButton,
+  FoodItemCard,
+  ShoppingCartButton,
+  CloseButton,
+} from "../../components";
 
 function RestaurantView() {
   const { id } = useParams();
@@ -20,9 +26,18 @@ function RestaurantView() {
 
   return (
     <div>
-      <div className="flex flex-col">
-        {/* Cover image */}
-        <img src={image} alt={name} className="w-full h-32 object-cover" />
+      <ShoppingCartButton />
+
+      <div className="flex flex-col p-0">
+        <div className="relative">
+          <div className="absolute p-4 z-10">
+            <CloseButton link="/customer" />
+          </div>
+          {/* Black Overlay */}
+          <div className="absolute glass top-0 left-0 w-full h-full"></div>
+          {/* Cover image */}
+          <img src={image} alt={name} className="w-full h-32 object-cover" />
+        </div>
         {/* Profile section */}
         <div
           className={`${styles.paddingX} flex flex-row items-center gap-4 py-4 bg-base-200`}
@@ -30,25 +45,21 @@ function RestaurantView() {
           <img
             src={image}
             alt={name}
-            className="w-30 h-30 rounded-full border-2 border-accent/30 object-cover"
+            className="w-20 h-20 md:w-30 md:h-30 rounded-full border-2 border-accent/30 object-cover"
           />
-          <div className="flex flex-col md:flex-row md:justify-between w-full">
+          <div className="flex flex-col md:flex-row md:justify-between w-full gap-2">
             <div className="flex flex-col">
               <h2 className="text-2xl font-bold">{name}</h2>
               <p className="text-sm text-gray-500">{description}</p>
             </div>
-          </div>
-          <div className="flex flex-row gap-8 w-full justify-end items-center">
-            <div className="flex flex-col gap-2 items-end">
-              <p className="text-sm text-gray-500">
-                Delivery Fee: LKR {deliveryFee.toFixed(2)}
-              </p>
-              <p className="text-sm text-gray-500">Rating: {rating}</p>
-              <p className="text-sm text-gray-500">
-                Delivery Time: {deliveryTime}
-              </p>
+            <div className="flex flex-row gap-8 w-full md:justify-end items-center">
+              <div className="flex flex-col md:gap-2 md:items-end text-sm text-gray-500">
+                <p>Delivery Fee: LKR {deliveryFee.toFixed(2)}</p>
+                <p>Rating: {rating}</p>
+                <p>Delivery Time: {deliveryTime}</p>
+              </div>
+              <LikeButton />
             </div>
-            <LikeButton />
           </div>
         </div>
         <div className="card w-full rounded-none">
@@ -60,8 +71,8 @@ function RestaurantView() {
               </div>
             </div>
             <div className="card-content flex flex-row gap-2 overflow-x-auto">
-              {restaurant.foodItems.map((item)=>(
-                <FoodItemCard item={item}/>
+              {restaurant.foodItems.map((item) => (
+                <FoodItemCard key={item.id} item={item} />
               ))}
             </div>
           </div>

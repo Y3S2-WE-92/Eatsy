@@ -11,12 +11,15 @@ import DeliveryLogin from "./Forms/Auth/DeliveryLogin";
 import RestaurantReg from "./Forms/Registration/RestaurantReg";
 import DeliveryReg from "./Forms/Registration/DeliveryReg";
 
+import PageTitle from "./PageComponents/PageTitle";
+
 import ThemeButton from "./Buttons/ThemeButton";
 import CloseButton from "./Buttons/CloseButton";
 import ProfileButton from "./Buttons/ProfileButton";
 import NotificationsButton from "./Buttons/NotificationsButton";
 import SeeMoreButton from "./Buttons/SeeMoreButton";
 import LikeButton from "./Buttons/Customer/LikeButton";
+import BackButton from "./Buttons/BackButton";
 
 import RestaurantCard from "./Cards/Customer/RestaurantCard";
 import FoodItemCard from "./Cards/Customer/FoodItemCard";
@@ -45,6 +48,9 @@ export {
   DeliveryLogin,
   RestaurantReg,
   DeliveryReg,
+
+  //Page Components
+  PageTitle,
   
   //Buttons
   ThemeButton,
@@ -53,6 +59,7 @@ export {
   NotificationsButton,
   SeeMoreButton,
   LikeButton,
+  BackButton,
 
   //Cards
   RestaurantCard,
