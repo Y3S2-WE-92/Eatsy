@@ -9,6 +9,8 @@ import {
   ShoppingCartButton,
   CloseButton,
 } from "../../components";
+import { useImageLoaded } from "../../utils/image-utils/useImageLoaded";
+import ImageLoader from "../../components/Loaders/ImageLoader";
 
 function RestaurantView() {
   const { id } = useParams();
@@ -24,6 +26,9 @@ function RestaurantView() {
   const { name, image, description, deliveryFee, rating, deliveryTime } =
     restaurant;
 
+  const isCoverImageLoaded = useImageLoaded(image);
+  const isProfileImageLoaded = useImageLoaded(image);
+
   return (
     <div>
       <ShoppingCartButton />
@@ -36,17 +41,25 @@ function RestaurantView() {
           {/* Black Overlay */}
           <div className="absolute glass top-0 left-0 w-full h-full"></div>
           {/* Cover image */}
-          <img src={image} alt={name} className="w-full h-32 object-cover" />
+          {isCoverImageLoaded ? (
+            <img src={image} alt={name} className="w-full h-32 object-cover" />
+          ) : (
+            <ImageLoader />
+          )}
         </div>
         {/* Profile section */}
         <div
           className={`${styles.paddingX} flex flex-row items-center gap-4 py-4 bg-base-200`}
         >
-          <img
-            src={image}
-            alt={name}
-            className="w-20 h-20 md:w-30 md:h-30 rounded-full border-2 border-accent/30 object-cover"
-          />
+          {isProfileImageLoaded ? (
+            <img
+              src={image}
+              alt={name}
+              className="w-20 h-20 md:w-30 md:h-30 rounded-full border-2 border-accent/30 object-cover"
+            />
+          ) : (
+            <ImageLoader />
+          )}
           <div className="flex flex-col md:flex-row md:justify-between w-full gap-2">
             <div className="flex flex-col">
               <h2 className="text-2xl font-bold">{name}</h2>
