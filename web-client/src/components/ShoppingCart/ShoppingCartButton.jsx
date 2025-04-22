@@ -30,7 +30,7 @@ function CartMenu({ onOpenModal }) {
 
 function ShoppingCartButton() {
   const location = useLocation();
-  const isCustomerRoot = location.pathname === "/customer/";
+  const isCustomerRoot = location.pathname === "/customer/" || location.pathname === "/customer";
   const [isViewAllCartsModalOpen, setIsViewAllCartsModalOpen] = useState(false);
 
   const handleOpenViewAllCartsModal = () => {
