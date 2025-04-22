@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function CloseButton({link}) {
   return (
-    <Link to={link} className="btn border border-error btn-ghost rounded-full hover:btn-error">
+    <Link to={link} className="btn btn-error btn-outline rounded-full hover:btn-error">
         <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
