@@ -4,6 +4,7 @@ import { CustomerNavBar } from '../../components';
 
 import Home from '../../pages/customer/Home';
 import RestaurantView from '../../pages/customer/RestaurantView';
+import Checkout from '../../pages/customer/Checkout';
 
 function CustomerLayout() {
   const sections = [
@@ -19,6 +20,8 @@ function CustomerLayout() {
         <Route path="/my-orders" element={<div>My Orders</div>} />
 
         <Route path="/restaurant-view/:id" element={<RestaurantView />} />
+
+        <Route path="/checkout/:cartId/:amount" element={<Checkout />} />
       </Routes>
     </div>
   )

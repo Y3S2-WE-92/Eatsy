@@ -2,20 +2,14 @@ import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import ShoppingCartModal from "./ShoppingCartModal";
 
-function ViewAllCartsModal({ carts }) {
+function ViewAllCartsModal({ carts, isOpen, onClose }) {
   const [selectedCart, setSelectedCart] = useState(null);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
-
-  const handleClose = () => {
-    const modal = document.getElementById("shopping-cart-view-modal");
-    modal.close();
-  };
 
   const handleViewCart = (cart) => {
     setSelectedCart(cart);
     setIsCartModalOpen(true);
-    const cartViewModal = document.getElementById("shopping-cart-view-modal");
-    cartViewModal.close();
+    onClose();
   };
 
   const handleCartModalClose = () => {
@@ -28,12 +22,13 @@ function ViewAllCartsModal({ carts }) {
       <dialog
         id="shopping-cart-view-modal"
         className="modal modal-bottom sm:modal-middle"
+        open={isOpen}
       >
         <div className="modal-box">
           <div className="flex flex-col">
             <div className="flex flex-row justify-between items-center mb-3">
               <h2 className="card-title">My Cart</h2>
-              <button className="btn" onClick={handleClose}>
+              <button className="btn" onClick={onClose}>
                 <IoClose className="text-lg" />
               </button>
             </div>

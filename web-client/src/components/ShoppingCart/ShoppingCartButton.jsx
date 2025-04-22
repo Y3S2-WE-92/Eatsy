@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import ViewAllCartsModal from "./ViewAllCartsModal";
 
@@ -13,18 +13,8 @@ const carts = [
       deliveryTime: "30-45 min",
     },
     items: [
-      {
-        id: 1,
-        name: "Item 1",
-        quantity: 2,
-        price: 100,
-      },
-      {
-        id: 2,
-        name: "Item 2",
-        quantity: 1,
-        price: 200,
-      },
+      { id: 1, name: "Item 1", quantity: 2, price: 100 },
+      { id: 2, name: "Item 2", quantity: 1, price: 200 },
     ],
   },
   {
@@ -37,40 +27,16 @@ const carts = [
       deliveryTime: "30-45 min",
     },
     items: [
-      {
-        id: 1,
-        name: "Item 1",
-        quantity: 1,
-        price: 100,
-      },
-      {
-        id: 2,
-        name: "Item 2",
-        quantity: 2,
-        price: 200,
-      },
-      {
-        id: 3,
-        name: "Item 3",
-        quantity: 1,
-        price: 300,
-      },
-      {
-        id: 4,
-        name: "Item 4",
-        quantity: 1,
-        price: 400,
-      },
-      {
-        id: 5,
-        name: "Item 5",
-        quantity: 1,
-        price: 500,
-      },
+      { id: 1, name: "Item 1", quantity: 1, price: 100 },
+      { id: 2, name: "Item 2", quantity: 2, price: 200 },
+      { id: 3, name: "Item 3", quantity: 1, price: 300 },
+      { id: 4, name: "Item 4", quantity: 1, price: 400 },
+      { id: 5, name: "Item 5", quantity: 1, price: 500 },
     ],
   },
 ];
-function CartMenu() {
+
+function CartMenu({ onOpenModal }) {
   return (
     <div
       tabIndex={0}
@@ -84,12 +50,7 @@ function CartMenu() {
           ))}
         </ul>
         <div className="card-actions">
-          <button
-            className="btn btn-primary btn-block"
-            onClick={() =>
-              document.getElementById("shopping-cart-view-modal").showModal()
-            }
-          >
+          <button className="btn btn-primary btn-block" onClick={onOpenModal}>
             View carts
           </button>
         </div>
@@ -101,6 +62,15 @@ function CartMenu() {
 function ShoppingCartButton() {
   const location = useLocation();
   const isCustomerRoot = location.pathname === "/customer/";
+  const [isViewAllCartsModalOpen, setIsViewAllCartsModalOpen] = useState(false);
+
+  const handleOpenViewAllCartsModal = () => {
+    setIsViewAllCartsModalOpen(true);
+  };
+
+  const handleCloseViewAllCartsModal = () => {
+    setIsViewAllCartsModalOpen(false);
+  };
 
   return (
     <div>
@@ -127,10 +97,9 @@ function ShoppingCartButton() {
               />
             </svg>
             <span className="hidden lg:inline-flex text-sm">My Carts</span>
-
             <div className="badge badge-xs badge-error indicator-menu">{carts.length}</div>
           </button>
-          <CartMenu />
+          <CartMenu onOpenModal={handleOpenViewAllCartsModal} />
         </div>
       ) : (
         // Floating Action Button
@@ -155,14 +124,17 @@ function ShoppingCartButton() {
                   d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                 />
               </svg>
-
               <div className="badge badge-sm badge-error indicator-item">{carts.length}</div>
             </div>
           </button>
-          <CartMenu />
+          <CartMenu onOpenModal={handleOpenViewAllCartsModal} />
         </div>
       )}
-      <ViewAllCartsModal carts={carts} />
+      <ViewAllCartsModal
+        carts={carts}
+        isOpen={isViewAllCartsModalOpen}
+        onClose={handleCloseViewAllCartsModal}
+      />
     </div>
   );
 }
