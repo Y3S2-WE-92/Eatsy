@@ -1,77 +1,160 @@
-import React from "react";
-import { FaLocationArrow } from "react-icons/fa6";
+// Home.jsx
+import React, { useState } from "react";
+import { FaLocationArrow, FaFilterCircleXmark } from "react-icons/fa6";
 import { IoSearchSharp } from "react-icons/io5";
 import { styles } from "../../styles/styles";
-
-import { RestaurantCard, SeeMoreButton, ShoppingCartButton } from "../../components";
-
+import {
+  RestaurantCard,
+  SeeMoreButton,
+  ShoppingCartButton,
+} from "../../components";
 import { featuredRestaurants, foodCategories } from "../../constants";
 
 function Home() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  // Filter restaurants based on search query and selected category
+  const filteredRestaurants = featuredRestaurants.filter((restaurant) => {
+    const matchesSearch =
+      restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      restaurant.description
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      restaurant.foodItems.some(
+        (item) =>
+          item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.category.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+    const matchesCategory = selectedCategory
+      ? restaurant.foodItems.some((item) => item.category === selectedCategory)
+      : true;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  // Handle category selection
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category === selectedCategory ? null : category);
+  };
+
+  // Handle location selection
+  const handleLocationSelect = (location) => {
+    setSelectedLocation(location);
+    // You might want to add logic to filter restaurants by location
+  };
+
+  // Clear all filters
+  const clearFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory(null);
+    setSelectedLocation(null);
+  };
+
   return (
-    <div className="flex flex-col gap-2">
-      <div className="relative flex flex-row p-2 gap-2 justify-center items-center sticky top-16 z-10">
-        {/* Select Delivery Location */}
-        <div className="dropdown dropdown-start">
-          <div
-            tabIndex={0}
-            className="btn btn-outline rounded-full bg-base-100"
-          >
-            <FaLocationArrow />
-            <span className="hidden lg:inline-flex text-sm">
-              Select Delivery Location
-            </span>
+    <div className={`${styles.paddingX} flex flex-col gap-2`}>
+      <div className="relative flex flex-col p-2 gap-2 justify-center items-center sticky top-18 z-10">
+        <div className="flex flex-row gap-2">
+          {/* Select Delivery Location */}
+          <div className="dropdown dropdown-start">
+            <div
+              tabIndex={0}
+              className="btn btn-outline rounded-full bg-base-100"
+            >
+              <FaLocationArrow />
+              <span className="hidden lg:inline-flex text-sm">
+                {selectedLocation || "Select Delivery Location"}
+              </span>
+            </div>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu p-2 shadow bg-base-300 mt-2 rounded-box max-w-sm"
+            >
+              {["Location 1", "Location 2", "Location 3"].map((location) => (
+                <li key={location}>
+                  <a onClick={() => handleLocationSelect(location)}>
+                    {location}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul
-            tabIndex={0}
-            className="dropdown-content menu p-2 shadow bg-base-300 mt-2 rounded-box max-w-sm"
-          >
-            <li>
-              <a>Location 1</a>
-            </li>
-            <li>
-              <a>Location 2</a>
-            </li>
-          </ul>
+          {/* Search Bar */}
+          <div className="search flex flex-row items-center border border-accent rounded-full md:w-lg pl-4">
+            <IoSearchSharp />
+            <input
+              type="text"
+              placeholder="Search for restaurants, foods, or drinks"
+              className="search input border-0 rounded-full"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          {/* Shopping Cart Button */}
+          <ShoppingCartButton />
         </div>
-        <div className="search flex flex-row items-center border border-accent rounded-full w-lg pl-4">
-          <IoSearchSharp />
-          <input
-            type="text"
-            placeholder="Search for restaurants, foods, or drinks"
-            className="search input w-full border-0 rounded-full"
-          />
-        </div>
-        {/* Shopping Cart Button */}
-        <ShoppingCartButton />
-      </div>
-      <div className="flex flex-col gap-2">
-        {/*Filter By Categories */}
+        {/* Filter By Categories */}
         <div
-          className={`${styles.paddingX} flex flex-row lg:justify-center bg-base-100 w-full rounded-box gap-6 p-2 overflow-x-auto`}
+          className={`${styles.paddingX} flex flex-row lg:justify-center bg-base-100 w-full rounded-box gap-4 py-4 overflow-x-auto`}
         >
           {foodCategories.map((category) => (
             <div key={category.id} className="flex flex-col items-center">
-              <button className="btn btn-ghost btn-circle btn-xl border border-accent/30">
+              <button
+                className={`btn btn-ghost bg-base-100 btn btn-circle btn-xl border ${
+                  selectedCategory === category.name
+                    ? "border-accent bg-base-300"
+                    : "border-accent/30"
+                }`}
+                onClick={() => handleCategoryClick(category.name)}
+              >
                 {category.icon}
               </button>
-              <span className="text-sm">{category.name}</span>
+              <span className="text-sm badge badge-soft mt-2">
+                {category.name}
+              </span>
             </div>
           ))}
         </div>
-
+      </div>
+      <div className="flex flex-col gap-2">
         <div className="card w-full rounded-none">
           <div className="card-body">
             <div className="card-header flex flex-row justify-between items-center">
-              <h2 className="card-title">Featured Restaurants</h2>
+              <div className="flex flex-row items-center justify-center gap-2">
+                <div className="card-title">Featured Restaurants</div>
+                <span className="text-xs badge badge-soft badge-primary">
+                  {filteredRestaurants.length} Results
+                </span>
+                {/* Clear Filters Button */}
+                {(searchQuery || selectedCategory || selectedLocation) && (
+                  <button
+                    className="btn btn-outline rounded-full bg-base-100 btn-xs"
+                    onClick={clearFilters}
+                    disabled={
+                      !searchQuery && !selectedCategory && !selectedLocation
+                    }
+                  >
+                    <FaFilterCircleXmark />
+                    <span>Clear Filters</span>
+                  </button>
+                )}
+              </div>
               <div className="card-actions">
                 <SeeMoreButton link="/products" />
               </div>
             </div>
             <div className="card-content flex flex-row gap-2 overflow-x-auto">
-              {featuredRestaurants.map((restaurant) => (
-                <RestaurantCard restaurant={restaurant} key={restaurant.id} />
-              ))}
+              {filteredRestaurants.length > 0 ? (
+                filteredRestaurants.map((restaurant) => (
+                  <RestaurantCard restaurant={restaurant} key={restaurant.id} />
+                ))
+              ) : (
+                <div className="text-center w-full py-4">
+                  No restaurants found matching your criteria.
+                </div>
+              )}
             </div>
           </div>
         </div>
