@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { featuredRestaurants } from "../../constants";
 import { styles } from "../../styles/styles";
-import { LikeButton, SeeMoreButton, FoodItemCard } from "../../components";
+import { LikeButton, SeeMoreButton, FoodItemCard, ShoppingCartButton } from "../../components";
 
 function RestaurantView() {
   const { id } = useParams();
@@ -20,6 +20,7 @@ function RestaurantView() {
 
   return (
     <div>
+    <ShoppingCartButton/>
       <div className="flex flex-col">
         {/* Cover image */}
         <img src={image} alt={name} className="w-full h-32 object-cover" />
