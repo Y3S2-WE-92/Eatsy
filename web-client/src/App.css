@@ -101,6 +101,7 @@ body {
   background-color: var(--color-base-100);
   color: var(--color-base-content);
   border-radius: 2rem;
+  border-color: var(--color-accent-100);
 }
 
 .search:focus {
