@@ -43,6 +43,9 @@ function ViewAllCartsModal({ carts }) {
                       >
                         View Cart
                       </button>
+                      <button className="btn btn-outline btn-error btn-block">
+                        Delete
+                      </button>
                     </div>
                   </button>
                 </div>
