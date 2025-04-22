@@ -20,6 +20,7 @@ import NotificationsButton from "./Buttons/NotificationsButton";
 import SeeMoreButton from "./Buttons/SeeMoreButton";
 import LikeButton from "./Buttons/Customer/LikeButton";
 import BackButton from "./Buttons/BackButton";
+import AvailabilityToggleButton from "./Buttons/Restaurant/AvailabilityToggleButton";
 
 import RestaurantCard from "./Cards/Customer/RestaurantCard";
 import FoodItemCard from "./Cards/Customer/FoodItemCard";
@@ -60,6 +61,7 @@ export {
   SeeMoreButton,
   LikeButton,
   BackButton,
+  AvailabilityToggleButton,
 
   //Cards
   RestaurantCard,
