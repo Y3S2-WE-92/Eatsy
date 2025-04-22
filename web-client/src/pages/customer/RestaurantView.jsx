@@ -7,6 +7,7 @@ import {
   SeeMoreButton,
   FoodItemCard,
   ShoppingCartButton,
+  CloseButton,
 } from "../../components";
 
 function RestaurantView() {
@@ -26,9 +27,17 @@ function RestaurantView() {
   return (
     <div>
       <ShoppingCartButton />
-      <div className="flex flex-col">
-        {/* Cover image */}
-        <img src={image} alt={name} className="w-full h-32 object-cover" />
+
+      <div className="flex flex-col p-0">
+        <div className="relative">
+          <div className="absolute p-4 z-10">
+            <CloseButton link="/customer" />
+          </div>
+          {/* Black Overlay */}
+          <div className="absolute glass top-0 left-0 w-full h-full"></div>
+          {/* Cover image */}
+          <img src={image} alt={name} className="w-full h-32 object-cover" />
+        </div>
         {/* Profile section */}
         <div
           className={`${styles.paddingX} flex flex-row items-center gap-4 py-4 bg-base-200`}
