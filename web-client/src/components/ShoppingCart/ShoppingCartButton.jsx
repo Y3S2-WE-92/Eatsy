@@ -98,7 +98,7 @@ function ShoppingCartButton() {
           <button
             tabIndex={0}
             role="button"
-            className="btn btn-ghost border border-accent rounded-full"
+            className="btn btn-outline rounded-full bg-base-100"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

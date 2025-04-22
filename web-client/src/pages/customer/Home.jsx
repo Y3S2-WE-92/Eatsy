@@ -12,10 +12,10 @@ function Home() {
     <div className="flex flex-col gap-2">
       <div className="relative flex flex-row p-2 gap-2 justify-center items-center sticky top-16 z-10">
         {/* Select Delivery Location */}
-        <div className="dropdown dropdown-end">
+        <div className="dropdown dropdown-start">
           <div
             tabIndex={0}
-            className="btn btn-ghost border border-accent rounded-full"
+            className="btn btn-outline rounded-full bg-base-100"
           >
             <FaLocationArrow />
             <span className="hidden lg:inline-flex text-sm">
@@ -24,7 +24,7 @@ function Home() {
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content menu p-2 shadow bg-base-300 mt-2 rounded-box w-full"
+            className="dropdown-content menu p-2 shadow bg-base-300 mt-2 rounded-box max-w-sm"
           >
             <li>
               <a>Location 1</a>
@@ -34,12 +34,12 @@ function Home() {
             </li>
           </ul>
         </div>
-        <div className="search flex flex-row items-center border border-accent rounded-full px-4 w-lg">
+        <div className="search flex flex-row items-center border border-accent rounded-full w-lg pl-4">
           <IoSearchSharp />
           <input
             type="text"
             placeholder="Search for restaurants, foods, or drinks"
-            className="search input w-full max-w-xs border-0"
+            className="search input w-full border-0 rounded-full"
           />
         </div>
         {/* Shopping Cart Button */}

@@ -98,9 +98,9 @@ body {
 }
 
 .search {
-  background-color: transparent;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+  border-radius: 2rem;
 }
 
 .search:focus {
