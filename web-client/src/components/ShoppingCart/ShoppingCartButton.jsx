@@ -55,6 +55,18 @@ const carts = [
         quantity: 1,
         price: 300,
       },
+      {
+        id: 4,
+        name: "Item 4",
+        quantity: 1,
+        price: 400,
+      },
+      {
+        id: 5,
+        name: "Item 5",
+        quantity: 1,
+        price: 500,
+      },
     ],
   },
 ];

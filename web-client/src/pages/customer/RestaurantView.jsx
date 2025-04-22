@@ -63,7 +63,7 @@ function RestaurantView() {
             </div>
             <div className="card-content flex flex-row gap-2 overflow-x-auto">
               {restaurant.foodItems.map((item) => (
-                <FoodItemCard item={item} />
+                <FoodItemCard key={item.id} item={item} />
               ))}
             </div>
           </div>

@@ -1,27 +1,46 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import Counter from "./Counter";
 import { formatCurrency } from "../../utils/format-utils/CurrencyUtil";
 
-function ShoppingCartModal({cart}) {
-  const handleClose = () => {
-    const modal = document.getElementById("shopping-cart-modal");
-    modal.close();
+function ShoppingCartModal({ cart, isOpen, onClose }) {
+  const [items, setItems] = useState(cart.items);
+
+  useEffect(() => {
+    setItems(cart.items);
+  }, [cart.items]);
+
+  const handleQuantityChange = (itemId, newQuantity) => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === itemId ? { ...item, quantity: newQuantity } : item
+      )
+    );
   };
+
+  const calculateSubtotal = () => {
+    return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  };
+
+  const calculateTotal = () => {
+    return calculateSubtotal() + cart.restaurant.deliveryFee;
+  };
+
   return (
     <dialog
       id="shopping-cart-modal"
       className="modal modal-bottom sm:modal-middle"
+      open={isOpen}
     >
       <div className="modal-box min-w-10/12 max-w-5xl">
         <div className="flex flex-col">
           <div className="flex flex-row justify-between items-center">
             <h2 className="card-title">{cart.restaurant.name}</h2>
-            <button className="btn" onClick={handleClose}>
+            <button className="btn" onClick={onClose}>
               <IoClose />
             </button>
           </div>
-          <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 mt-4">
+          <div className="overflow-x-auto overflow-y-auto rounded-box border border-base-content/5 bg-base-100 mt-4 max-h-96">
             <table className="table text-end">
               {/* head */}
               <thead>
@@ -33,33 +52,49 @@ function ShoppingCartModal({cart}) {
                 </tr>
               </thead>
               <tbody>
-              {cart.items.map((item) => (
+                {items.map((item) => (
                   <tr key={item.id}>
                     <td className="text-center">{item.name}</td>
-                    <td className="text-center"><Counter existingQty={item.quantity}/></td>
+                    <td className="text-center">
+                      <Counter
+                        existingQty={item.quantity}
+                        onQuantityChange={(newQty) =>
+                          handleQuantityChange(item.id, newQty)
+                        }
+                      />
+                    </td>
                     <td>{formatCurrency(item.price)}</td>
-                    <td>{formatCurrency(item.price)}</td>
+                    <td>{formatCurrency(item.price * item.quantity)}</td>
                   </tr>
                 ))}
               </tbody>
               <tfoot className="text-end">
-              <tr>
-                <td colSpan={3}>Subtotal</td>
-                <td>{formatCurrency(300)}</td>
-              </tr>
-              <tr>
-                <td colSpan={3}>Delivery Fee</td>
-                <td>+ {formatCurrency(cart.restaurant.deliveryFee)}</td>
-              </tr>
+                <tr>
+                  <td colSpan={3}>Subtotal</td>
+                  <td>{formatCurrency(calculateSubtotal())}</td>
+                </tr>
+                <tr>
+                  <td colSpan={3}>Delivery Fee</td>
+                  <td>+ {formatCurrency(cart.restaurant.deliveryFee)}</td>
+                </tr>
                 <tr>
                   <td colSpan={3}>Total</td>
-                  <td className="font-bold text-lg">{formatCurrency(400)}</td>
+                  <td className="font-bold text-lg">
+                    {formatCurrency(calculateTotal())}
+                  </td>
                 </tr>
               </tfoot>
             </table>
           </div>
           <div className="modal-action">
-            <button className="btn btn-primary">Checkout</button>
+          <div className="flex flex-row gap-8 items-center mb-4 md:mb-0">
+          <div className="flex flex-col items-end">
+          <p>Total Amount</p>
+          <p className="font-bold text-xl">{formatCurrency(calculateTotal())}</p>
+          </div>
+          <button className="btn btn-primary">Checkout</button>
+          </div>
+            
           </div>
         </div>
       </div>
