@@ -7,7 +7,7 @@ const MenuItemSchema = new mongoose.Schema(
     category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
     availability: { type: Boolean, default: true },
     estPreperationTime: Number,
-    restaurantId: { type: String, required: true },
+    restaurantID: { type: String, required: true },
   },
   { timestamps: true }
 );

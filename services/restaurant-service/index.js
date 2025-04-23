@@ -27,9 +27,11 @@ app.get("/api/health", (req, res) => {
 
 // Importing category routes
 const categoryRoutes = require("./routes/category.route.js");
+const menuItemRoutes = require("./routes/menuItem.route.js");
 
 // Using category routes
 app.use("/api/category", categoryRoutes);
+app.use("/api/menu", menuItemRoutes);
 
 // MongoDB connection
 mongoose
