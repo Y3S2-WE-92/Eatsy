@@ -18,7 +18,6 @@ const processPayment = async (req, res) => {
         allow_redirects: "never"
       },
     });
-    console.log("Card Token: ", cardToken);
 
     const payment = new Payment({
       userId,
@@ -32,7 +31,6 @@ const processPayment = async (req, res) => {
     res.status(201).json({ success: true, payment });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
-    console.log("Process payment error: ", err.message);
   }
 };
 

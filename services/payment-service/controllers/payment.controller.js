@@ -25,7 +25,6 @@ const getPaymentsByUser = async (req, res) => {
   const getAllPayments = async (req, res) => {
     try {
         const payments = await Payment.find();
-        console.log("Getting payments...");
       if (!payments) return res.status(404).json({ success: false, error: "Payments not found" });
   
       res.json({ success: true, data: payments });

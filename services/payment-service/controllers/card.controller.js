@@ -20,7 +20,6 @@ const saveCard = async (req, res) => {
     await card.save();
     res.status(201).json({ success: true, card });
   } catch (err) {
-    console.log("Error saving card: ", err.message);
     res.status(500).json({ success: false, error: err.message });
   }
 };
