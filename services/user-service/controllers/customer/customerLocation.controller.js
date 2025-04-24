@@ -10,6 +10,16 @@ const getCustomerLocations = async (req, res) => {
   }
 };
 
+const getAllCustomerLocations = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const locations = await CustomerLocation.find();
+    res.status(200).json(locations);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};
+
 const addCustomerLocation = async (req, res) => {
   try {
     const { customerID, name, deliveryAddress } = req.body;
@@ -53,6 +63,7 @@ const getLocationByID = async (req, res) => {
 
 module.exports = {
   getCustomerLocations,
+  getAllCustomerLocations,
   addCustomerLocation,
   deleteCustomerLocation,
   getLocationByID
