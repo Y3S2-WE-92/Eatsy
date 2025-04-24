@@ -61,11 +61,11 @@ function Home() {
           <div className="dropdown dropdown-start">
             <div
               tabIndex={0}
-              className="btn btn-outline rounded-full bg-base-100 md:w-32"
+              className="btn btn-outline rounded-full bg-base-100"
             >
               <FaLocationArrow />
-              <span className="hidden lg:inline-flex text-sm">
-                {selectedLocation.name || "Select Delivery Location"}
+              <span className="hidden lg:inline-flex text-sm truncate">
+                {selectedLocation?.name || "Select Delivery Location"}
               </span>
             </div>
             <ul
@@ -128,12 +128,12 @@ function Home() {
                   {filteredRestaurants.length} <span className="hidden lg:inline-flex text-sm">Results</span>
                 </span>
                 {/* Clear Filters Button */}
-                {(searchQuery || selectedCategory || selectedLocation) && (
+                {(searchQuery || selectedCategory) && (
                   <button
                     className="btn btn-outline rounded-full bg-base-100 btn-xs"
                     onClick={clearFilters}
                     disabled={
-                      !searchQuery && !selectedCategory && !selectedLocation
+                      !searchQuery && !selectedCategory
                     }
                   >
                     <FaFilterCircleXmark />
