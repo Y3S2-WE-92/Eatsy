@@ -21,4 +21,7 @@ const RestaurantSchema = new mongoose.Schema({
 },
 { timestamps: true });
 
+// Geospatial index for location
+RestaurantSchema.index({ location: "2dsphere" });
+
 module.exports = mongoose.model("Restaurant", RestaurantSchema);
