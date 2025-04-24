@@ -1,5 +1,3 @@
-import { getAllRestaurants, getRestaurantByID } from "../../../services/user-service/controllers/restaurant/restaurant.controller";
-
 const USER_API_URL = import.meta.env.VITE_USER_API_URL;
 
 export const userAPI = {
@@ -21,9 +19,13 @@ export const userAPI = {
   getAllRestaurants: `${USER_API_URL}/restaurant`,
   getRestaurantByID: `${USER_API_URL}/restaurant/:id`,
 
-  //Authentication
-  DeliveryRegister: `${USER_API_URL}/register/delivery`,
-
-  //Login
-  DeliveryLogin: `${USER_API_URL}/auth/delivery`,
+  // DeliveryPerson
+  DeliveryRegister: `${USER_API_URL}/deliveryPerson/register`,
+  DeliveryLogin: `${USER_API_URL}/deliveryPerson/login`,
+  getNearbyDeliveryPersons: `${USER_API_URL}/deliveryPerson/nearby`,
+  getDeliveryPersons: `${USER_API_URL}/deliveryPerson/`,
+  getDeliveryPersonById: `${USER_API_URL}/deliveryPerson/:id`,
+  updateDeliveryPerson: `${USER_API_URL}/deliveryPerson/:id`,
+  updateAvailability: `${USER_API_URL}/deliveryPerson/availability/:id`,
+  updateLocation: `${USER_API_URL}/deliveryPerson/location/:id`,
 };
