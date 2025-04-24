@@ -1,167 +1,130 @@
 const Order = require('../models/order.model');
-const axios = require('axios');
-const { sendSMS, sendEmail } = require('../services/notification.service');
 
-exports.placeOrder = async (req, res) => {
-    console.log('placeOrder called with body:', req.body);
-    try {
-      const { restaurantId, items, deliveryAddress } = req.body;
-      const customerId = req.user?.id || 'mockedCustomerId'; // Mocked for testing
-  
-      // Fetch menu items from Restaurant Service
-    // Fetch menu items from Restaurant Service
-    // const restaurantResponse = await axios.get(`${process.env.RESTAURANT_SERVICE_URL}/api/restaurant/${order.restaurantId}/menu`);
-    // const menuItems = restaurantResponse.data.items;
-
-    const menuItems = [
-        { itemId: 'item1', name: 'Pizza', price: 10 },
-        { itemId: 'item2', name: 'Burger', price: 5 },
-        { itemId: 'item3', name: 'Pasta', price: 8 }
-      ];
-
-  
-      // Validate and calculate total
-      let totalAmount = 0;
-      const orderItems = items.map(item => {
-        const menuItem = menuItems.find(m => m.itemId === item.itemId);
-        if (!menuItem) throw new Error(`Item ${item.itemId} not found`);
-        totalAmount += menuItem.price * item.quantity;
-        return {
-          itemId: item.itemId,
-          name: menuItem.name,
-          quantity: item.quantity,
-          price: menuItem.price
-        };
-      });
-  
-      // Create order
-      const order = new Order({
-        customerId,
-        restaurantId,
-        items: orderItems,
-        totalAmount,
-        deliveryAddress
-      });
-  
-      await order.save();
-  
-      // Use MongoDB _id as order identifier
-      const orderId = order._id.toString();
-      console.log('Generated orderId:', orderId);
-  
-      // Notify customer
-    //   await sendSMS(
-    //     req.user?.phone || 'mockedPhone',
-    //     `Order ${orderId} placed successfully! Total: LKR ${totalAmount}`
-    //   );
-    //   console.log('SMS notification sent');
-  
-    //   await sendEmail(
-    //     req.user?.email || 'mockedEmail@example.com',
-    //     'Order Confirmation',
-    //     `Your order ${orderId} has been placed. Total: LKR ${totalAmount}`
-    //   );
-    //   console.log('Email notification sent');
-  
-      // Notify Delivery Service with full order details
-      try {
-        await axios.post(`${process.env.DELIVERY_SERVICE_URL}/api/delivery/assign`, {
-          id: orderId,
-          restaurantId,
-          customerId,
-          deliveryAddress,
-          status: 'pending'
-        });
-        console.log('Delivery service notified');
-      } catch (deliveryError) {
-        console.error('Failed to notify Delivery Service:', deliveryError.message);
-        // Continue to respond to client even if delivery assignment fails
-      }
-  
-      res.json({ message: 'Order placed', orderId });
-    } catch (error) {
-      console.error('Error in placeOrder:', error);
-      res.status(500).json({ error: error.message });
-    }
-  };
-
-exports.modifyOrder = async (req, res) => {
+// Create a new order
+const createOrder = async (req, res) => {
   try {
-    const { id } = req.params; // Use _id
-    const { items, deliveryAddress } = req.body;
-    const customerId = req.user.id;
+    const order = new Order(req.body);
+    const savedOrder = await order.save();
+    res.status(201).json(savedOrder);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
 
-    const order = await Order.findOne({ _id: id, customerId });
-    if (!order || order.status !== 'pending') {
-      return res.status(400).json({ error: 'Order cannot be modified' });
-    }
+// Get all orders (optionally filter by status, customerID, restaurantID)
+const getOrders = async (req, res) => {
+  try {
+    const filter = {};
+    if (req.query.status) filter.status = req.query.status;
+    if (req.query.customerID) filter.customerID = req.query.customerID;
+    if (req.query.restaurantID) filter.restaurantID = req.query.restaurantID;
 
-    // Fetch menu items from Restaurant Service
-    // const restaurantResponse = await axios.get(`${process.env.RESTAURANT_SERVICE_URL}/api/restaurant/${order.restaurantId}/menu`);
-    // const menuItems = restaurantResponse.data.items;
+    const orders = await Order.find(filter);
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
-    const menuItems = [
-        { itemId: 'item1', name: 'Pizza', price: 10 },
-        { itemId: 'item2', name: 'Burger', price: 5 },
-        { itemId: 'item3', name: 'Pasta', price: 8 }
-      ];
+// Get a single order by ID
+const getOrderById = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ error: 'Order not found' });
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
-    // Validate and calculate total
-    let totalAmount = 0;
-    const orderItems = items.map(item => {
-      const menuItem = menuItems.find(m => m.itemId === item.itemId);
-      if (!menuItem) throw new Error(`Item ${item.itemId} not found`);
-      totalAmount += menuItem.price * item.quantity;
-      return {
-        itemId: item.itemId,
-        name: menuItem.name,
-        quantity: item.quantity,
-        price: menuItem.price
-      };
+// Get nearby orders for delivery (within x km)
+const getNearbyOrders = async (req, res) => {
+  try {
+    const { lat, lng, maxDistance = 5000 } = req.query;
+    if (!lat || !lng) return res.status(400).json({ error: 'lat and lng required' });
+
+    const nearbyOrders = await Order.find({
+      status: 'ready',
+      'deliveryLocation.location': {
+        $nearSphere: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [parseFloat(lng), parseFloat(lat)]
+          },
+          $maxDistance: parseInt(maxDistance)
+        }
+      }
     });
 
-    order.items = orderItems;
-    order.totalAmount = totalAmount;
-    if (deliveryAddress) order.deliveryAddress = deliveryAddress;
-    order.updatedAt = Date.now();
-
-    await order.save();
-
-    res.json({ message: 'Order modified', orderId: id });
-  } catch (error) {
-    console.error('Error in modifyOrder:', error);
-    res.status(500).json({ error: error.message });
+    res.json(nearbyOrders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 
-exports.getOrderStatus = async (req, res) => {
+// Update the deliveryPersonID for an order
+const updateDeliveryPersonID = async (req, res) => {
   try {
-    const { id } = req.params; // Use _id
-    const customerId = req.user.id;
-
-    const order = await Order.findOne({ _id: id, customerId });
-    if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
-    }
-
-    res.json({ orderId: id, status: order.status, totalAmount: order.totalAmount });
-  } catch (error) {
-    console.error('Error in getOrderStatus:', error);
-    res.status(500).json({ error: error.message });
+    const { deliveryPersonID } = req.body;
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      { deliveryPersonID },
+      { new: true, runValidators: true }
+    );
+    if (!order) return res.status(404).json({ error: 'Order not found' });
+    res.json(order);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 };
 
-exports.getCustomerOrders = async (req, res) => {
+// Update the paymentID for an order
+const updatePaymentID = async (req, res) => {
   try {
-    const { customerId } = req.params;
-    if (customerId !== req.user.id) {
-      return res.status(403).json({ error: 'Unauthorized' });
+    const { paymentID } = req.body;
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      { paymentID, status: 'paid' },
+      { new: true, runValidators: true }
+    );
+    if (!order) return res.status(404).json({ error: 'Order not found' });
+    res.json(order);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+// Update the status of an order
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const update = { status };
+
+    if (status === 'ready') {
+      update.readyAt = new Date();
+    } else if (status === 'delivered') {
+      update.deliveredAt = new Date();
     }
 
-    const orders = await Order.find({ customerId }).sort({ createdAt: -1 });
-    res.json(orders);
-  } catch (error) {
-    console.error('Error in getCustomerOrders:', error);
-    res.status(500).json({ error: error.message });
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      update,
+      { new: true, runValidators: true }
+    );
+    if (!order) return res.status(404).json({ error: 'Order not found' });
+    res.json(order);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
+};
+
+
+module.exports = {
+  createOrder,
+  getOrders,
+  getOrderById,
+  getNearbyOrders,
+  updateDeliveryPersonID,
+  updatePaymentID,
+  updateOrderStatus
 };
