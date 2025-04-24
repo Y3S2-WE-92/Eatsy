@@ -8,7 +8,7 @@ import {
   SeeMoreButton,
   ShoppingCartButton,
 } from "../../components";
-import { featuredRestaurants, foodCategories } from "../../constants";
+import { featuredRestaurants, foodCategories, customerLocations } from "../../constants";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -61,22 +61,22 @@ function Home() {
           <div className="dropdown dropdown-start">
             <div
               tabIndex={0}
-              className="btn btn-outline rounded-full bg-base-100"
+              className="btn btn-outline rounded-full bg-base-100 md:w-32"
             >
               <FaLocationArrow />
               <span className="hidden lg:inline-flex text-sm">
-                {selectedLocation || "Select Delivery Location"}
+                {selectedLocation.name || "Select Delivery Location"}
               </span>
             </div>
             <ul
               tabIndex={0}
               className="dropdown-content menu p-2 shadow bg-base-300 mt-2 rounded-box max-w-sm"
             >
-              {["Location 1", "Location 2", "Location 3"].map((location) => (
-                <li key={location}>
-                  <a onClick={() => handleLocationSelect(location)}>
-                    {location}
-                  </a>
+              {customerLocations.map((location) => (
+                <li key={location._id}>
+                  <div onClick={() => handleLocationSelect(location)}>
+                    {location.name}
+                  </div>
                 </li>
               ))}
             </ul>

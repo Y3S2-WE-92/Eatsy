@@ -32,21 +32,24 @@ export const featuredRestaurants = [
         name: "Chicken Pizza",
         category: "Pizza",
         price: 1200,
-        image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGl6emF8ZW58MHx8MHx8fDA%3D",
+        image:
+          "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGl6emF8ZW58MHx8MHx8fDA%3D",
       },
       {
         id: 2,
         name: "Classic Beef Burger",
         category: "Burgers",
         price: 900,
-        image: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YnVyZ2VyfGVufDB8fDB8fHww",
+        image:
+          "https://images.unsplash.com/photo-1550547660-d9450f859349?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YnVyZ2VyfGVufDB8fDB8fHww",
       },
       {
         id: 3,
         name: "Spicy Tuna Roll",
         category: "Sushi",
         price: 1500,
-        image: "https://images.unsplash.com/photo-1556906918-c3071bd11598?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dHVuYSUyMHJvbGx8ZW58MHx8MHx8fDA%3D",
+        image:
+          "https://images.unsplash.com/photo-1556906918-c3071bd11598?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dHVuYSUyMHJvbGx8ZW58MHx8MHx8fDA%3D",
       },
     ],
   },
@@ -65,21 +68,24 @@ export const featuredRestaurants = [
         name: "Caesar Salad",
         category: "Salads",
         price: 700,
-        image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2FsYWR8ZW58MHx8MHx8fDA%3D",
+        image:
+          "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2FsYWR8ZW58MHx8MHx8fDA%3D",
       },
       {
         id: 2,
         name: "Chocolate Lava Cake",
         category: "Desserts",
         price: 850,
-        image: "https://images.unsplash.com/photo-1673551490812-eaee2e9bf0ef?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bGF2YSUyMGNha2V8ZW58MHx8MHx8fDA%3D",
+        image:
+          "https://images.unsplash.com/photo-1673551490812-eaee2e9bf0ef?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bGF2YSUyMGNha2V8ZW58MHx8MHx8fDA%3D",
       },
       {
         id: 3,
         name: "Fruit Parfait",
         category: "Desserts",
         price: 600,
-        image: "https://images.unsplash.com/photo-1490474504059-bf2db5ab2348?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8UGFyZmFpdHxlbnwwfHwwfHx8MA%3D%3D",
+        image:
+          "https://images.unsplash.com/photo-1490474504059-bf2db5ab2348?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8UGFyZmFpdHxlbnwwfHwwfHx8MA%3D%3D",
       },
     ],
   },
@@ -97,21 +103,24 @@ export const featuredRestaurants = [
         name: "Vegan Buddha Bowl",
         category: "Vegan",
         price: 1000,
-        image: "https://images.unsplash.com/photo-1631311695255-8dde6bf96cb5?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmVnYW4lMjBib3dsfGVufDB8fDB8fHww",
+        image:
+          "https://images.unsplash.com/photo-1631311695255-8dde6bf96cb5?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmVnYW4lMjBib3dsfGVufDB8fDB8fHww",
       },
       {
         id: 2,
         name: "Berry Smoothie",
         category: "Drinks",
         price: 450,
-        image: "https://images.unsplash.com/photo-1600718374662-0483d2b9da44?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHNtb290aGllfGVufDB8fDB8fHww",
+        image:
+          "https://images.unsplash.com/photo-1600718374662-0483d2b9da44?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHNtb290aGllfGVufDB8fDB8fHww",
       },
       {
         id: 3,
         name: "Avocado Toast",
         category: "Brunch",
         price: 800,
-        image: "https://images.unsplash.com/photo-1659778059522-d280d965fde8?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhY2FkbyUyMHRvYXN0fGVufDB8fDB8fHww",
+        image:
+          "https://images.unsplash.com/photo-1659778059522-d280d965fde8?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhY2FkbyUyMHRvYXN0fGVufDB8fDB8fHww",
       },
     ],
   },
@@ -275,5 +284,38 @@ export const carts = [
       { id: 4, name: "Item 4", quantity: 1, price: 400 },
       { id: 5, name: "Item 5", quantity: 1, price: 500 },
     ],
+  },
+];
+
+export const customerLocations = [
+  {
+    deliveryAddress: {
+      location: {
+        type: "Point",
+        coordinates: [79.8612, 6.9271],
+      },
+      address: "123 Main Street, Colombo",
+    },
+    _id: "6809d482ed123c5c8c9a37fe",
+    customerID: "6809d14ff303ed8706d4b234",
+    name: "Home",
+    createdAt: "2025-04-24T06:04:50.952Z",
+    updatedAt: "2025-04-24T06:04:50.952Z",
+    __v: 0,
+  },
+  {
+    deliveryAddress: {
+      location: {
+        type: "Point",
+        coordinates: [80.6378, 7.2906],
+      },
+      address: "456 Park Avenue, Kandy",
+    },
+    _id: "6809d7390df7f0150c7514b0",
+    customerID: "6809d14ff303ed8706d4b234",
+    name: "Office",
+    createdAt: "2025-04-24T06:16:25.863Z",
+    updatedAt: "2025-04-24T06:16:25.863Z",
+    __v: 0,
   },
 ];
