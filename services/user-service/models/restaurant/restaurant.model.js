@@ -1,0 +1,24 @@
+const mongoose = require("mongoose");
+
+const RestaurantSchema = new mongoose.Schema({
+  name: String,
+  email: { type: String, unique: true },
+  phone: { type: String, unique: true, required: true },
+  username: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
+  profileImage: { type: String },
+  address: { type: String, required: true },
+  location: {
+    type: { type: String, enum: ["Point"], default: "Point" },
+    coordinates: { type: [Number], required: true },
+  },
+  availability: { type: Boolean, default: false },
+  owner: { type: String },
+  businessRegNo: { type: String },
+  coverImage: { type: String },
+  verifiedBy: { type: String },
+  accountStatus: { type: String, default: "pending" },
+},
+{ timestamps: true });
+
+module.exports = mongoose.model("Restaurant", RestaurantSchema);
