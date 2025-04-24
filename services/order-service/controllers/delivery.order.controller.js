@@ -1,6 +1,7 @@
 const Order = require('../models/order.model');
 const axios = require('axios');
 const { sendSMS, sendEmail } = require('../services/notification.service');
+const DELIVERY_SERVICE_URL = process.env.DELIVERY_SERVICE_URL || 'http://localhost:4003';
 
 exports.placeOrder = async (req, res) => {
     console.log('placeOrder called with body:', req.body);
@@ -65,7 +66,7 @@ exports.placeOrder = async (req, res) => {
   
       // Notify Delivery Service with full order details
       try {
-        await axios.post(`${process.env.DELIVERY_SERVICE_URL}/api/delivery/assign`, {
+        await axios.post(`${DELIVERY_SERVICE_URL}/api/delivery/assign`, {
           id: orderId,
           restaurantId,
           customerId,
