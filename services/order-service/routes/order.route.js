@@ -4,8 +4,8 @@ const { createOrder, getOrders, getOrderById, getNearbyOrders, updateDeliveryPer
 
 router.post("/", createOrder);
 router.get("/", getOrders);
-router.get("/:id", getOrderById);
 router.get("/nearby", getNearbyOrders);
+router.get("/:id", getOrderById);
 router.put("/deliveryPerson/:id", updateDeliveryPersonID);
 router.put("/payment/:id", updatePaymentID);
 router.put("/status/:id", updateOrderStatus);
