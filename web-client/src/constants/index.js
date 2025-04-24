@@ -34,6 +34,11 @@ export const featuredRestaurants = [
         price: 1200,
         image:
           "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGl6emF8ZW58MHx8MHx8fDA%3D",
+        sizePrice: [
+          { id: 1, size: "Small", price: 1000 },
+          { id: 2, size: "Medium", price: 1200 },
+          { id: 3, size: "Large", price: 1500 },
+        ],
       },
       {
         id: 2,
@@ -42,6 +47,11 @@ export const featuredRestaurants = [
         price: 900,
         image:
           "https://images.unsplash.com/photo-1550547660-d9450f859349?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YnVyZ2VyfGVufDB8fDB8fHww",
+        sizePrice: [
+          { id: 1, size: "Small", price: 1000 },
+          { id: 2, size: "Medium", price: 1200 },
+          { id: 3, size: "Large", price: 1500 },
+        ],
       },
       {
         id: 3,
@@ -50,6 +60,11 @@ export const featuredRestaurants = [
         price: 1500,
         image:
           "https://images.unsplash.com/photo-1556906918-c3071bd11598?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dHVuYSUyMHJvbGx8ZW58MHx8MHx8fDA%3D",
+          sizePrice:[
+          {id: 1, size: "Small", price: 1000},
+          {id: 2, size: "Medium", price: 1200},
+          {id: 3, size: "Large", price: 1500},
+        ]
       },
     ],
   },
@@ -59,6 +74,7 @@ export const featuredRestaurants = [
     description: "Fresh salads and delicious desserts.",
     image:
       "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D",
+      
     deliveryFee: 150,
     rating: 4.0,
     deliveryTime: "20-30 min",
