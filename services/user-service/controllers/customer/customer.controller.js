@@ -47,10 +47,10 @@ const login = async (req, res) => {
       return res.status(400).json({ msg: "Invalid username or password" });
 
     const token = jwt.sign(
-      { id: customer._id, role: customer.role },
+      { id: customer._id },
       process.env.JWT_SECRET,
       { expiresIn: "3h" }
-    );
+    );    
 
     res.status(200).json({
       token,
