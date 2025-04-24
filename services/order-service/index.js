@@ -27,9 +27,11 @@ app.use("/api/delivery/order", deliveryOrderRoutes);
 
 // Import Routes
 const orderRoutes = require("./routes/order.route");
+const orderItemRoutes = require("./routes/orderItem.route");
 
 // Use Routes
 app.use("/api/order", orderRoutes);
+app.use("/api/orderItem", orderItemRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
