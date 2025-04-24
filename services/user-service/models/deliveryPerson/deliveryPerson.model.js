@@ -12,10 +12,16 @@ const DeliveryPersonSchema = new mongoose.Schema(
     vehicleNo: { type: String, required: true },
     licenseNo: { type: String, required: true },
     availability: { type: Boolean, default: false },
+    location: {
+      type: { type: String, enum: ["Point"], default: "Point" },
+      coordinates: { type: [Number], default: [0, 0] },
+    },
     verifiedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
     accountStatus: { type: String, default: "pending" },
   },
   { timestamps: true }
 );
+
+DeliveryPersonSchema.index({ location: "2dsphere" });
 
 module.exports = mongoose.model("DeliveryPerson", DeliveryPersonSchema);
