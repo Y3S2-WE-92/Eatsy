@@ -8,6 +8,13 @@ const MenuItemSchema = new mongoose.Schema(
     availability: { type: Boolean, default: true },
     estPreperationTime: Number,
     restaurantID: { type: String, required: true },
+    image: { type: String },
+    sizes: [
+      {
+        size: { type: String, required: true },
+        price: { type: Number, required: true }
+      }
+    ],
   },
   { timestamps: true }
 );
