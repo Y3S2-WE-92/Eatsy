@@ -68,7 +68,7 @@ const updateDeliveryPersonID = async (req, res) => {
     const { deliveryPersonID } = req.body;
     const order = await Order.findByIdAndUpdate(
       req.params.id,
-      { deliveryPersonID },
+      { deliveryPersonID, status: 'assigned' },
       { new: true, runValidators: true }
     );
     if (!order) return res.status(404).json({ error: 'Order not found' });
