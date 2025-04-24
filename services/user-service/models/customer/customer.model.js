@@ -7,7 +7,7 @@ const CustomerSchema = new mongoose.Schema(
     phone: { type: String, unique: true, required: true },
     username: { type: String, unique: true, required: true },
     password: { type: String, required: true },
-    profileImage: String,
+    profileImage: { type: String, default: "" },
   },
   { timestamps: true }
 );

@@ -1,4 +1,6 @@
 const Customer = require("../../models/customer/customer.model");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
   try {
@@ -53,8 +55,8 @@ const login = async (req, res) => {
     res.status(200).json({
       token,
       user: {
+        id: customer._id,
         username: customer.username,
-        role: customer.role,
       },
     });
   } catch (err) {
