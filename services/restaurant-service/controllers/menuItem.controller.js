@@ -1,5 +1,6 @@
 const MenuItem = require("../models/menuItem.model");
 const Category = require("../models/category.model");
+const { getRestaurantById } = require("../utils/user-service.util");
 
 const getAllMenuItems = async (req, res) => {
     try {
@@ -35,7 +36,11 @@ const getMenuItemByID = async (req, res) => {
 const getMenuItemsByRestaurantID = async (req, res) => {
     try {
         const menuItems = await MenuItem.find({ restaurantID: req.params.id }).populate("category");
-        res.json(menuItems);
+
+        const restaurant = await getRestaurantById(menuItems.restaurantID);
+
+        if (!restaurant) return res.status(404).json({ message: 'Restaurant not found' });
+        res.json(menuItems, restaurant);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
