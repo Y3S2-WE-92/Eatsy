@@ -48,6 +48,9 @@ const customerLocationRoutes = require("./routes/customer/customerLocation.route
 // Restaurant
 const restaurantRoutes = require("./routes/restaurant/restaurant.route");
 
+//Admin
+const adminRoutes = require("./routes/admin/admin.route");
+
 // Use Routes
 // Customer
 app.use("/api/customer", customerRoutes);
@@ -55,6 +58,9 @@ app.use("/api/customer-location", customerLocationRoutes);
 
 // Restaurant
 app.use("/api/restaurant", restaurantRoutes);
+
+// Admin
+app.use("/api/admin", adminRoutes);
 
 // Start server
 app.listen(PORT, () => {

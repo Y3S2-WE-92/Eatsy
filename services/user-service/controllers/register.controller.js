@@ -1,5 +1,4 @@
 const DeliveryPerson = require("../models/deliveryperson.model");
-const Admin = require("../models/admin.model");
 const bcrypt = require("bcryptjs");
 
 // Delivery Person Registration
@@ -45,37 +44,6 @@ const deliveryRegister = async (req, res) => {
   }
 };
 
-// Admin Registration
-const adminRegister = async (req, res) => {
-  try {
-    const { name, email, username, password } = req.body;
-
-    const existingUser = await Admin.findOne({
-      $or: [{ email }, { username }],
-    });
-    if (existingUser) {
-      return res
-        .status(400)
-        .json({ msg: "Admin already exists with provided email or username" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newAdmin = new Admin({
-      name,
-      email,
-      username,
-      password: hashedPassword,
-    });
-
-    await newAdmin.save();
-    res.status(201).json({ msg: "Admin registered successfully" });
-  } catch (err) {
-    res.status(500).json({ msg: err.message });
-  }
-};
-
 module.exports = {
   deliveryRegister,
-  adminRegister,
 };
