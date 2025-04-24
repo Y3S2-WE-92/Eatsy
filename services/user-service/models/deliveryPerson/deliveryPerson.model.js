@@ -4,7 +4,7 @@ const DeliveryPersonSchema = new mongoose.Schema(
   {
     name: String,
     email: { type: String, unique: true },
-    phone: { type: String, unique: true },
+    phone: { type: String, unique: true, required: true },
     username: { type: String, unique: true },
     password: { type: String, required: true },
     profileImage: { type: String },
