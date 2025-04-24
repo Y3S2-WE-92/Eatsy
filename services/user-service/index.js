@@ -45,10 +45,16 @@ app.use("/api/delivery-person", deliveryPersonRoutes);
 const customerRoutes = require("./routes/customer/customer.route");
 const customerLocationRoutes = require("./routes/customer/customerLocation.route");
 
+// Restaurant
+const restaurantRoutes = require("./routes/restaurant/restaurant.route");
+
 // Use Routes
 // Customer
 app.use("/api/customer", customerRoutes);
 app.use("/api/customer-location", customerLocationRoutes);
+
+// Restaurant
+app.use("/api/restaurant", restaurantRoutes);
 
 // Start server
 app.listen(PORT, () => {
