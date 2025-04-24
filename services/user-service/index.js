@@ -40,6 +40,16 @@ app.use("/api/register", registerRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/delivery-person", deliveryPersonRoutes);
 
+// Import Routes
+// Customer
+const customerRoutes = require("./routes/customer/customer.route");
+const customerLocationRoutes = require("./routes/customer/customerLocation.route");
+
+// Use Routes
+// Customer
+app.use("/api/customer", customerRoutes);
+app.use("/api/customer-location", customerLocationRoutes);
+
 // Start server
 app.listen(PORT, () => {
   console.log(`User Service running on port ${PORT}`);
