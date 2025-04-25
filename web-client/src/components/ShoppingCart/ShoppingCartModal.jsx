@@ -22,14 +22,16 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
           : item
       )
     );
-  };  
+    // Recalculate total after updating quantity
+    setCheckoutAmount(calculateTotal());
+  };
 
   const calculateSubtotal = () => {
     return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
 
   const calculateTotal = () => {
-    return calculateSubtotal() + 0; // <- Add Delivery fee
+    return calculateSubtotal() + 0; // Add Delivery fee
   };
 
   const handleCheckout = () => {
@@ -51,7 +53,7 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
               <IoClose />
             </button>
           </div>
-          
+
           <div className="overflow-x-auto overflow-y-auto rounded-box border border-base-content/5 bg-base-100 mt-4 max-h-96">
             <table className="table text-end">
               {/* head */}
@@ -71,7 +73,7 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
                       <Counter
                         existingQty={item.quantity}
                         onQuantityChange={(newQty) =>
-                          handleQuantityChange(item.id, newQty)
+                          handleQuantityChange(item.itemID, item.selectedSize, newQty)
                         }
                       />
                     </td>
@@ -106,7 +108,9 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
                   {formatCurrency(calculateTotal())}
                 </p>
               </div>
-              <button className="btn btn-primary" onClick={handleCheckout}>Checkout</button>
+              <button className="btn btn-primary" onClick={handleCheckout}>
+                Checkout
+              </button>
             </div>
           </div>
         </div>

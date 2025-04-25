@@ -1,5 +1,3 @@
-// Input in minutes, formats in to hours and minutes
-
 export const formatMinutesTime = (time) => {
     const hours = Math.floor(time / 60);
     if (hours === 0) {
