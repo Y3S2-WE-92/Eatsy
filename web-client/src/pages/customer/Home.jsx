@@ -1,4 +1,3 @@
-// Home.jsx
 import React, { useState } from "react";
 import { FaFilterCircleXmark } from "react-icons/fa6";
 import { IoSearchSharp } from "react-icons/io5";

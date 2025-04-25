@@ -32,17 +32,15 @@ function FoodItemCard({ item }) {
               className="w-full h-32 object-cover"
             />
           ) : (
-            <div className="w-full h-32">
+            <div className="w-full h-32 bg-accent/30">
               <ImageLoader />
             </div>
           )}
         </figure>
         <div className="card-body">
           <div className="card-title truncate">{item.name}</div>
-          <p>{formatCurrency(item.price)}</p>
-
-          <div className="card-footer mt-3">
-            <Counter />
+          <div className="flex flex-col">
+          <small>Starting from </small><p className="font-bold">{formatCurrency(item.price)}</p>
           </div>
         </div>
       </div>

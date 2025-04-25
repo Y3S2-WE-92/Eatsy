@@ -21,7 +21,7 @@ function RestaurantCard({ restaurant }) {
             className="w-full h-32 object-cover"
           />
           ):(
-            <div className="w-full h-32">
+            <div className="w-full h-32 bg-accent/30">
               <ImageLoader />
             </div>
           )}
