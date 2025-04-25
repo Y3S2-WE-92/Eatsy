@@ -2,4 +2,13 @@ const RESTAURANTS_API_URL = import.meta.env.VITE_RESTAURANTS_API_URL;
 
 export const restaurantAPI = {
     RestaurantsAPIhealth: `${RESTAURANTS_API_URL}/health`,
+
+    getAllCategories: `${RESTAURANTS_API_URL}/category`,
+    createCategories: `${RESTAURANTS_API_URL}/category`,
+    getCategoryByID: `${RESTAURANTS_API_URL}/category/:id`,
+
+    getAllMenuItems: `${RESTAURANTS_API_URL}/menu`,
+    createMenuItems: `${RESTAURANTS_API_URL}/menu`,
+    getMenuItemsByID: `${RESTAURANTS_API_URL}/menu/:id`,
+    getMenuItemsByRestaurantID: `${RESTAURANTS_API_URL}/menu/restaurant/:id`,
 }
