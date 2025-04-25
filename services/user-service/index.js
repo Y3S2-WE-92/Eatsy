@@ -3,11 +3,6 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-// Import routes
-const registerRoutes = require("./routes/register.route");
-const authRoutes = require("./routes/auth.route");
-const deliveryPersonRoutes = require("./routes/deliveryPersonRoutes");
-
 // Load environment variables
 if (process.env.NODE_ENV === 'production') {
   dotenv.config({ path: '.env.production' });
@@ -36,9 +31,33 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', service: 'User Service' });
 });
 
-app.use("/api/register", registerRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/delivery-person", deliveryPersonRoutes);
+// Import Routes
+// Customer
+const customerRoutes = require("./routes/customer/customer.route");
+const customerLocationRoutes = require("./routes/customer/customerLocation.route");
+
+// Restaurant
+const restaurantRoutes = require("./routes/restaurant/restaurant.route");
+
+// Delivery Person
+const deliveryPersonRoutes = require("./routes/deliveryPerson/deliveryPerson.route");
+
+//Admin
+const adminRoutes = require("./routes/admin/admin.route");
+
+// Use Routes
+// Customer
+app.use("/api/customer", customerRoutes);
+app.use("/api/customer-location", customerLocationRoutes);
+
+// Delivery Person
+app.use("/api/deliveryPerson", deliveryPersonRoutes);
+
+// Restaurant
+app.use("/api/restaurant", restaurantRoutes);
+
+// Admin
+app.use("/api/admin", adminRoutes);
 
 // Start server
 app.listen(PORT, () => {
