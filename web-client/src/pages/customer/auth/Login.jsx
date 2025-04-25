@@ -4,11 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { userAPI } from "../../../services";
 import { jwtDecode } from "jwt-decode";
-import {useToast} from "../../../utils/alert-utils/ToastUtil";
+import { useToast } from "../../../utils/alert-utils/ToastUtil";
+import { useDispatch } from "react-redux"; // Import useDispatch
+import { setLoginCustomer } from "../../../redux/customer/customerSlice"; // Import setLoginCustomer action
 
 function Login() {
   const toast = useToast();
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // Use dispatch hook
   const [loginData, setLoginData] = useState({
     username: "",
     password: "",
@@ -43,7 +46,6 @@ function Login() {
         }
 
         const decodedToken = jwtDecode(token);
-        // console.log("Decoded JWT:", decodedToken);
 
         localStorage.setItem("token", token);
 
@@ -55,6 +57,13 @@ function Login() {
             username: response.data.user.username,
           })
         );
+
+        // Dispatch the setLoginCustomer action to store the user data in Redux state
+        dispatch(setLoginCustomer({
+          id: decodedToken.id,
+          name: response.data.user.name,
+          username: response.data.user.username,
+        }));
 
         console.log("Login successful", response.data);
         toast.success("Login successful");
