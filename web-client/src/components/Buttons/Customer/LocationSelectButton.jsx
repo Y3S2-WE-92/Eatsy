@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaLocationArrow } from "react-icons/fa6";
-import { getCustomerLocations } from "../../../utils/fetch-utils/customer/fetchLocations";
+import { getCustomerLocations } from "../../../utils/fetch-utils/customer/fetch-customer";
 import { useDispatch } from "react-redux";
 import { setSelectedLocation } from "../../../redux/customer/customerSlice";
 
