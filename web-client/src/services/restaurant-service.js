@@ -9,6 +9,6 @@ export const restaurantAPI = {
 
     getAllMenuItems: `${RESTAURANTS_API_URL}/menu`,
     createMenuItems: `${RESTAURANTS_API_URL}/menu`,
+    getMenuItemsByRestaurantID: (id) => `${RESTAURANTS_API_URL}/menu/restaurant/${id}`,
     getMenuItemsByID: `${RESTAURANTS_API_URL}/menu/:id`,
-    getMenuItemsByRestaurantID: `${RESTAURANTS_API_URL}/menu/restaurant/:id`,
 }
