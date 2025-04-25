@@ -3,6 +3,7 @@ import { IoClose } from "react-icons/io5";
 import Counter from "./Counter";
 import { formatCurrency } from "../../utils/format-utils/CurrencyUtil";
 import { useNavigate } from "react-router-dom";
+import LocationSelectButton from "../Buttons/Customer/LocationSelectButton";
 
 function ShoppingCartModal({ cart, isOpen, onClose }) {
   const navigate = useNavigate();
@@ -48,12 +49,11 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
       <div className="modal-box min-w-10/12 max-w-5xl">
         <div className="flex flex-col">
           <div className="flex flex-row justify-between items-center">
-            <h2 className="card-title text-2xl">{cart.restaurantID}</h2>
+            <h2 className="card-title text-2xl truncate">{cart.restaurantID}</h2>
             <button className="btn" onClick={onClose}>
               <IoClose />
             </button>
           </div>
-
           <div className="overflow-x-auto overflow-y-auto rounded-box border border-base-content/5 bg-base-100 mt-4 max-h-96">
             <table className="table text-end">
               {/* head */}
@@ -73,7 +73,11 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
                       <Counter
                         existingQty={item.quantity}
                         onQuantityChange={(newQty) =>
-                          handleQuantityChange(item.itemID, item.selectedSize, newQty)
+                          handleQuantityChange(
+                            item.itemID,
+                            item.selectedSize,
+                            newQty
+                          )
                         }
                       />
                     </td>
@@ -101,7 +105,10 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
             </table>
           </div>
           <div className="modal-action">
-            <div className="flex flex-row gap-8 items-center mb-4 md:mb-0">
+            <div className="flex flex-row gap-8 items-center justify-end mb-4 md:mb-0">
+              <div className="flex flex-row gap-4">
+              <label className="label hidden md:flex">Delivery to </label> <LocationSelectButton />
+              </div>
               <div className="flex flex-col items-end">
                 <p>Total Amount</p>
                 <p className="font-bold text-xl">
