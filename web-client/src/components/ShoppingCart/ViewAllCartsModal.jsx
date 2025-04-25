@@ -27,19 +27,21 @@ function ViewAllCartsModal({ carts, isOpen, onClose }) {
         <div className="modal-box">
           <div className="flex flex-col">
             <div className="flex flex-row justify-between items-center mb-3">
-              <h2 className="card-title">My Cart</h2>
+              <h2 className="card-title">My Carts</h2>
               <button className="btn" onClick={onClose}>
                 <IoClose className="text-lg" />
               </button>
             </div>
             <div className="flex flex-col gap-2">
-              {carts.map((cart) => (
+              {carts.map((cart, index) => (
                 <div
-                  key={cart.id}
+                  key={index}
                   className="card card-compact bg-base-200 border border-base-content/5"
                 >
                   <div className="card-body">
-                    <div className="card-title">{cart.restaurant.name}</div>
+                    <div className="card-title">
+                      Restaurant ID: {cart.restaurantID}
+                    </div>
                     <div className="card-actions justify-end">
                       <button
                         className="btn btn-primary btn-block"

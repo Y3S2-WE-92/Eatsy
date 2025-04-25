@@ -14,20 +14,22 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
     setCheckoutAmount(calculateTotal());
   }, [cart.items]);
 
-  const handleQuantityChange = (itemId, newQuantity) => {
+  const handleQuantityChange = (itemID, selectedSize, newQuantity) => {
     setItems((prevItems) =>
       prevItems.map((item) =>
-        item.id === itemId ? { ...item, quantity: newQuantity } : item
+        item.itemID === itemID && item.selectedSize === selectedSize
+          ? { ...item, quantity: newQuantity }
+          : item
       )
     );
-  };
+  };  
 
   const calculateSubtotal = () => {
     return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
 
   const calculateTotal = () => {
-    return calculateSubtotal() + cart.restaurant.deliveryFee;
+    return calculateSubtotal() + 0; // <- Add Delivery fee
   };
 
   const handleCheckout = () => {
@@ -44,7 +46,7 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
       <div className="modal-box min-w-10/12 max-w-5xl">
         <div className="flex flex-col">
           <div className="flex flex-row justify-between items-center">
-            <h2 className="card-title text-2xl">{cart.restaurant.name}</h2>
+            <h2 className="card-title text-2xl">{cart.restaurantID}</h2>
             <button className="btn" onClick={onClose}>
               <IoClose />
             </button>
@@ -85,7 +87,7 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
                 </tr>
                 <tr>
                   <td colSpan={3}>Delivery Fee</td>
-                  <td>+ {formatCurrency(cart.restaurant.deliveryFee)}</td>
+                  <td>+ {formatCurrency(0)}</td>
                 </tr>
                 <tr>
                   <td colSpan={3}>Total</td>

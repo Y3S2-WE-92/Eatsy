@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import ViewAllCartsModal from "./ViewAllCartsModal";
 import { FaCartShopping } from "react-icons/fa6";
+import { useSelector } from "react-redux"; // <-- Redux hook
 
-import { carts } from "../../constants";
-
-function CartMenu({ onOpenModal }) {
+function CartMenu({ carts, onOpenModal }) {
   return (
     <div
       tabIndex={0}
@@ -14,8 +13,8 @@ function CartMenu({ onOpenModal }) {
       <div className="card-body">
         <span className="text-lg font-bold">{carts.length} Carts</span>
         <ul className="menu gap-2">
-          {carts.map((cart) => (
-            <li key={cart.id}>{cart.restaurant.name}</li>
+          {carts.map((cart, index) => (
+            <li key={index}>Restaurant ID: {cart.restaurantID}</li>
           ))}
         </ul>
         <div className="card-actions">
@@ -30,21 +29,18 @@ function CartMenu({ onOpenModal }) {
 
 function ShoppingCartButton() {
   const location = useLocation();
-  const isCustomerRoot = location.pathname === "/customer/" || location.pathname === "/customer";
+  const isCustomerRoot =
+    location.pathname === "/customer/" || location.pathname === "/customer";
   const [isViewAllCartsModalOpen, setIsViewAllCartsModalOpen] = useState(false);
 
-  const handleOpenViewAllCartsModal = () => {
-    setIsViewAllCartsModalOpen(true);
-  };
+  const carts = useSelector((state) => state.cart.carts); // <-- Get carts from Redux
 
-  const handleCloseViewAllCartsModal = () => {
-    setIsViewAllCartsModalOpen(false);
-  };
+  const handleOpenViewAllCartsModal = () => setIsViewAllCartsModalOpen(true);
+  const handleCloseViewAllCartsModal = () => setIsViewAllCartsModalOpen(false);
 
   return (
     <div>
       {isCustomerRoot ? (
-        // Normal Button
         <div className="dropdown dropdown-end">
           <button
             tabIndex={0}
@@ -53,12 +49,13 @@ function ShoppingCartButton() {
           >
             <FaCartShopping />
             <span className="hidden lg:inline-flex text-sm">My Carts</span>
-            <div className="badge badge-xs badge-error indicator-menu">{carts.length}</div>
+            <div className="badge badge-xs badge-error indicator-menu">
+              {carts.length}
+            </div>
           </button>
-          <CartMenu onOpenModal={handleOpenViewAllCartsModal} />
+          <CartMenu carts={carts} onOpenModal={handleOpenViewAllCartsModal} />
         </div>
       ) : (
-        // Floating Action Button
         <div className="dropdown dropdown-top fixed bottom-16 right-8 flex items-end justify-end z-50">
           <button
             tabIndex={0}
@@ -67,12 +64,15 @@ function ShoppingCartButton() {
           >
             <div className="indicator p-2">
               <FaCartShopping />
-              <div className="badge badge-sm badge-error indicator-item">{carts.length}</div>
+              <div className="badge badge-sm badge-error indicator-item">
+                {carts.length}
+              </div>
             </div>
           </button>
-          <CartMenu onOpenModal={handleOpenViewAllCartsModal} />
+          <CartMenu carts={carts} onOpenModal={handleOpenViewAllCartsModal} />
         </div>
       )}
+
       <ViewAllCartsModal
         carts={carts}
         isOpen={isViewAllCartsModalOpen}
