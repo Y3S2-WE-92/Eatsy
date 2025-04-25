@@ -73,7 +73,6 @@
   --noise: 0;
 }
 
-
 .signup,
 .login {
   display: flex;
@@ -112,6 +111,15 @@ body {
 
 .glass {
   background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur( 4px );
-  -webkit-backdrop-filter: blur( 4px );
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.modal {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.modal-box {
+  border: var(--border) solid var(--color-accent);
 }

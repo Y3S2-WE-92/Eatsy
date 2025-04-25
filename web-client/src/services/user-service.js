@@ -1,15 +1,31 @@
 const USER_API_URL = import.meta.env.VITE_USER_API_URL;
 
 export const userAPI = {
-    UserAPIhealth: `${USER_API_URL}/health`,
+  UserAPIhealth: `${USER_API_URL}/health`,
 
-    //Authentication
-    CustomerRegister: `${USER_API_URL}/register/customer`,
-    DeliveryRegister: `${USER_API_URL}/register/delivery`,
-    RestaurantRegister: `${USER_API_URL}/register/restaurant`,
+  // Customer
+  CustomerRegister: `${USER_API_URL}/customer/register`,
+  CustomerLogin: `${USER_API_URL}/customer/login`,
 
-    //Login
-    CustomerLogin: `${USER_API_URL}/auth/customer`,
-    DeliveryLogin: `${USER_API_URL}/auth/delivery`,
-    RestaurantLogin: `${USER_API_URL}/auth/restaurant`,
-}
+  // CustomerLocation
+  addCustomerLocation: `${USER_API_URL}/customer-location`,
+  deleteCustomerLocation: `${USER_API_URL}/customer-location/:id`,
+  getLocationByID: `${USER_API_URL}/customer-location/:id`,
+  getCustomerLocations: `${USER_API_URL}/customer-location/customer`,
+
+  // Restaurant
+  RestaurantRegister: `${USER_API_URL}/restaurant/register`,
+  RestaurantLogin: `${USER_API_URL}/restaurant/login`,
+  getAllRestaurants: `${USER_API_URL}/restaurant`,
+  getRestaurantByID: `${USER_API_URL}/restaurant/:id`,
+
+  // DeliveryPerson
+  DeliveryRegister: `${USER_API_URL}/deliveryPerson/register`,
+  DeliveryLogin: `${USER_API_URL}/deliveryPerson/login`,
+  getNearbyDeliveryPersons: `${USER_API_URL}/deliveryPerson/nearby`,
+  getDeliveryPersons: `${USER_API_URL}/deliveryPerson/`,
+  getDeliveryPersonById: `${USER_API_URL}/deliveryPerson/:id`,
+  updateDeliveryPerson: `${USER_API_URL}/deliveryPerson/:id`,
+  updateAvailability: `${USER_API_URL}/deliveryPerson/availability/:id`,
+  updateLocation: `${USER_API_URL}/deliveryPerson/location/:id`,
+};

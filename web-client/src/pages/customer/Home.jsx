@@ -1,19 +1,19 @@
 // Home.jsx
 import React, { useState } from "react";
-import { FaLocationArrow, FaFilterCircleXmark } from "react-icons/fa6";
+import { FaFilterCircleXmark } from "react-icons/fa6";
 import { IoSearchSharp } from "react-icons/io5";
 import { styles } from "../../styles/styles";
 import {
   RestaurantCard,
   SeeMoreButton,
   ShoppingCartButton,
+  LocationSelectButton,
 } from "../../components";
 import { featuredRestaurants, foodCategories } from "../../constants";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedLocation, setSelectedLocation] = useState(null);
 
   // Filter restaurants based on search query and selected category
   const filteredRestaurants = featuredRestaurants.filter((restaurant) => {
@@ -40,47 +40,19 @@ function Home() {
     setSelectedCategory(category === selectedCategory ? null : category);
   };
 
-  // Handle location selection
-  const handleLocationSelect = (location) => {
-    setSelectedLocation(location);
-    // You might want to add logic to filter restaurants by location
-  };
-
   // Clear all filters
   const clearFilters = () => {
     setSearchQuery("");
     setSelectedCategory(null);
-    setSelectedLocation(null);
   };
 
   return (
     <div className={`${styles.paddingX} flex flex-col gap-2`}>
       <div className="relative flex flex-col p-2 gap-2 justify-center items-center sticky top-18 z-10">
         <div className="flex flex-row gap-2">
-          {/* Select Delivery Location */}
-          <div className="dropdown dropdown-start">
-            <div
-              tabIndex={0}
-              className="btn btn-outline rounded-full bg-base-100"
-            >
-              <FaLocationArrow />
-              <span className="hidden lg:inline-flex text-sm">
-                {selectedLocation || "Select Delivery Location"}
-              </span>
-            </div>
-            <ul
-              tabIndex={0}
-              className="dropdown-content menu p-2 shadow bg-base-300 mt-2 rounded-box max-w-sm"
-            >
-              {["Location 1", "Location 2", "Location 3"].map((location) => (
-                <li key={location}>
-                  <a onClick={() => handleLocationSelect(location)}>
-                    {location}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Location Select Button */}
+          <LocationSelectButton />
+
           {/* Search Bar */}
           <div className="search flex flex-row items-center border border-accent rounded-full md:w-lg pl-4">
             <IoSearchSharp />
@@ -128,12 +100,12 @@ function Home() {
                   {filteredRestaurants.length} <span className="hidden lg:inline-flex text-sm">Results</span>
                 </span>
                 {/* Clear Filters Button */}
-                {(searchQuery || selectedCategory || selectedLocation) && (
+                {(searchQuery || selectedCategory) && (
                   <button
                     className="btn btn-outline rounded-full bg-base-100 btn-xs"
                     onClick={clearFilters}
                     disabled={
-                      !searchQuery && !selectedCategory && !selectedLocation
+                      !searchQuery && !selectedCategory
                     }
                   >
                     <FaFilterCircleXmark />

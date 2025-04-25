@@ -1,31 +1,51 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const orderSchema = new mongoose.Schema({
-  customerId: { type: String, required: true },
-  restaurantId: { type: String, required: true },
-  items: [{
-    itemId: { type: String, required: true },
-    name: { type: String, required: true },
-    quantity: { type: Number, required: true },
-    price: { type: Number, required: true }
-  }],
-  totalAmount: { type: Number, required: true },
-  deliveryAddress: {
-    address: { type: String, required: true },
-    location: {
-      type: { type: String, enum: ['Point'], default: 'Point' },
-      coordinates: { type: [Number], required: true } // [longitude, latitude]
-    }
+const orderSchema = new mongoose.Schema(
+  {
+    refNo: { type: String, required: true, unique: true },
+    customerID: { type: String, required: true },
+    restaurantID: { type: String, required: true },
+    deliveryPersonID: { type: String },
+    paymentID: { type: String },
+    status: {
+      type: String,
+      enum: [
+        "pending",
+        "accepted",
+        "rejected",
+        "paid",
+        "preparing",
+        "ready",
+        "assigned",
+        "pickup",
+        "delivered",
+      ],
+      default: "pending",
+    },
+    restaurantCost: { type: Number, required: true },
+    deliveryCost: { type: Number, required: true },
+    readyAt: { type: Date },
+    deliveredAt: { type: Date },
+    deliveryLocation: {
+      address: { type: String, required: true },
+      location: {
+        type: { type: String, enum: ["Point"], default: "Point" },
+        coordinates: { type: [Number], required: true },
+      },
+    },
+    items: [
+      {
+        itemID: { type: String, required: true },
+        name: { type: String, required: true },
+        quantity: { type: Number, required: true },
+        selectedSize: { type: String, required: true },
+        price: { type: Number, required: true },
+      }
+    ]
   },
-  status: {
-    type: String,
-    enum: ['pending', 'confirmed', 'preparing', 'ready', 'assigned', 'picked_up', 'delivered'],
-    default: 'pending'
-  },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
-});
+  { timestamps: true }
+);
 
-orderSchema.index({ 'deliveryAddress.location': '2dsphere' });
+orderSchema.index({ "deliveryLocation.location": "2dsphere" });
 
-module.exports = mongoose.model('Order', orderSchema);
+module.exports = mongoose.model("Order", orderSchema);
