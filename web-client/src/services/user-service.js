@@ -11,7 +11,7 @@ export const userAPI = {
   addCustomerLocation: `${USER_API_URL}/customer-location`,
   deleteCustomerLocation: `${USER_API_URL}/customer-location/:id`,
   getLocationByID: `${USER_API_URL}/customer-location/:id`,
-  getCustomerLocations: `${USER_API_URL}/customer-location/customer/:id`,
+  getCustomerLocations: `${USER_API_URL}/customer-location/customer`,
 
   // Restaurant
   RestaurantRegister: `${USER_API_URL}/restaurant/register`,
