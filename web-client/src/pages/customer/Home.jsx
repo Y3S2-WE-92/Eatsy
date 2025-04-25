@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaFilterCircleXmark } from "react-icons/fa6";
 import { IoSearchSharp } from "react-icons/io5";
 import { styles } from "../../styles/styles";
@@ -9,10 +9,28 @@ import {
   LocationSelectButton,
 } from "../../components";
 import { featuredRestaurants, foodCategories } from "../../constants";
+import { getAllRestaurants } from "../../utils/fetch-utils/customer/fetch-user";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [featuredRestaurants, setFeaturedRestaurants] = useState([]);
+
+  const fetchAllRestaurants = async () => {
+    try {
+      const response = await getAllRestaurants();
+      return response;
+    } catch (error) {
+      console.error("Failed to fetch restaurants:", error.message);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    fetchAllRestaurants().then((restaurants) => {
+      setFeaturedRestaurants(restaurants);
+    });
+  }, []);
 
   // Filter restaurants based on search query and selected category
   const filteredRestaurants = featuredRestaurants.filter((restaurant) => {
@@ -119,7 +137,7 @@ function Home() {
             <div className="card-content flex flex-row gap-2 overflow-x-auto">
               {filteredRestaurants.length > 0 ? (
                 filteredRestaurants.map((restaurant) => (
-                  <RestaurantCard restaurant={restaurant} key={restaurant.id} />
+                  <RestaurantCard restaurant={restaurant} key={restaurant._id} />
                 ))
               ) : (
                 <div className="text-center w-full py-4">

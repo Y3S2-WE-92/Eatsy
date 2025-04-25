@@ -8,7 +8,7 @@ function RestaurantCard({ restaurant }) {
   const isImageLoaded = useImageLoaded(restaurant.image);
 
   return (
-    <Link to={`/customer/restaurant-view/${restaurant.id}`}>
+    <Link to={`/customer/restaurant-view/${restaurant._id}`}>
       <div
         key={restaurant.id}
         className="card min-w-56 bg-base-100 border border-accent/30"

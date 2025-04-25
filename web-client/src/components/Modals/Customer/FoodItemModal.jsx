@@ -6,9 +6,11 @@ import { useImageLoaded } from "../../../utils/image-utils/useImageLoaded";
 import { formatMinutesTime } from "../../../utils/format-utils/TimeFormatUtil";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../redux/customer/cartSlice";
+import { useToast } from "../../../utils/alert-utils/ToastUtil";
 
 function FoodItemModal({ item, isOpen, onClose }) {
   const dispatch = useDispatch();
+  const toast = useToast();
   const isImageLoaded = useImageLoaded(item.image);
 
   const [quantities, setQuantities] = useState({});
@@ -34,7 +36,7 @@ function FoodItemModal({ item, isOpen, onClose }) {
         items: cartItems,
       }));
     }
-
+    toast.success("Item added to cart");
     onClose();
   };
 
