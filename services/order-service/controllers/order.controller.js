@@ -1,9 +1,11 @@
 const Order = require('../models/order.model');
+const generateRefNo = require('../utils/refno.util');
 
 // Create a new order
 const createOrder = async (req, res) => {
   try {
-    const order = new Order(req.body);
+    const refNo = generateRefNo(); 
+    const order = new Order({ ...req.body, refNo });
     const savedOrder = await order.save();
     res.status(201).json(savedOrder);
   } catch (err) {
@@ -118,6 +120,16 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
+const getOrderByRefNo = async (req, res) => {
+  try {
+    const order = await Order.findOne({ refNo: req.params.refNo });
+    if (!order) return res.status(404).json({ error: 'Order not found' });
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 
 module.exports = {
   createOrder,
@@ -126,5 +138,6 @@ module.exports = {
   getNearbyOrders,
   updateDeliveryPersonID,
   updatePaymentID,
-  updateOrderStatus
+  updateOrderStatus,
+  getOrderByRefNo
 };
