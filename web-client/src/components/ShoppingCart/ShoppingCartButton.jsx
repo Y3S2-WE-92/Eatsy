@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import ViewAllCartsModal from "./ViewAllCartsModal";
 import { FaCartShopping } from "react-icons/fa6";
-import { useSelector } from "react-redux"; // <-- Redux hook
+import { useSelector } from "react-redux";
 
 function CartMenu({ carts, onOpenModal }) {
   return (
@@ -33,7 +33,7 @@ function ShoppingCartButton() {
     location.pathname === "/customer/" || location.pathname === "/customer";
   const [isViewAllCartsModalOpen, setIsViewAllCartsModalOpen] = useState(false);
 
-  const carts = useSelector((state) => state.cart.carts); // <-- Get carts from Redux
+  const carts = useSelector((state) => state.cart.carts);
 
   const handleOpenViewAllCartsModal = () => setIsViewAllCartsModalOpen(true);
   const handleCloseViewAllCartsModal = () => setIsViewAllCartsModalOpen(false);
