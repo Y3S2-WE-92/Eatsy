@@ -30,6 +30,8 @@ export const featuredRestaurants = [
       {
         id: 1,
         name: "Chicken Pizza",
+        description:
+          "A mouthwatering classic, our Chicken Pizza features a crispy thin crust topped with a generous layer of gooey mozzarella cheese, tender grilled chicken pieces, fresh bell peppers, onions, and a rich tomato sauce infused with Italian herbs. Perfectly baked to golden-brown perfection, it's a feast for pizza lovers.",
         category: "Pizza",
         price: 1200,
         image:
@@ -43,6 +45,8 @@ export const featuredRestaurants = [
       {
         id: 2,
         name: "Classic Beef Burger",
+        description:
+          "Satisfy your hunger with our Classic Beef Burger, featuring a juicy, flame-grilled beef patty nestled in a freshly toasted sesame bun. It’s layered with crisp lettuce, ripe tomatoes, tangy pickles, cheddar cheese, and our signature house sauce. A timeless burger that delivers rich flavor in every bite.",
         category: "Burgers",
         price: 900,
         image:
@@ -56,15 +60,91 @@ export const featuredRestaurants = [
       {
         id: 3,
         name: "Spicy Tuna Roll",
+        description:
+          "Dive into our Spicy Tuna Roll – a bold and flavorful sushi roll made with premium sushi-grade tuna, seasoned with spicy mayo, and wrapped in soft seaweed and vinegared rice. Accented with crunchy cucumber and a hint of sesame, this roll brings the perfect balance of heat and umami in every bite.",
         category: "Sushi",
         price: 1500,
         image:
           "https://images.unsplash.com/photo-1556906918-c3071bd11598?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dHVuYSUyMHJvbGx8ZW58MHx8MHx8fDA%3D",
-          sizePrice:[
-          {id: 1, size: "Small", price: 1000},
-          {id: 2, size: "Medium", price: 1200},
-          {id: 3, size: "Large", price: 1500},
-        ]
+        sizePrice: [
+          { id: 1, size: "Small", price: 1000 },
+          { id: 2, size: "Medium", price: 1200 },
+          { id: 3, size: "Large", price: 1500 },
+        ],
+      },
+      {
+        _id: "680a9b8c147e468c201015a5",
+        name: "Cheesy Chicken Burger",
+        description:
+          "Grilled chicken patty with extra cheese, lettuce, and secret sauce.",
+        category: {
+          _id: "68094cc35bc518db7c8d096b",
+          name: "Pizza",
+          icon: "🍕",
+          __v: 0,
+        },
+        availability: true,
+        estPreperationTime: 15,
+        restaurantID: "6804c96b1812becd86b51dd9",
+        image:
+          "https://images.unsplash.com/photo-1619901282828-7cbde1c89884?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGNoZWVzZSUyMGJ1cmdlcnxlbnwwfHwwfHx8MA%3D%3D",
+        sizes: [
+          {
+            size: "Small",
+            price: 850,
+            _id: "680a9b8c147e468c201015a6",
+          },
+          {
+            size: "Medium",
+            price: 1050,
+            _id: "680a9b8c147e468c201015a7",
+          },
+          {
+            size: "Large",
+            price: 1250,
+            _id: "680a9b8c147e468c201015a8",
+          },
+        ],
+        createdAt: "2025-04-24T20:14:04.755Z",
+        updatedAt: "2025-04-24T20:14:04.755Z",
+        __v: 0,
+      },
+      {
+        _id: "680a9b8c147e468c201015c4",
+        name: "Tandori Chicken Noodles",
+        description:
+          "Grilled chicken patty with extra cheese, lettuce, and secret sauce.",
+        category: {
+          _id: "68094cc35bc518db7c8d096b",
+          name: "Pizza",
+          icon: "🍕",
+          __v: 0,
+        },
+        availability: true,
+        estPreperationTime: 15,
+        restaurantID: "6804c96b1812becd86b51dd9",
+        image:
+          "https://images.unsplash.com/photo-1619901282828-7cbde1c89884?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGNoZWVzZSUyMGJ1cmdlcnxlbnwwfHwwfHx8MA%3D%3D",
+        sizes: [
+          {
+            size: "Small",
+            price: 950,
+            _id: "680a9b8c147e468c201015a6",
+          },
+          {
+            size: "Medium",
+            price: 2050,
+            _id: "680a9b8c147e468c201015a7",
+          },
+          {
+            size: "Large",
+            price: 1250,
+            _id: "680a9b8c147e468c201015a8",
+          },
+        ],
+        createdAt: "2025-04-24T20:14:04.755Z",
+        updatedAt: "2025-04-24T20:14:04.755Z",
+        __v: 0,
       },
     ],
   },
@@ -74,7 +154,7 @@ export const featuredRestaurants = [
     description: "Fresh salads and delicious desserts.",
     image:
       "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D",
-      
+
     deliveryFee: 150,
     rating: 4.0,
     deliveryTime: "20-30 min",
@@ -82,6 +162,7 @@ export const featuredRestaurants = [
       {
         id: 1,
         name: "Caesar Salad",
+        description: "Classic Caesar salad",
         category: "Salads",
         price: 700,
         image:
@@ -90,6 +171,7 @@ export const featuredRestaurants = [
       {
         id: 2,
         name: "Chocolate Lava Cake",
+        description: "Delicious chocolate cake",
         category: "Desserts",
         price: 850,
         image:
@@ -98,6 +180,7 @@ export const featuredRestaurants = [
       {
         id: 3,
         name: "Fruit Parfait",
+        description: "Refreshing fruit parfait",
         category: "Desserts",
         price: 600,
         image:
