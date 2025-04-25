@@ -2,7 +2,7 @@ const CustomerLocation = require("../../models/customer/customerLocation.model")
 
 const getCustomerLocations = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.user;
     const locations = await CustomerLocation.find({ customerID: id });
     res.status(200).json(locations);
   } catch (err) {
