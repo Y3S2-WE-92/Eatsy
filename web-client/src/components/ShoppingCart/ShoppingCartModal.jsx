@@ -195,7 +195,7 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
             <div className="flex flex-row gap-8 items-center justify-end mb-4 md:mb-0">
               <div className="flex flex-row gap-4">
                 <label className="label hidden md:flex">Delivery to </label>
-                <LocationSelectButton />
+                <LocationSelectButton dropdownDirection="top"/>
               </div>
               <div className="flex flex-col items-end">
                 <p>Total Amount</p>
