@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/delivery.order.controller');
-const authMiddleware = require('../middleware/auth');
+const authMiddleware = require('../middleware/auth.middleware');
 
 router.post(
     '/place', 
