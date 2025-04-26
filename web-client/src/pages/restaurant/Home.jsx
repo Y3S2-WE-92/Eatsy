@@ -1,8 +1,13 @@
 import React from 'react'
+import { AvailabilityToggleButton } from '../../components'
+import { styles } from '../../styles/styles'
 
 function Home() {
   return (
-    <div>Home</div>
+    <div className={`${styles.paddingX} relative flex flex-col`}>
+      <AvailabilityToggleButton />
+      
+    </div>
   )
 }
 
