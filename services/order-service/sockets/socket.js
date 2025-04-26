@@ -17,7 +17,13 @@ module.exports = {
       // Restaurant joins their room
       socket.on("joinRestaurantRoom", (restaurantID) => {
         console.log(`Restaurant ${restaurantID} joined room`);
-        socket.join(restaurantID); 
+        socket.join(restaurantID);
+      });
+
+      // Customer joins their room
+      socket.on("joinCustomerRoom", (customerID) => {
+        console.log(`Customer ${customerID} joined room`);
+        socket.join(customerID);
       });
 
       socket.on("disconnect", () => {
@@ -33,5 +39,5 @@ module.exports = {
       throw new Error("Socket.io not initialized!");
     }
     return io;
-  }
+  },
 };
