@@ -66,7 +66,7 @@ function Home() {
   return (
     <div className={`${styles.paddingX} relative flex flex-col gap-2`}>
       {/* Top Bar */}
-      <div className="glass-transparent flex flex-col p-4 gap-2 justify-center items-center sticky top-0 z-10">
+      <div className="flex flex-col p-4 gap-2 justify-center items-center sticky top-0 z-10 bg-base-100/80">
         <div className="flex flex-row gap-2">
           {/* Location Select Button */}
           <LocationSelectButton />
