@@ -7,7 +7,7 @@ function AvailabilityToggleButton() {
     setChecked(!checked);
   };
   return (
-    <div className="absolute top-0 right-0 p-4 z-10">
+    <div className="absolute top-0 right-0 p-4 z-50">
       <div className="flex flex-row gap-4 items-center bg-base-200 p-2 pl-6 border border-accent rounded-full">
         <p
           className={`font-bold text-sm badge badge-soft ${
