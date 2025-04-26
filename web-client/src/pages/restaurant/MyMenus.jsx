@@ -1,9 +1,26 @@
 import React, { useState } from "react";
 import { IoSearchSharp, IoAdd } from "react-icons/io5";
 import MenuTable from "../../components/tables/Restaurant/MenuTable";
+import MenuItemForm from "../../components/Forms/Restaurant/MenuItemForm";
 
 function MyMenus() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+  const handleAddItem = () => {
+    setIsAddItemModalOpen(true);
+  }
+
+  // Handle form submission for adding new item
+  const handleAddSubmit = (newItem) => {
+    console.log('New menu item:', newItem);
+    // Replace with API call to add new menu item
+    // await fetch('/api/menu', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(newItem),
+    // });
+    setIsAddItemModalOpen(false);
+  };
 
   return (
     <div className="max-w-7xl mx-auto p-4">
@@ -23,14 +40,25 @@ function MyMenus() {
           </div>
         </div>
         <div className="flex justify-center lg:justify-end w-full lg:w-auto">
-        <button className="btn btn-accent btn-sm flex items-center gap-2 w-2/5 md:w-2/5 lg:w-auto">
-          <IoAdd size={20} />
-          Add Item
-        </button>
+          <button
+            className="btn btn-accent btn-sm flex items-center gap-2 w-2/5 md:w-2/5 lg:w-auto"
+            onClick={handleAddItem}
+          >
+            <IoAdd size={20} />
+            Add Item
+          </button>
         </div>
       </div>
       {/* Menu Table */}
       <MenuTable searchQuery={searchQuery} />
+      {/* Add Menu Item Modal */}
+      <MenuItemForm
+        isOpen={isAddItemModalOpen}
+        onClose={() => setIsAddItemModalOpen(false)}
+        mode="add"
+        onSubmit={handleAddSubmit}
+        restaurantID={"restaurantID"} // Replace with actual restaurant ID
+      />
     </div>
   );
 }
