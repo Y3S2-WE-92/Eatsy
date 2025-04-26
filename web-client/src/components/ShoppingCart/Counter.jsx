@@ -12,14 +12,25 @@ function Counter({ existingQty = 0, onQuantityChange }) {
     if (count > 0) {
       const newCount = count - 1;
       setCount(newCount);
-      onQuantityChange(newCount);
+      onQuantityChange?.(newCount);
     }
   };
 
   const handlePlusClick = () => {
     const newCount = count + 1;
     setCount(newCount);
-    onQuantityChange(newCount);
+    onQuantityChange?.(newCount);
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+
+    // Allow only numbers
+    if (/^\d*$/.test(value)) {
+      const numericValue = Number(value);
+      setCount(numericValue);
+      onQuantityChange?.(numericValue);
+    }
   };
 
   return (
@@ -33,8 +44,9 @@ function Counter({ existingQty = 0, onQuantityChange }) {
       </button>
       <input
         className="input input-bordered w-10 md:w-20 text-center input-sm"
+        type="text"
         value={count}
-        readOnly
+        onChange={handleInputChange}
       />
       <button
         className="btn btn-primary btn-circle btn-xs"

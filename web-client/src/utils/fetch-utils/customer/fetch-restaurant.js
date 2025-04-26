@@ -10,3 +10,13 @@ export const getAllCategories = async () => {
         return [];
     }
 };
+
+export const getMenuItemsByRestaurantID = async (id) => {
+    try {
+        const response = await axios.get(`${restaurantAPI.getMenuItemsByRestaurantID(id)}`);
+        return response.data;
+    } catch (error) {
+        console.error("Failed to fetch menu items:", error.message);
+        return [];
+    }
+}

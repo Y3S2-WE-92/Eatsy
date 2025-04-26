@@ -16,8 +16,8 @@ export const userAPI = {
   // Restaurant
   RestaurantRegister: `${USER_API_URL}/restaurant/register`,
   RestaurantLogin: `${USER_API_URL}/restaurant/login`,
-  getAllRestaurants: `${USER_API_URL}/restaurant`,
-  getRestaurantByID: `${USER_API_URL}/restaurant/:id`,
+  getAllRestaurants: `${USER_API_URL}/restaurant/`,
+  getRestaurantByID: (id) => `${USER_API_URL}/restaurant/${id}`,
 
   // DeliveryPerson
   DeliveryRegister: `${USER_API_URL}/deliveryPerson/register`,
