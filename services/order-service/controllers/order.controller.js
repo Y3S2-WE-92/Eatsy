@@ -130,6 +130,17 @@ const getOrderByRefNo = async (req, res) => {
   }
 };
 
+const getMyOrders = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const orders = await Order.find({ customerID: id }).sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (error) {
+    console.error('Error in getCustomerOrders:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 module.exports = {
   createOrder,
@@ -139,5 +150,6 @@ module.exports = {
   updateDeliveryPersonID,
   updatePaymentID,
   updateOrderStatus,
-  getOrderByRefNo
+  getOrderByRefNo,
+  getMyOrders
 };
