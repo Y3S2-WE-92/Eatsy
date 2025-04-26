@@ -88,6 +88,13 @@ export const useToast = () => {
         error,
       }, {
         position: 'top-right',
+        style: {
+          borderRadius: '8px',
+          background: isDark ? '#1e40af' : '#eff6ff',
+          color: isDark ? '#bfdbfe' : '#1d4ed8',
+          border: '1px solid',
+          borderColor: isDark ? '#60a5fa' : '#60a5fa',
+        },
       });
     },
   };

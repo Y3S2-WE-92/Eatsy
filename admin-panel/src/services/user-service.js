@@ -1,5 +1,3 @@
-import { getAllAdmins } from "../../../services/user-service/controllers/admin/admin.controller";
-
 const USER_API_URL = import.meta.env.VITE_USER_API_URL;
 
 export const userAPI = {

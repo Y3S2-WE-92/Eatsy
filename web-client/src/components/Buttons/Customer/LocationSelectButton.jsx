@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { FaLocationArrow } from "react-icons/fa6";
-import { getCustomerLocations } from "../../../utils/fetch-utils/customer/fetch-customer";
-import { useDispatch } from "react-redux";
+import { getCustomerLocations } from "../../../utils/fetch-utils/customer/fetch-user";
+import { useDispatch, useSelector } from "react-redux";
 import { setSelectedLocation } from "../../../redux/customer/customerSlice";
 
 function LocationSelectButton() {
   const dispatch = useDispatch();
   const [locations, setLocations] = useState([]);
-  const [location, setLocation] = useState(null);
+  // Retrieve selectedLocation from Redux store
+  const selectedLocation = useSelector((state) => state.customer.loginCustomer?.selectedLocation);
+  const [location, setLocation] = useState(selectedLocation || null);
 
   // Handle location selection
   const handleLocationSelect = (location) => {
-
     setLocation(location);
-    console.log("Location before dispatch:", location);
     dispatch(setSelectedLocation(location));
   };
 
@@ -29,6 +29,11 @@ function LocationSelectButton() {
   useEffect(() => {
     fetchCustomerLocations();
   }, []);
+
+  // Update local state if selectedLocation changes in Redux store
+  useEffect(() => {
+    setLocation(selectedLocation || null);
+  }, [selectedLocation]);
 
   return (
     <div className="dropdown dropdown-start">
