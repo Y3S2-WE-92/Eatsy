@@ -96,14 +96,14 @@ body {
   font-family: "UberMove", sans-serif;
 }
 
-.search {
+.search input {
   background-color: var(--color-base-100);
   color: var(--color-base-content);
-  border-radius: 2rem;
+  border-radius: 4rem;
   border-color: var(--color-accent-100);
 }
 
-.search:focus {
+.search input:focus {
   outline: none;
   border: none;
   background-color: transparent;

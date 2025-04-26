@@ -43,6 +43,8 @@ import OrderAccordionItem from "./Accordions/Customer/OrderAccordionItem";
 
 import OrderTimeline from "./Timelines/Customer/OrderTimeline";
 
+import OrderRequests from "./Widgets/Restaurant/OrderRequests";
+
 export {
   //Navbars
   LandingNavbar,
@@ -97,5 +99,8 @@ export {
   Counter,
 
   //Timelines
-  OrderTimeline
+  OrderTimeline,
+
+  //Widgets
+  OrderRequests
 };

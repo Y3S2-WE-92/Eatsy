@@ -1,12 +1,17 @@
-const Order = require('../models/order.model');
-const generateRefNo = require('../utils/refno.util');
+const Order = require("../models/order.model");
+const generateRefNo = require("../utils/refno.util");
+const { getIO } = require("../sockets/socket");
 
 // Create a new order
 const createOrder = async (req, res) => {
   try {
-    const refNo = generateRefNo(); 
+    const refNo = generateRefNo();
     const order = new Order({ ...req.body, refNo });
     const savedOrder = await order.save();
+
+    const io = getIO();
+    io.to(savedOrder.restaurantID).emit("newOrder", savedOrder);
+
     res.status(201).json(savedOrder);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -32,7 +37,7 @@ const getOrders = async (req, res) => {
 const getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
-    if (!order) return res.status(404).json({ error: 'Order not found' });
+    if (!order) return res.status(404).json({ error: "Order not found" });
     res.json(order);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -43,19 +48,20 @@ const getOrderById = async (req, res) => {
 const getNearbyOrders = async (req, res) => {
   try {
     const { lat, lng, maxDistance = 5000 } = req.query;
-    if (!lat || !lng) return res.status(400).json({ error: 'lat and lng required' });
+    if (!lat || !lng)
+      return res.status(400).json({ error: "lat and lng required" });
 
     const nearbyOrders = await Order.find({
-      status: 'ready',
-      'deliveryLocation.location': {
+      status: "ready",
+      "deliveryLocation.location": {
         $nearSphere: {
           $geometry: {
-            type: 'Point',
-            coordinates: [parseFloat(lng), parseFloat(lat)]
+            type: "Point",
+            coordinates: [parseFloat(lng), parseFloat(lat)],
           },
-          $maxDistance: parseInt(maxDistance)
-        }
-      }
+          $maxDistance: parseInt(maxDistance),
+        },
+      },
     });
 
     res.json(nearbyOrders);
@@ -70,10 +76,10 @@ const updateDeliveryPersonID = async (req, res) => {
     const { deliveryPersonID } = req.body;
     const order = await Order.findByIdAndUpdate(
       req.params.id,
-      { deliveryPersonID, status: 'assigned' },
+      { deliveryPersonID, status: "assigned" },
       { new: true, runValidators: true }
     );
-    if (!order) return res.status(404).json({ error: 'Order not found' });
+    if (!order) return res.status(404).json({ error: "Order not found" });
     res.json(order);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -86,10 +92,10 @@ const updatePaymentID = async (req, res) => {
     const { paymentID } = req.body;
     const order = await Order.findByIdAndUpdate(
       req.params.id,
-      { paymentID, status: 'paid' },
+      { paymentID, status: "paid" },
       { new: true, runValidators: true }
     );
-    if (!order) return res.status(404).json({ error: 'Order not found' });
+    if (!order) return res.status(404).json({ error: "Order not found" });
     res.json(order);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -102,18 +108,29 @@ const updateOrderStatus = async (req, res) => {
     const { status } = req.body;
     const update = { status };
 
-    if (status === 'ready') {
+    if (status === "ready") {
       update.readyAt = new Date();
-    } else if (status === 'delivered') {
+    } else if (status === "delivered") {
       update.deliveredAt = new Date();
     }
 
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      update,
-      { new: true, runValidators: true }
-    );
-    if (!order) return res.status(404).json({ error: 'Order not found' });
+    const order = await Order.findByIdAndUpdate(req.params.id, update, {
+      new: true,
+      runValidators: true,
+    });
+    if (!order) return res.status(404).json({ error: "Order not found" });
+
+    const io = getIO();
+    if (status === "accepted" || status === "rejected") {
+      io.to(order.customerID).emit("orderStatusUpdate", {
+        orderID: order._id,
+        status,
+        refNo: order.refNo,
+        restaurantCost: order.restaurantCost,
+        deliveryCost: order.deliveryCost,
+      });
+    }
+    
     res.json(order);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -123,7 +140,7 @@ const updateOrderStatus = async (req, res) => {
 const getOrderByRefNo = async (req, res) => {
   try {
     const order = await Order.findOne({ refNo: req.params.refNo });
-    if (!order) return res.status(404).json({ error: 'Order not found' });
+    if (!order) return res.status(404).json({ error: "Order not found" });
     res.json(order);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -136,11 +153,10 @@ const getMyOrders = async (req, res) => {
     const orders = await Order.find({ customerID: id }).sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
-    console.error('Error in getCustomerOrders:', error);
+    console.error("Error in getCustomerOrders:", error);
     res.status(500).json({ error: error.message });
   }
 };
-
 
 module.exports = {
   createOrder,
@@ -151,5 +167,5 @@ module.exports = {
   updatePaymentID,
   updateOrderStatus,
   getOrderByRefNo,
-  getMyOrders
+  getMyOrders,
 };

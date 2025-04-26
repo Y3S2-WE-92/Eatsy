@@ -22,7 +22,7 @@ function MyOrders() {
   }, []);
 
   return (
-    <div className={`${styles.paddingX} ${styles.paddingY} flex flex-col mb-8`}>
+    <div className={`${styles.paddingX} flex flex-col mb-12`}>
       <ShoppingCartButton />
       <PageTitle title="My Orders" backLink="/customer" />
       <div className="join join-vertical bg-base-100">
