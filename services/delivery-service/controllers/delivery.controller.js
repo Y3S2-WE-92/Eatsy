@@ -8,18 +8,14 @@ const USER_SERVICE_URL =
 
 exports.assignDeliveryPerson = async (req, res) => {
   try {
-    const { id, restaurantId, customerId, deliveryAddress, status } = req.body;
+    const { id, restaurantId, customerId, deliveryAddress, deliveryPersonId } = req.body;
     console.log("Assigning delivery person for order ID:", id);
 
     // Fetch order from Order Service
-    console.log("Fetching order from Order Service...", req.body);
     let order;
     try {
       const response = await axios.get(
-        `${ORDER_SERVICE_URL}/api/delivery/order/${id}`,
-        {
-          // headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` }
-        }
+        `${ORDER_SERVICE_URL}/api/order/${id}`
       );
       order = response.data;
       console.log("Fetched order:", order);
@@ -28,7 +24,7 @@ exports.assignDeliveryPerson = async (req, res) => {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    if (order.status !== "pending") {
+    if (order.status !== "ready") {
       console.log("Invalid order status:", order.status);
       return res.status(400).json({ error: "Invalid order" });
     }
@@ -38,21 +34,21 @@ exports.assignDeliveryPerson = async (req, res) => {
     let deliveryPersons;
     try {
       const response = await axios.get(
-        `${USER_SERVICE_URL}/api/delivery-person/nearby?longitude=${coordinates[0]}&latitude=${coordinates[1]}`
-        // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
+        `${USER_SERVICE_URL}/api/deliveryPerson/${deliveryPersonId}`
       );
       deliveryPersons = response.data;
+      console.log("Fetched delivery persons:", deliveryPersons);
     } catch (error) {
       console.log("Error fetching delivery persons:", error.message);
       return res.status(500).json({ error: "Failed to find delivery persons" });
     }
 
-    if (!deliveryPersons.length) {
-      console.log("No available delivery persons found");
-      return res.status(404).json({ error: "No available delivery persons" });
-    }
+    // if (!deliveryPersons.length) {
+    //   console.log("No available delivery persons found");
+    //   return res.status(404).json({ error: "No available delivery persons" });
+    // }
 
-    const deliveryPerson = deliveryPersons[0];
+    const deliveryPerson = deliveryPersons;
 
     // Create Delivery document
     const delivery = new Delivery({
@@ -69,9 +65,8 @@ exports.assignDeliveryPerson = async (req, res) => {
     // Update delivery person in User Service
     try {
       await axios.put(
-        `${USER_SERVICE_URL}/api/delivery-person/${deliveryPerson._id}`,
-        { available: false, currentOrder: id }
-        // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
+        `${USER_SERVICE_URL}/api/deliveryPerson/${deliveryPerson._id}`,
+        { availability: false }
       );
     } catch (error) {
       console.error("Failed to update delivery person:", error.message);
@@ -84,17 +79,12 @@ exports.assignDeliveryPerson = async (req, res) => {
     // Update order status in Order Service
     try {
       await axios.put(
-        `${ORDER_SERVICE_URL}/api/delivery/order/${id}/status`,
+        `${ORDER_SERVICE_URL}/order/status/${id}`,
         { status: "assigned" }
-        // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
       );
     } catch (error) {
       console.error("Failed to update order status:", error.message);
     }
-
-    // // Send notifications
-    // await sendSMS(deliveryPerson.telephone, `New order assigned: ${id}. Pick up at ${deliveryAddress.address}`);
-    // await sendEmail(deliveryPerson.email, 'New Delivery Assignment', `Assigned order ${id}.`);
 
     res.json({
       message: "Delivery person assigned",
@@ -119,7 +109,7 @@ exports.getDeliveryStatus = async (req, res) => {
     let deliveryPerson;
     try {
       const response = await axios.get(
-        `${USER_SERVICE_URL}/api/delivery-person/${delivery.deliveryPersonId}`
+        `${USER_SERVICE_URL}/api/deliverPerson/${delivery.deliveryPersonId}`
         // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
       );
       deliveryPerson = response.data;
@@ -157,8 +147,8 @@ exports.updateDeliveryStatus = async (req, res) => {
     if (status === "delivered") {
       try {
         await axios.put(
-          `${USER_SERVICE_URL}/api/delivery-person/${delivery.deliveryPersonId}`,
-          { available: true, currentOrder: null }
+          `${USER_SERVICE_URL}/api/deliverPerson/${delivery.deliveryPersonId}`,
+          { availability: true }
           // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
         );
       } catch (error) {
@@ -228,7 +218,7 @@ exports.updateDeliveryPersonLocation = async (req, res) => {
     // Update location in User Service
     try {
       await axios.put(
-        `${USER_SERVICE_URL}/api/delivery-person/${deliveryPersonId}`,
+        `${USER_SERVICE_URL}/api/deliverPerson/${deliveryPersonId}`,
         { location },
         { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
       );
@@ -244,6 +234,74 @@ exports.updateDeliveryPersonLocation = async (req, res) => {
     res.json({ message: "Location updated", location });
   } catch (error) {
     console.error("Error in updateDeliveryPersonLocation:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.updateOrderStatusByDeliveryPerson = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { status } = req.body;
+    const deliveryPersonId = req.user.id;
+
+    // Verify the delivery person is assigned to the order
+    const delivery = await Delivery.findOne({ orderId, deliveryPersonId });
+    if (!delivery) {
+      return res.status(403).json({ error: "Unauthorized or invalid order" });
+    }
+
+    // Update the delivery status
+    delivery.status = status;
+    await delivery.save();
+
+    // Update the order status in Order Service
+    try {
+      await axios.put(
+        `${ORDER_SERVICE_URL}/api/delivery/order/${orderId}/status`,
+        { status }
+        // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
+      );
+    } catch (error) {
+      console.error("Failed to update order status in Order Service:", error.message);
+    }
+
+    res.json({ message: "Order status updated", status });
+  } catch (error) {
+    console.error("Error in updateOrderStatusByDeliveryPerson:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.updateOrderStatusByDeliveryPerson = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { status } = req.body;
+    const deliveryPersonId = req.user.id;
+
+    // Verify the delivery person is assigned to the order
+    const delivery = await Delivery.findOne({ orderId, deliveryPersonId });
+    if (!delivery) {
+      return res.status(403).json({ error: "Unauthorized or invalid order" });
+    }
+
+    // Update the delivery status
+    delivery.status = status;
+    await delivery.save();
+
+    // Update the order status in Order Service
+    try {
+      await axios.put(
+        `${ORDER_SERVICE_URL}/api/delivery/order/${orderId}/status`,
+        { status }
+        // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
+      );
+    } catch (error) {
+      console.error("Failed to update order status in Order Service:", error.message);
+    }
+
+    res.json({ message: "Order status updated", status });
+  } catch (error) {
+    console.error("Error in updateOrderStatusByDeliveryPerson:", error);
     res.status(500).json({ error: error.message });
   }
 };

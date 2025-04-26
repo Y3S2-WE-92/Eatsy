@@ -418,3 +418,48 @@ export const customerLocations = [
     __v: 0,
   },
 ];
+
+export const orderDetails = [
+  {
+    orderId: "order1",
+    restaurantName: "Pizza Palace",
+    customerName: "Alice",
+    customerPhone: "123-456-7890",
+    deliveryAddress: "123 Main Street, Colombo",
+    totalAmount: "$25.00",
+    restaurantLocation: [80.0379, 7.0698],
+    customerLocation: [80.2049, 6.9421],
+  },
+  {
+    orderId: "order2",
+    restaurantName: "Burger Haven",
+    customerName: "Bob",
+    customerPhone: "987-654-3210",
+    deliveryAddress: "456 Elm Street, Colombo",
+    totalAmount: "$15.00",
+    restaurantLocation: [80.0450, 7.0700],
+    customerLocation: [80.2100, 6.9500],
+  },
+  {
+    orderId: "order3",
+    restaurantName: "Sushi World",
+    customerName: "Charlie",
+    customerPhone: "555-555-5555",
+    deliveryAddress: "789 Pine Street, Colombo",
+    totalAmount: "$30.00",
+    restaurantLocation: [80.0500, 7.0720],
+    customerLocation: [80.2200, 6.9600],
+  }
+]
+export const oneOrderDetails = [
+  {
+    orderId: "order1",
+    restaurantName: "Pizza Palace",
+    customerName: "Alice",
+    customerPhone: "123-456-7890",
+    deliveryAddress: "123 Main Street, Colombo",
+    totalAmount: "$25.00",
+    restaurantLocation: [80.0379, 7.0698],
+    customerLocation: [80.2049, 6.9421],
+  },
+]
