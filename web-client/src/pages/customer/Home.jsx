@@ -64,8 +64,9 @@ function Home() {
   };
 
   return (
-    <div className={`${styles.paddingX} flex flex-col gap-2`}>
-      <div className="relative flex flex-col p-2 gap-2 justify-center items-center sticky top-18 z-10">
+    <div className={`${styles.paddingX} relative flex flex-col gap-2`}>
+      {/* Top Bar */}
+      <div className="glass-transparent flex flex-col p-4 gap-2 justify-center items-center sticky top-0 z-10">
         <div className="flex flex-row gap-2">
           {/* Location Select Button */}
           <LocationSelectButton />
@@ -86,7 +87,7 @@ function Home() {
         </div>
         {/* Filter By Categories */}
         <div
-          className={`${styles.paddingX} flex flex-row lg:justify-center bg-base-100 w-full rounded-box gap-4 py-4 overflow-x-auto`}
+          className={`${styles.paddingX} flex flex-row lg:justify-center w-full rounded-box gap-4 py-4 overflow-x-auto`}
         >
           {foodCategories.map((category) => (
             <div key={category.id} className="flex flex-col items-center">
