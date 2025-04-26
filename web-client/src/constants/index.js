@@ -418,3 +418,101 @@ export const customerLocations = [
     __v: 0,
   },
 ];
+
+export const orders = [
+  {
+    deliveryLocation: {
+      location: {
+        type: "Point",
+        coordinates: [0, 0],
+      },
+      address: "Home",
+    },
+    _id: "680d0f1326f6a7dd94dfd41a",
+    refNo: "REFM9YGJMY",
+    customerID: "6809d14ff303ed8706d4b234",
+    restaurantID: "6809f4e58029922b21942dca",
+    status: "accepted",
+    restaurantCost: 2700,
+    deliveryCost: 0,
+    items: [
+      {
+        itemID: "680be1af58afd52f47430768",
+        name: "Margherita Pizza",
+        quantity: 1,
+        selectedSize: "Extra Large",
+        price: 1800,
+        _id: "680d0f1326f6a7dd94dfd41b",
+      },
+      {
+        itemID: "680be1af58afd52f47430768",
+        name: "Margherita Pizza",
+        quantity: 1,
+        selectedSize: "Small",
+        price: 900,
+        _id: "680d0f1326f6a7dd94dfd41c",
+      },
+    ],
+    createdAt: "2025-04-26T16:51:31.257Z",
+    updatedAt: "2025-04-26T16:55:00.983Z",
+    __v: 0,
+  },
+  {
+    deliveryLocation: {
+      location: {
+        type: "Point",
+        coordinates: [0, 0],
+      },
+      address: "Home",
+    },
+    _id: "680d100926f6a7dd94dfd470",
+    refNo: "REFM9YGOWW",
+    customerID: "6809d14ff303ed8706d4b234",
+    restaurantID: "6809f4e58029922b21942dca",
+    status: "accepted",
+    restaurantCost: 900,
+    deliveryCost: 0,
+    items: [
+      {
+        itemID: "680be1af58afd52f47430768",
+        name: "Margherita Pizza",
+        quantity: 1,
+        selectedSize: "Small",
+        price: 900,
+        _id: "680d100926f6a7dd94dfd471",
+      },
+    ],
+    createdAt: "2025-04-26T16:55:37.379Z",
+    updatedAt: "2025-04-26T16:55:57.293Z",
+    __v: 0,
+  },
+  {
+    deliveryLocation: {
+      location: {
+        type: "Point",
+        coordinates: [0, 0],
+      },
+      address: "Office",
+    },
+    _id: "680d106826f6a7dd94dfd504",
+    refNo: "REFM9YGQYB",
+    customerID: "6809d14ff303ed8706d4b234",
+    restaurantID: "6809f4e58029922b21942dca",
+    status: "rejected",
+    restaurantCost: 900,
+    deliveryCost: 0,
+    items: [
+      {
+        itemID: "680be1af58afd52f47430768",
+        name: "Margherita Pizza",
+        quantity: 1,
+        selectedSize: "Small",
+        price: 900,
+        _id: "680d106826f6a7dd94dfd505",
+      },
+    ],
+    createdAt: "2025-04-26T16:57:12.520Z",
+    updatedAt: "2025-04-26T16:57:38.550Z",
+    __v: 0,
+  },
+]
