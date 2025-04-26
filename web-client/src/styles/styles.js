@@ -2,7 +2,7 @@ import '../fonts/fonts.css';
 
 const styles = {
     paddingX: "sm:px-12 px-4",
-    paddingY: "sm:py-16 py-6",
+    paddingY: "sm:pb-16 py-6",
     paddingNavBar: "sm:px-12 px-6",
     padding: "sm:px-16 px-6 sm:py-16 py-10",
     primaryFont: "primary-font",

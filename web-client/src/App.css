@@ -115,6 +115,11 @@ body {
   -webkit-backdrop-filter: blur(4px);
 }
 
+.glass-transparent {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
 .modal {
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
