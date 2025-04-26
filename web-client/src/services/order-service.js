@@ -5,6 +5,7 @@ export const orderAPI = {
 
     placeOrder: `${ORDERS_API_URL}/order/`,
     getAllOrders: `${ORDERS_API_URL}/order/`,
+    getCustomerMyOrders : `${ORDERS_API_URL}/order/customer/my-orders`,
     getOrderByID:(id) => `${ORDERS_API_URL}/order/${id}`,
     getOrderByRefNo: (refNo) => `${ORDERS_API_URL}/order/ref/${refNo}`,
     updateDeliveryPersonID: (id) => `${ORDERS_API_URL}/order/deliveryPerson/${id}`,
