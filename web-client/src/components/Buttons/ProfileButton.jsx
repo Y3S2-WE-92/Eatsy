@@ -36,7 +36,7 @@ function ProfileButton() {
           <a>Settings</a>
         </li>
         <li>
-          <Link to={"/customer/my-cards"}><a>My cards</a></Link>
+          <Link to={"/customer/my-cards"}>My cards</Link>
         </li>
         <li>
           <button onClick={handleLogout} className="btn btn-error">
