@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const orderRoutes = require("./routes/order.routes");
 const deliveryOrderRoutes = require("./routes/delivery.order.route");
 
 if (process.env.NODE_ENV === 'production') {
@@ -24,8 +23,13 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "OK", service: "Order Service" });
 });
 
-app.use("/api/order", orderRoutes);
 app.use("/api/delivery/order", deliveryOrderRoutes);
+
+// Import Routes
+const orderRoutes = require("./routes/order.route");
+
+// Use Routes
+app.use("/api/order", orderRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
