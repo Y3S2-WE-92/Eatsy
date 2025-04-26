@@ -3,6 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import { RestaurantNavbar } from "../../components";
 
 import Home from "../../pages/restaurant/Home";
+import MyMenus from "../../pages/restaurant/MyMenus";
+import Orders from "../../pages/restaurant/Orders";
 
 function RestaurantLayout() {
   const sections = [
@@ -16,8 +18,8 @@ function RestaurantLayout() {
       <RestaurantNavbar sections={sections} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/orders" element={<div>Orders</div>} />
-        <Route path="/menu" element={<div>Menu</div>} />
+        <Route path="/orders" element={<Orders/>} />
+        <Route path="/menu" element={<MyMenus/>} />
       </Routes>
     </div>
   );
