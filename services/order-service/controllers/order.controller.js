@@ -119,6 +119,18 @@ const updateOrderStatus = async (req, res) => {
       runValidators: true,
     });
     if (!order) return res.status(404).json({ error: "Order not found" });
+
+    const io = getIO();
+    if (status === "accepted" || status === "rejected") {
+      io.to(order.customerID).emit("orderStatusUpdate", {
+        orderID: order._id,
+        status,
+        refNo: order.refNo,
+        restaurantCost: order.restaurantCost,
+        deliveryCost: order.deliveryCost,
+      });
+    }
+    
     res.json(order);
   } catch (err) {
     res.status(400).json({ error: err.message });
