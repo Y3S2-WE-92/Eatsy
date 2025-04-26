@@ -33,6 +33,10 @@ import ComponentHealth from "./Cards/ComponentHealth";
 import ShoppingCartButton from "./ShoppingCart/ShoppingCartButton";
 import Counter from "./ShoppingCart/Counter";
 
+import OrderAccordionItem from "./Accordions/Customer/OrderAccordionItem";
+
+import OrderTimeline from "./Timelines/Customer/OrderTimeline";
+
 export {
   //Navbars
   LandingNavbar,
@@ -67,6 +71,9 @@ export {
   RestaurantCard,
   FoodItemCard,
 
+  //Accordions
+  OrderAccordionItem,
+
   //Common
   Footer,
   ThemeLogo,
@@ -75,5 +82,8 @@ export {
 
   //Shopping Cart
   ShoppingCartButton,
-  Counter
+  Counter,
+
+  //Timelines
+  OrderTimeline
 };
