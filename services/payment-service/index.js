@@ -28,15 +28,20 @@ app.get('/api/health', (req, res) => {
 const paymentRouter = require("./routes/payment.route.js");
 const paymentOrderRouter =  require("./routes/payment-order.route.js");
 const cardRouter = require("./routes/card.route.js");
+const commissionSettingRouter = require("./routes/commissionSetting.route.js");
+const paybackRouter = require("./routes/payback.route.js");
+const initCommissionSetting = require('./startup/commisionSetting.startup.js');
 
 app.use('/api/payment', paymentRouter);
 app.use('/api/payment-order', paymentOrderRouter);
 app.use('/api/card', cardRouter);
-
+app.use('/api/commission-setting', commissionSettingRouter);
+app.use('/api/payback', paybackRouter)
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Connected to DB")
     app.listen(PORT, () => {
+      initCommissionSetting();
       console.log(`Payment Service running on port ${PORT}`);
     });
   })
