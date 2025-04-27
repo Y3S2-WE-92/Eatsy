@@ -1,30 +1,31 @@
 const Payback = require("../models/payback.model");
 const CommissionSetting = require("../models/commissionSetting.model");
 const sendPaybackNotification = require("../utils/sendPaybackNotification.util");
+const getUserEmailByType = require("../utils/getUserEmailByType.util.js")
 
 const createPayback = async (req, res) => {
     try {
-        const { orderId, receiverId, amount, email, receiverType } = req.body;
+        const { refNo, receiverId, amount, receiverType } = req.body;
 
         const commissionSetting = await CommissionSetting.findOne();
         if (!commissionSetting) {
             return res.status(400).json({ message: "Commission settings not configured." });
         }
 
-        const platformCommission = receiverType === 'Restaurant'
+        const platformCommission = receiverType === 'restaurant'
             ? amount * commissionSetting.restaurantCommissionPercentage / 100
             : amount * commissionSetting.deliveryCommissionPercentage / 100;
 
         const amountReceived = amount - platformCommission;
 
         // Check if payback already exists
-        const existingPayback = await Payback.findOne({ orderId, receiverType });
+        const existingPayback = await Payback.findOne({ refNo, receiverType });
         if (existingPayback) {
             return res.status(400).json({ message: "Payback already exists" });
         }
 
         const payback = new Payback({
-            orderId,
+            refNo,
             receiverId,
             receiverType,
             amountReceived,
@@ -33,9 +34,11 @@ const createPayback = async (req, res) => {
 
         await payback.save();
 
+        const email = getUserEmailByType({id: receiverId, receiverType})
+
         // Prepare different email content based on receiverType
         if (email) {
-            const isRestaurant = receiverType === 'Restaurant';
+            const isRestaurant = receiverType === 'restaurant';
             const greeting = isRestaurant ? "Dear Restaurant Partner," : "Dear Delivery Partner,";
             const serviceType = isRestaurant ? "your recent order" : "your delivery service";
             const thanksMessage = isRestaurant ? "Thank you for partnering with Eatsy!" : "Thank you for working with Eatsy!";
@@ -44,12 +47,12 @@ const createPayback = async (req, res) => {
             await sendPaybackNotification({
                 to: email,
                 subject,
-                text: `You have received LKR ${amountReceived} after platform commission for Order ID: ${orderId}.`,
+                text: `You have received LKR ${amountReceived} after platform commission for Order ID: ${refNo}.`,
                 html: `<div style="font-family: Arial, sans-serif; color: #333; padding-left: 20px;">
                     <h3>${greeting}</h3>
                     <h3>We are pleased to inform you that you have received a payment for ${serviceType}.</h3>
                     <h3><b>Net Amount:</b> LKR ${amountReceived}</h3>
-                    <h3><b>Order ID:</b> ${orderId}</h3>
+                    <h3><b>Order ID:</b> ${refNo}</h3>
                     <h3>${thanksMessage}</h3>
                 </div>`
             });
@@ -76,7 +79,7 @@ const getPaybacks = async (req, res) => {
 const getPaybackByOrderId = async (req, res) => {
     const { id } = req.params;
     try {
-        const paybacks = await Payback.find({ orderId: id });
+        const paybacks = await Payback.find({ refNo: id });
         res.status(200).json(paybacks);
     } catch (error) {
         console.error("Error fetching paybacks:", error.message);
