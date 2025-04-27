@@ -4,7 +4,10 @@ const SUPABASE_PROJECT_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Initialize Supabase client
-const supabase = createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
+let supabase = null;
+if (SUPABASE_PROJECT_URL && SUPABASE_ANON_KEY) {
+  supabase = createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
+}
 
 const ImageUploader = ({ setImageUrl }) => {
   const [imagePreview, setImagePreview] = useState(null);
