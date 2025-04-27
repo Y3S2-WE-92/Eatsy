@@ -13,7 +13,7 @@ const {
 const { protect } = require("../middleware/auth.middleware");
 
 router.get("/", getAllMenuItems);
-router.post("/", createMenuItem);
+router.post("/", protect, createMenuItem);
 router.get("/restaurant/my-menu-items", protect, getMyMenuItems);
 router.put("/restaurant/my-menu-items/:id", protect, updateMyMenuItem);
 router.delete("/restaurant/my-menu-items/:id", protect, deleteMyMenuItem);

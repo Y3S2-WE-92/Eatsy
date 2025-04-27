@@ -4,7 +4,6 @@ import { useToast } from "../../../utils/alert-utils/ToastUtil";
 import { formatCurrency } from "../../../utils/format-utils/CurrencyUtil";
 import { updateMyMenuItem } from "../../../utils/update-utils/restaurant/update-menuItem";
 import { createMenuItems } from "../../../utils/create-utils/restaurant/create-menuItems";
-import { useRestaurant } from "../../../utils/redux-utils/redux-restaurant";
 import ImageUploader from "../../ImageUploaders/ImageUploader";
 
 function MenuItemForm({
@@ -12,9 +11,8 @@ function MenuItemForm({
   onClose,
   mode = "add",
   initialData = {},
-  restaurantID,
+  refreshTable = () => {},
 }) {
-  const restaurant = useRestaurant();
   const toast = useToast();
   const [imageUrl, setImageUrl] = useState("");
   const [formData, setFormData] = useState({
@@ -25,7 +23,6 @@ function MenuItemForm({
     estPreperationTime: "",
     sizes: [],
     image: "",
-    restaurantID: restaurant.id || "",
   });
   const [categories, setCategories] = useState([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
@@ -60,10 +57,9 @@ function MenuItemForm({
         estPreperationTime: initialData.estPreperationTime || "",
         sizes: initialData.sizes || [],
         image: initialData.image || "",
-        restaurantID: restaurant.id || initialData.restaurant?.id || "",
       });
     }
-  }, [initialData, mode, restaurant.id]);
+  }, [initialData, mode]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -124,14 +120,32 @@ function MenuItemForm({
       if (mode === "edit") {
         const response = await updateMyMenuItem(initialData._id, updatedFormData);
         if (response?.status === 200) {
+          refreshTable();
           toast.success("Menu item updated successfully");
-          window.location.reload();
+          setFormData({
+            id: "",
+            name: "",
+            category: "",
+            description: "",
+            estPreperationTime: "",
+            sizes: [],
+            image: "",
+          });
         }
       } else {
         const response = await createMenuItems(updatedFormData);
         if (response?.status === 201) {
           toast.success("Menu item created successfully");
-          window.location.reload();
+          setFormData({
+            id: "",
+            name: "",
+            category: "",
+            description: "",
+            estPreperationTime: "",
+            sizes: [],
+            image: "",
+          });
+          refreshTable();
         }
       }
       onClose();

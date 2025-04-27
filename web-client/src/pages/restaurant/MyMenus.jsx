@@ -65,13 +65,13 @@ function MyMenus() {
         menuItems={menuItems}
         isLoading={isLoading}
         error={error}
-        restaurantID={restaurant.id}
+        refreshTable={fetchMyMenuItems}
       />
       <MenuItemForm
         isOpen={isAddItemModalOpen}
         onClose={() => setIsAddItemModalOpen(false)}
         mode="add"
-        restaurantID={restaurant.id}
+        refreshTable={fetchMyMenuItems}
       />
     </div>
   );

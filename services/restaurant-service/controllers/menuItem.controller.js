@@ -12,12 +12,19 @@ const getAllMenuItems = async (req, res) => {
 };
 
 const createMenuItem = async (req, res) => {
+  const {id} = req.user;
   try {
     const category = await Category.findById(req.body.category);
     if (!category) {
       return res.status(404).json({ message: "Category not found" });
     }
-    const menuItem = await MenuItem.create(req.body);
+
+    const updatedData = {
+      ...req.body,
+      restaurantID: id,
+    };
+
+    const menuItem = await MenuItem.create(updatedData);
     res.status(201).json(menuItem);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -114,7 +121,11 @@ const updateMyMenuItem = async (req, res) => {
         .status(403)
         .json({ message: "Unauthorized to update this menu item" });
     }
-    Object.assign(menuItem, req.body);
+    const updatedData = {
+      ...req.body,
+      restaurantID: id,
+    }
+    Object.assign(menuItem, updatedData);
     await menuItem.save();
     res.json(menuItem);
   } catch (error) {

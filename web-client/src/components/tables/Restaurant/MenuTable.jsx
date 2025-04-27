@@ -10,7 +10,7 @@ function MenuTable({
   menuItems = [],
   isLoading = false,
   error = null,
-  restaurantID,
+  refreshTable = () => {},
 }) {
   const toast = useToast();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -37,7 +37,7 @@ function MenuTable({
 
         if (response.status === 200) {
           toast.success("Menu item deleted successfully!");
-          window.location.reload();
+          refreshTable();
         }
       } catch (error) {
         console.error("Error deleting menu item:", error);
@@ -149,7 +149,7 @@ function MenuTable({
           }}
           mode="edit"
           initialData={selectedItem}
-          restaurantID={restaurantID}
+          refreshTable={refreshTable}
         />
       )}
     </div>
