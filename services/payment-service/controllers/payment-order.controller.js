@@ -3,7 +3,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Payment = require("../models/payment.model.js");
 
 const processPayment = async (req, res) => {
-  const { userId, amount, cardToken } = req.body;
+  const { userId, refNo, amount, cardToken } = req.body;
 
   const customerId = process.env.STRIPE_CUSTOMER_ID;
   try {
@@ -21,6 +21,7 @@ const processPayment = async (req, res) => {
 
     const payment = new Payment({
       userId,
+      refNo,
       amount,
       cardToken,
       status: "success",
