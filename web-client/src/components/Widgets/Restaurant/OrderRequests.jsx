@@ -13,19 +13,17 @@ import {
   AcceptOrder,
   RejectOrder,
 } from "../../../utils/update-utils/restaurant/update-order";
+import { useRestaurant } from "../../../utils/redux-utils/redux-restaurant";
 
 function OrderRequests() {
   const toast = useToast();
+  const restaurant = useRestaurant();
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isOrderViewModalOpen, setIsOrderViewModalOpen] = useState(false);
 
-  const restaurantID = useSelector(
-    (state) => state.restaurant.loginRestaurant?.id
-  );
-
   useEffect(() => {
-    connectRestaurantSocket(restaurantID);
+    connectRestaurantSocket(restaurant.id);
 
     listenNewOrder((newOrder) => {
       setOrders((prev) => [...prev, newOrder]);
@@ -35,7 +33,7 @@ function OrderRequests() {
     return () => {
       disconnectSocket();
     };
-  }, [restaurantID]);
+  }, [restaurant.id]);
 
   const handleItemClick = (order) => {
     setSelectedOrder(order);
