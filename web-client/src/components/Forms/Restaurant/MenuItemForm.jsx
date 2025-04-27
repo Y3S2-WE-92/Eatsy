@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IoAdd, IoClose } from 'react-icons/io5';
 import { formatCurrency } from '../../../utils/format-utils/CurrencyUtil';
+import { getAllCategories } from '../../../utils/fetch-utils/customer/fetch-restaurant'
 
 function MenuItemForm({ isOpen, onClose, mode = 'add', initialData = {}, onSubmit, restaurantID }) {
   const [formData, setFormData] = useState({
@@ -10,67 +11,89 @@ function MenuItemForm({ isOpen, onClose, mode = 'add', initialData = {}, onSubmi
     description: '',
     estPreparationTime: '',
     sizes: [],
-    image: null,
+    image: '',
     restaurantID: restaurantID || '',
+    //isAvailable: true, // Default to true for new items
   });
   const [newSize, setNewSize] = useState('');
   const [newPrice, setNewPrice] = useState('');
   const [editingIndex, setEditingIndex] = useState(null); // Track index of size-price pair being edited
+  const [categories, setCategories] = useState([]); 
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false);
+  const [categoryError, setCategoryError] = useState(null);
+  const sizeOptions = ['Small', 'Regular', 'Large', 'Medium', 'Extra Large']; 
 
-  // Predefined categories and sizes
-  const categories = ['Appetizers', 'Main Course', 'Desserts', 'Beverages'];
-  const sizeOptions = ['Small', 'Regular', 'Large'];
-
+// Fetch categories when component mounts
+useEffect(() => {
+  const fetchCategories = async () => {
+    setIsLoadingCategories(true);
+    try {
+      const fetchedCategories = await getAllCategories();
+      setCategories(Array.isArray(fetchedCategories) ? fetchedCategories : []);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      setCategoryError('Failed to load categories');
+      setCategories([]);
+    } finally {
+      setIsLoadingCategories(false);
+    }
+  };
+  fetchCategories();
+}, []);
+  
   // Populate form with initial data in edit mode
   useEffect(() => {
     if (mode === 'edit' && initialData) {
-      setFormData({
-        id: initialData.id,
+      const categoryId = initialData.category || ''; // Use _id directly
+        setFormData({
+        id: initialData.id || null,
         name: initialData.name || '',
-        category: initialData.category || '', // Assumes category is a string; backend maps to ObjectId
+        category: categoryId, // Use category _id
         description: initialData.description || '',
-        estPreparationTime: initialData.estPreparationTime || '',
+        estPreparationTime: initialData.estPreparationTime != null ? String(initialData.estPreperationTime) : '',
         sizes: initialData.sizes || [],
-        image: null, // Image is not pre-filled (user can upload a new one)
+        image: initialData.image || '', 
         restaurantID: restaurantID || initialData.restaurantID || '',
+        //isAvailable: initialData.isAvailable !== undefined ? initialData.isAvailable : true,
       });
     }
-  }, [mode, initialData, restaurantID]);
+  }, [mode, initialData, restaurantID, categories]);
 
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: name === 'estPreparationTime' ? parseFloat(value) || '' : value }));
+    setFormData((prev) => ({ ...prev,
+       [name]: name === 'estPreparationTime' ? (value ? parseFloat(value) : '') : value, }));
   };
 
-  // Handle file input
-  const handleFileChange = (e) => {
-    setFormData((prev) => ({ ...prev, image: e.target.files[0] }));
-  };
+  // // Handle file input
+  // const handleFileChange = (e) => {
+  //   setFormData((prev) => ({ ...prev, image: e.target.files[0] }));
+  // };
 
-  // Add or update size-price pair
-  const handleSizePriceAction = () => {
-    if (newSize && newPrice) {
-      if (editingIndex !== null) {
-        // Update existing size-price pair
-        setFormData((prev) => ({
-          ...prev,
-          sizes: prev.sizes.map((size, idx) =>
-            idx === editingIndex ? { size: newSize, price: parseFloat(newPrice) } : size
-          ),
-        }));
-        setEditingIndex(null);
-      } else {
-        // Add new size-price pair
-        setFormData((prev) => ({
-          ...prev,
-          sizes: [...prev.sizes, { size: newSize, price: parseFloat(newPrice) }],
-        }));
-      }
-      setNewSize('');
-      setNewPrice('');
+ // Add or update size-price pair
+ const handleSizePriceAction = () => {
+  if (newSize && newPrice) {
+    const price = parseFloat(newPrice);
+    if (isNaN(price)) return; // Validate price
+    if (editingIndex !== null) {
+      setFormData((prev) => ({
+        ...prev,
+        sizes: prev.sizes.map((size, idx) =>
+          idx === editingIndex ? { size: newSize, price } : size
+        ),
+      }));
+      setEditingIndex(null);
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        sizes: [...prev.sizes, { size: newSize, price }],
+      }));
     }
-  };
+    setNewSize('');
+    setNewPrice('');
+  }
+};
 
   // Edit size-price pair
   const handleEditSizePrice = (index) => {
@@ -88,15 +111,28 @@ function MenuItemForm({ isOpen, onClose, mode = 'add', initialData = {}, onSubmi
     }));
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const submitData = {
-      ...formData,
-      image: formData.image || initialData.image, // Retain original image if no new one is uploaded
-    };
-    onSubmit(submitData);
+ // Handle form submission
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  const selectedCategory = categories.find((cat) => cat._id === formData.category);
+  const submitData = {
+    name: formData.name,
+    restaurantID: formData.restaurantID,
+    description: formData.description || undefined,
+    category: formData.category || undefined,
+    categoryName: selectedCategory?.name || undefined, // Include category name
+    estPreperationTime: formData.estPreparationTime ? Number(formData.estPreparationTime) : undefined,
+    sizes: formData.sizes.length > 0 ? formData.sizes : undefined,
+    image: formData.image || undefined,
   };
+
+  try {
+    await onSubmit(submitData);
+  } catch (error) {
+    console.error('Error submitting form:', error);
+    throw error;
+  }
+};
 
   // Handle cancel
   const handleCancel = () => {
@@ -107,8 +143,9 @@ function MenuItemForm({ isOpen, onClose, mode = 'add', initialData = {}, onSubmi
       description: '',
       estPreparationTime: '',
       sizes: [],
-      image: null,
+      image: '',
       restaurantID: restaurantID || '',
+      //isAvailable: true,
     });
     setNewSize('');
     setNewPrice('');
@@ -122,7 +159,6 @@ function MenuItemForm({ isOpen, onClose, mode = 'add', initialData = {}, onSubmi
   return (
     <div className="modal modal-open">
       <div className="modal-box relative max-w-4xl">
-        {/* Title and Close Button */}
         <h3 className="text-xl font-bold mb-4">
           {mode === 'edit' ? 'Edit Menu Item' : 'Add New Menu Item'}
         </h3>
@@ -137,21 +173,18 @@ function MenuItemForm({ isOpen, onClose, mode = 'add', initialData = {}, onSubmi
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Column 1: Image Upload */}
           <div className="flex flex-col items-center">
-            <label className="block text-sm font-medium mb-2">Upload Image</label>
-            <label className="btn btn-ghost btn-sm w-full max-w-xs">
-              <span>Choose File</span>
+            <label className="block text-sm font-medium mb-2">Image URL</label>
               <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-            </label>
-            {formData.image ? (
-              <p className="mt-2 text-sm text-gray-500">{formData.image.name}</p>
-            ) : mode === 'edit' && initialData.image ? (
-              <p className="mt-2 text-sm text-gray-500">Current: {initialData.image}</p>
-            ) : null}
+              type="text"
+              name="image"
+              value={formData.image}
+              onChange={handleInputChange}
+              className="input input-bordered w-full max-w-xs"
+              placeholder="Enter image URL"
+            />
+            {formData.image && (
+              <p className="mt-2 text-sm text-gray-500">URL: {formData.image}</p>
+            )}
           </div>
 
           {/* Column 2: Input Fields */}
@@ -172,6 +205,11 @@ function MenuItemForm({ isOpen, onClose, mode = 'add', initialData = {}, onSubmi
             {/* Category */}
             <div>
               <label className="block text-sm font-medium mb-1">Category</label>
+              {isLoadingCategories ? (
+                <p>Loading categories...</p>
+              ) : categoryError ? (
+                <p className="text-red-500">{categoryError}</p>
+              ) : (
               <select
                 name="category"
                 value={formData.category}
@@ -180,12 +218,12 @@ function MenuItemForm({ isOpen, onClose, mode = 'add', initialData = {}, onSubmi
               >
                 <option value="">Select Category</option>
                 {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
+                  <option key={cat._id} value={cat._id}>
+                    {cat.name}
                   </option>
                 ))}
               </select>
-              {/* Note: Backend must map category string to Category ObjectId */}
+              )}
             </div>
 
             {/* Description */}
