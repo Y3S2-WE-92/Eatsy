@@ -1,11 +1,16 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useCustomerLogout, useRestaurantLogout } from "../../utils/auth-utils/auth-user";
 
 function ProfileButton() {
+  const customerLogout = useCustomerLogout();
+  const restaurantLogout = useRestaurantLogout();
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    customerLogout();
+    restaurantLogout();
 
     // Redirect to the login page
     navigate("/");
