@@ -4,7 +4,6 @@ import { DeliveryMap } from "../../components";
 function Home() {
   return (
     <>
-      <div>Home</div>
       <DeliveryMap mode="delivery"/>
     </>
   );
