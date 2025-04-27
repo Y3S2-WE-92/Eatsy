@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import {
   connectRestaurantSocket,
   listenNewOrder,
@@ -40,21 +39,21 @@ function OrderRequests() {
     setIsOrderViewModalOpen(true);
   };
 
-  const handleAccept = async (id) => {
+  const handleAccept = async (id, refNo) => {
     try {
       await AcceptOrder(id);
       setOrders((prev) => prev.filter((order) => order._id !== id));
-      toast.success("Order accepted!");
+      toast.success(`Order ${refNo} accepted!`);
     } catch (error) {
       console.error("Error accepting order:", error);
     }
   };
 
-  const handleReject = async (id) => {
+  const handleReject = async (id, refNo) => {
     try {
       await RejectOrder(id);
       setOrders((prev) => prev.filter((order) => order._id !== id));
-      toast.error("Order rejected!");
+      toast.error(`Order ${refNo} rejected!`);
     } catch (error) {
       console.error("Error rejecting order:", error);
     }
@@ -88,13 +87,13 @@ function OrderRequests() {
               </div>
               <div className="flex flex-row gap-2">
                 <button
-                  onClick={() => handleAccept(order._id)}
+                  onClick={() => handleAccept(order._id, order.refNo)}
                   className="btn btn-circle btn-success btn-sm text-xl font-bold"
                 >
                   <IoCheckmarkSharp />
                 </button>
                 <button
-                  onClick={() => handleReject(order._id)}
+                  onClick={() => handleReject(order._id, order.refNo)}
                   className="btn btn-circle btn-error btn-sm text-xl font-bold"
                 >
                   <IoClose />
