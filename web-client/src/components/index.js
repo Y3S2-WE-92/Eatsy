@@ -39,6 +39,8 @@ import ComponentHealth from "./Cards/ComponentHealth";
 import ShoppingCartButton from "./ShoppingCart/ShoppingCartButton";
 import Counter from "./ShoppingCart/Counter";
 
+import DeliveryMap from "./DeliveryMap/DeliveryMap";
+
 import OrderAccordionItem from "./Accordions/Customer/OrderAccordionItem";
 
 import OrderTimeline from "./Timelines/Customer/OrderTimeline";
@@ -97,6 +99,9 @@ export {
   //Shopping Cart
   ShoppingCartButton,
   Counter,
+
+  //Delivery
+  DeliveryMap,
 
   //Timelines
   OrderTimeline,

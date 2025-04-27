@@ -47,9 +47,8 @@ const getOrderById = async (req, res) => {
 // Get nearby orders for delivery (within x km)
 const getNearbyOrders = async (req, res) => {
   try {
-    const { lat, lng, maxDistance = 5000 } = req.query;
-    if (!lat || !lng)
-      return res.status(400).json({ error: "lat and lng required" });
+    const { lat, lng, maxDistance = 500000 } = req.query;
+    if (!lat || !lng) return res.status(400).json({ error: 'lat and lng required' });
 
     const nearbyOrders = await Order.find({
       status: "ready",
