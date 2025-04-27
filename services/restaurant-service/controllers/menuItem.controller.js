@@ -48,7 +48,7 @@ const getMenuItemsByRestaurantID = async (req, res) => {
 };
 
 const getMyMenuItems = async (req, res) => {
-  const {id} = req.user;
+  const { id } = req.user;
   try {
     const menuItems = await MenuItem.find({
       restaurantID: id,
@@ -60,13 +60,12 @@ const getMyMenuItems = async (req, res) => {
 };
 
 const updateMenuItemAvailability = async (req, res) => {
-  const {id} = req.user;
+  const { id } = req.user;
   try {
     // Check if the user is a restaurant owner
     const restaurant = await getRestaurantById(id);
 
     if (!restaurant) {
-      console.log("Restaurant not found");
       return res.status(404).json({ message: "Restaurant not found" });
     }
 
@@ -74,6 +73,13 @@ const updateMenuItemAvailability = async (req, res) => {
 
     if (!menuItem) {
       return res.status(404).json({ message: "Menu item not found" });
+    }
+
+    // Check if the menu item belongs to the restaurant
+    if (menuItem.restaurantID !== restaurant._id.toString()) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to update this menu item" });
     }
 
     // Toggle availability
@@ -86,6 +92,66 @@ const updateMenuItemAvailability = async (req, res) => {
   }
 };
 
+const updateMyMenuItem = async (req, res) => {
+  const { id } = req.user;
+  try {
+    // Check if the user is a restaurant owner
+    const restaurant = await getRestaurantById(id);
+
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    const menuItem = await MenuItem.findById(req.params.id);
+
+    if (!menuItem) {
+      return res.status(404).json({ message: "Menu item not found" });
+    }
+
+    // Check if the menu item belongs to the restaurant
+    if (menuItem.restaurantID !== restaurant._id.toString()) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to update this menu item" });
+    }
+    Object.assign(menuItem, req.body);
+    await menuItem.save();
+    res.json(menuItem);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const deleteMyMenuItem = async (req, res) => {
+  const { id } = req.user;
+  try {
+    // Check if the user is a restaurant owner
+    const restaurant = await getRestaurantById(id);
+
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    const menuItem = await MenuItem.findById(req.params.id);
+
+    if (!menuItem) {
+      return res.status(404).json({ message: "Menu item not found" });
+    }
+
+    // Check if the menu item belongs to the restaurant
+    if (menuItem.restaurantID !== restaurant._id.toString()) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to delete this menu item" });
+    }
+
+    await MenuItem.findByIdAndDelete(req.params.id);
+    res.json({ message: "Menu item deleted" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAllMenuItems,
   createMenuItem,
@@ -93,4 +159,6 @@ module.exports = {
   getMenuItemsByRestaurantID,
   getMyMenuItems,
   updateMenuItemAvailability,
+  updateMyMenuItem,
+  deleteMyMenuItem
 };
