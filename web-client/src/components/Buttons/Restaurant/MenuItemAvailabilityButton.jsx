@@ -8,7 +8,7 @@ function MenuItemAvailabilityButton({ menuItemID, initialAvailability }) {
 
   const handleToggle = async () => {
     setChecked((prev) => !prev);
-   const response = await updateMenuItemAvailability(menuItemID);
+    const response = await updateMenuItemAvailability(menuItemID);
 
     if (response) {
       toast.success("Menu item availability updated!");

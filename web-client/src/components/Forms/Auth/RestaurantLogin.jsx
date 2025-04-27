@@ -66,6 +66,8 @@ function RestaurantLogin() {
             id: decodedToken.id,
             name: response.data.user.name,
             username: response.data.user.username,
+            availability: response.data.user.availability,
+            accountStatus: response.data.user.accountStatus,
           })
         );
 
