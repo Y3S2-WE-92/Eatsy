@@ -35,6 +35,21 @@ const getSavedCards = async (req, res) => {
   }
 };
 
+const updateCard = async (req, res) => {
+  const { id } = req.params;
+  const { cardName } = req.body;
+
+  try {
+    const updatedCard = await Card.findByIdAndUpdate(id, { cardName });
+    if (!updatedCard) {
+      return res.status(404).json({ success: false, message: "Card not found" });
+    }
+    res.json({ success: true, card: updatedCard });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
 const deleteCard = async (req, res) => {
     const { id } = req.params;
   
@@ -46,4 +61,4 @@ const deleteCard = async (req, res) => {
     }
   };
 
-module.exports = {saveCard, getSavedCards, deleteCard}
+module.exports = {saveCard, getSavedCards, updateCard, deleteCard}
