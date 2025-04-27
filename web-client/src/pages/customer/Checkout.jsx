@@ -29,7 +29,7 @@ function Checkout() {
       <PageTitle title='Checkout' backLink='/customer' />
 
       <Elements stripe={stripePromise}>
-        <SelectCardPayment amount = {amount}/>
+        <SelectCardPayment amount = {amount} refNo={cartId}/>
       </Elements>
     </div>
   )

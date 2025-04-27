@@ -8,7 +8,7 @@ import { useStripe } from "@stripe/react-stripe-js";
 import ConfirmModal from "../../../components/Cards/Payment/ConfirmModal";
 import { useToast } from "../../../utils/alert-utils/ToastUtil";
 
-export default function SelectCardPayment({ amount }) {
+export default function SelectCardPayment({ amount, refNo }) {
     const [cards, setCards] = useState([]);
     const [useNewCard, setUseNewCard] = useState(false);
     const [selectedCard, setSelectedCard] = useState(null);
@@ -44,6 +44,7 @@ export default function SelectCardPayment({ amount }) {
         axios
             .post(paymentAPI.PaymentAPIProcessPayment, {
                 userId: user.id,
+                refNo,
                 amount,
                 cardToken: selectedCard.cardToken,
             })
@@ -83,6 +84,7 @@ export default function SelectCardPayment({ amount }) {
         try {
             const response = await axios.post(paymentAPI.PaymentAPIProcessPayment, {
                 userId: user.id,
+                refNo,
                 amount: amount,
                 cardToken: token,
             });
