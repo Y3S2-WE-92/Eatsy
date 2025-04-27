@@ -24,6 +24,7 @@ import BackButton from "./Buttons/BackButton";
 import AvailabilityToggleButton from "./Buttons/Restaurant/AvailabilityToggleButton";
 import LocationSelectButton from "./Buttons/Customer/LocationSelectButton";
 import MenuItemAvailabilityButton from "./Buttons/Restaurant/MenuItemAvailabilityButton";
+import MapViewButton from "./MapView/MapViewButton";
 
 import RestaurantCard from "./Cards/Customer/RestaurantCard";
 import FoodItemCard from "./Cards/Customer/FoodItemCard";
@@ -81,6 +82,8 @@ export {
   BackButton,
   AvailabilityToggleButton,
   LocationSelectButton,
+  MapViewButton,
+  MenuItemAvailabilityButton,
 
   //Cards
   RestaurantCard,
