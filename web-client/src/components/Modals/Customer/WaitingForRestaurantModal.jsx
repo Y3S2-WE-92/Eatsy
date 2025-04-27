@@ -4,12 +4,12 @@ import {
   listenOrderStatusUpdate,
   disconnectCustomerSocket,
 } from "../../../sockets/customer.socket";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useCustomer } from "../../../utils/redux-utils/redux-customer";
 
 function WaitingForRestaurantModal({ isOpen, onClose }) {
   const navigate = useNavigate();
-  const customerID = useSelector((state) => state.customer.loginCustomer?.id);
+  const customer = useCustomer();
   const [message, setMessage] = useState(
     "Waiting for restaurant confirmation..."
   );
@@ -18,7 +18,7 @@ function WaitingForRestaurantModal({ isOpen, onClose }) {
   const [spinnerStyle, setSpinnerStyle] = useState("text-warning");
 
   useEffect(() => {
-    connectCustomerSocket(customerID);
+    connectCustomerSocket(customer.id);
 
     listenOrderStatusUpdate((data = {status: "accepted"}) => {
       if (data.status === "accepted") {
@@ -48,7 +48,7 @@ function WaitingForRestaurantModal({ isOpen, onClose }) {
     return () => {
       disconnectCustomerSocket();
     };
-  }, [customerID]);
+  }, [customer.id]);
 
   return (
     <dialog className="modal modal-bottom sm:modal-middle" open={isOpen}>
