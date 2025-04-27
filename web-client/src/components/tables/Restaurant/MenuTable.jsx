@@ -4,6 +4,7 @@ import { formatCurrency } from "../../../utils/format-utils/CurrencyUtil";
 import MenuItemForm from "../../Forms/Restaurant/MenuItemForm";
 import { deleteMyMenuItem } from "../../../utils/delete-utils/restaurant/delete-menuItem";
 import { useToast } from "../../../utils/alert-utils/ToastUtil";
+import { formatMinutesTime } from "../../../utils/format-utils/TimeFormatUtil";
 
 function MenuTable({
   searchQuery = "",
@@ -106,7 +107,7 @@ function MenuTable({
                 </td>
                 <td>
                   {item.estPreperationTime
-                    ? `${item.estPreperationTime} mins`
+                    ? `${formatMinutesTime(item.estPreperationTime)}`
                     : "N/A"}
                 </td>
                 <td className="whitespace-normal break-words max-w-xs">
@@ -121,13 +122,13 @@ function MenuTable({
                 <td>
                   <div className="flex flex-row gap-2">
                     <button
-                      className="btn btn-outline btn-xs text-sm"
+                      className="btn btn-outline btn-sm text-sm"
                       onClick={() => handleEditClick(item)}
                     >
                       Edit
                     </button>
                     <button
-                      className="btn btn-outline btn-error btn-xs text-sm"
+                      className="btn btn-outline btn-error btn-sm text-sm"
                       onClick={() => handleDelete(item._id)}
                     >
                       Delete
