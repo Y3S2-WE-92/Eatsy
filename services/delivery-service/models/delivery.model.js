@@ -5,8 +5,8 @@ const deliverySchema = new mongoose.Schema({
   deliveryPersonId: { type: mongoose.Schema.Types.ObjectId, required: true },
   restaurantId: { type: String, required: true },
   customerId: { type: String, required: true },
-  deliveryAddress: {
-    address: { type: String, required: true },
+  deliveryLocation: {
+    address: { type: String, required: false },
     location: {
       type: { type: String, enum: ['Point'], default: 'Point' },
       coordinates: { type: [Number], required: true }
