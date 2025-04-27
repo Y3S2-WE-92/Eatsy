@@ -5,14 +5,15 @@ import OrderDetails from './OrderDetails';
 import ActiveStatusButton from './ActiveStatusButton';
 import { orderAPI } from '../../services/order-service'; // Fix the import
 import axios from 'axios';
+import { useDeliveryPerson } from '../../utils/redux-utils/redux-delivery';
 
 mapboxgl.accessToken = "pk.eyJ1IjoiamFrYWRwIiwiYSI6ImNtOXZqa3V0ODBnNDYycXNjMGZsMDZ6bXEifQ._21wZoGlO774ykfUi1X7Rw";
 
 const DeliveryMap = ({ mode = "delivery", orderData = null }) => {
   const mapRef = useRef(null);
   const deliveryPersonMarkerRef = useRef(null);
-
-  const DELIVERY_PERSON_ID = "680a7778b80586911ffda91e"; // Replace with actual delivery person ID
+  const deliveryPerson = useDeliveryPerson();
+  const DELIVERY_PERSON_ID = deliveryPerson.id; // Replace with actual delivery person ID
 
   const [orderDetails, setOrderDetails] = useState(orderData); // Selected order details
   const [nearbyOrders, setNearbyOrders] = useState([]); // List of nearby orders (for delivery mode)
