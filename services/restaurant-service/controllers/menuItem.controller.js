@@ -47,9 +47,50 @@ const getMenuItemsByRestaurantID = async (req, res) => {
   }
 };
 
+const getMyMenuItems = async (req, res) => {
+  const {id} = req.user;
+  try {
+    const menuItems = await MenuItem.find({
+      restaurantID: id,
+    }).populate("category");
+    res.json(menuItems);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const updateMenuItemAvailability = async (req, res) => {
+  const {id} = req.user;
+  try {
+    // Check if the user is a restaurant owner
+    const restaurant = await getRestaurantById(id);
+
+    if (!restaurant) {
+      console.log("Restaurant not found");
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    const menuItem = await MenuItem.findById(req.params.id);
+
+    if (!menuItem) {
+      return res.status(404).json({ message: "Menu item not found" });
+    }
+
+    // Toggle availability
+    menuItem.availability = !menuItem.availability;
+    await menuItem.save();
+
+    res.json(menuItem);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAllMenuItems,
   createMenuItem,
   getMenuItemByID,
   getMenuItemsByRestaurantID,
+  getMyMenuItems,
+  updateMenuItemAvailability,
 };
