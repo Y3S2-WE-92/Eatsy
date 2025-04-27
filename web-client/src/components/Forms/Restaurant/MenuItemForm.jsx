@@ -5,6 +5,7 @@ import { formatCurrency } from "../../../utils/format-utils/CurrencyUtil";
 import { updateMyMenuItem } from "../../../utils/update-utils/restaurant/update-menuItem";
 import { createMenuItems } from "../../../utils/create-utils/restaurant/create-menuItems";
 import { useRestaurant } from "../../../utils/redux-utils/redux-restaurant";
+import ImageUploader from "../../ImageUploaders/ImageUploader";
 
 function MenuItemForm({
   isOpen,
@@ -15,6 +16,7 @@ function MenuItemForm({
 }) {
   const restaurant = useRestaurant();
   const toast = useToast();
+  const [imageUrl, setImageUrl] = useState("");
   const [formData, setFormData] = useState({
     id: mode === "edit" ? initialData._id : null,
     name: "",
@@ -114,15 +116,19 @@ function MenuItemForm({
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // Set the uploaded image URL into the formData
+    const updatedFormData = { ...formData, image: imageUrl || formData.image };
+  
     try {
       if (mode === "edit") {
-        const response = await updateMyMenuItem(initialData._id, formData);
+        const response = await updateMyMenuItem(initialData._id, updatedFormData);
         if (response?.status === 200) {
           toast.success("Menu item updated successfully");
           window.location.reload();
         }
       } else {
-        const response = await createMenuItems(formData);
+        const response = await createMenuItems(updatedFormData);
         if (response?.status === 201) {
           toast.success("Menu item created successfully");
           window.location.reload();
@@ -131,122 +137,137 @@ function MenuItemForm({
       onClose();
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast.error(error.response?.data?.message || "Failed to submit menu item");
+      toast.error(
+        error.response?.data?.message || "Failed to submit menu item"
+      );
     }
-  };  
+  };
+  
 
   return (
     <dialog open={isOpen} className="modal modal-bottom sm:modal-middle">
-      <div className="modal-box max-w-3xl">
+      <div className="modal-box min-w-8/10 max-w-5xl">
         <h2 className="text-2xl mb-4">
           {mode === "edit" ? "Edit Menu Item" : "Add Menu Item"}
         </h2>
         <form>
-          {/* Form fields */}
-          <input
-            type="text"
-            name="name"
-            placeholder="Name"
-            value={formData.name}
-            onChange={handleInputChange}
-            className="input input-bordered w-full mb-2"
-            required
-          />
+          <div className="flex flex-row gap-4">
+            {/* Form fields */}
+            <ImageUploader setImageUrl={setImageUrl} />
+            <div className="flex-1">
+              <input
+                type="text"
+                name="name"
+                placeholder="Name"
+                value={formData.name}
+                onChange={handleInputChange}
+                className="input input-bordered w-full mb-2"
+                required
+              />
 
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleInputChange}
-            className="select select-bordered w-full mb-2"
-            required
-          >
-            <option value="">Select Category</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                className="select select-bordered w-full mb-2"
+                required
+              >
+                <option value="">Select Category</option>
+                {categories.map((cat) => (
+                  <option key={cat._id} value={cat._id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
 
-          <textarea
-            name="description"
-            placeholder="Description"
-            value={formData.description}
-            onChange={handleInputChange}
-            className="textarea textarea-bordered w-full mb-2"
-          />
+              <textarea
+                name="description"
+                placeholder="Description"
+                value={formData.description}
+                onChange={handleInputChange}
+                className="textarea textarea-bordered w-full mb-2"
+              />
 
-          <input
-            type="number"
-            name="estPreperationTime"
-            placeholder="Estimated Preparation Time (minutes)"
-            value={formData.estPreperationTime}
-            onChange={handleInputChange}
-            className="input input-bordered w-full mb-2"
-          />
+              <input
+                type="number"
+                name="estPreperationTime"
+                placeholder="Estimated Preparation Time (minutes)"
+                value={formData.estPreperationTime}
+                onChange={handleInputChange}
+                className="input input-bordered w-full mb-2"
+              />
 
-          {/* Size and price management */}
-          <div className="flex gap-2 mb-2">
-            <input
-              type="text"
-              placeholder="Size (e.g., Small)"
-              value={newSize}
-              onChange={(e) => setNewSize(e.target.value)}
-              className="input input-bordered w-1/2"
-            />
-            <input
-              type="number"
-              placeholder="Price"
-              value={newPrice}
-              onChange={(e) => setNewPrice(e.target.value)}
-              className="input input-bordered w-1/2"
-            />
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={handleSizePriceAction}
-            >
-              {editingIndex !== null ? "Update" : "Add"}
-            </button>
-          </div>
-
-          {/* Display Sizes */}
-          {formData.sizes.map((size, idx) => (
-            <div key={idx} className="flex items-center justify-between mb-1">
-              <span>{`${size.size}: ${formatCurrency(
-                size.price,
-                "LKR"
-              )}`}</span>
-              <div className="flex gap-2">
+              {/* Size and price management */}
+              <div className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  placeholder="Size (e.g., Small)"
+                  value={newSize}
+                  onChange={(e) => setNewSize(e.target.value)}
+                  className="input input-bordered w-1/2"
+                />
+                <input
+                  type="number"
+                  placeholder="Price"
+                  value={newPrice}
+                  onChange={(e) => setNewPrice(e.target.value)}
+                  className="input input-bordered w-1/2"
+                />
                 <button
                   type="button"
-                  className="btn btn-xs btn-info"
-                  onClick={() => handleEditSizePrice(idx)}
+                  className="btn btn-primary"
+                  onClick={handleSizePriceAction}
                 >
-                  Edit
+                  {editingIndex !== null ? "Update" : "Add"}
+                </button>
+              </div>
+
+              {/* Display Sizes */}
+              {formData.sizes.map((size, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between mb-1"
+                >
+                  <span>{`${size.size}: ${formatCurrency(
+                    size.price,
+                    "LKR"
+                  )}`}</span>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      className="btn btn-xs btn-info"
+                      onClick={() => handleEditSizePrice(idx)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-xs btn-error"
+                      onClick={() => handleDeleteSizePrice(idx)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+              <div className="flex justify-end gap-2 mt-4">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={handleSubmit}
+                >
+                  {mode === "edit" ? "Update" : "Add"}
                 </button>
                 <button
                   type="button"
-                  className="btn btn-xs btn-error"
-                  onClick={() => handleDeleteSizePrice(idx)}
+                  className="btn btn-ghost"
+                  onClick={onClose}
                 >
-                  Delete
+                  Cancel
                 </button>
               </div>
             </div>
-          ))}
-
-          <div className="flex justify-end gap-2 mt-4">
-            <button
-              type="button"
-              className="btn btn-success"
-              onClick={handleSubmit}
-            >
-              {mode === "edit" ? "Update" : "Add"}
-            </button>
-            <button type="button" className="btn btn-ghost" onClick={onClose}>
-              Cancel
-            </button>
           </div>
         </form>
       </div>

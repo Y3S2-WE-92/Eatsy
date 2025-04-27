@@ -48,6 +48,8 @@ import OrderTimeline from "./Timelines/Customer/OrderTimeline";
 
 import OrderRequests from "./Widgets/Restaurant/OrderRequests";
 
+import ImageUploader from "./ImageUploaders/ImageUploader";
+
 export {
   //Navbars
   LandingNavbar,
@@ -108,5 +110,8 @@ export {
   OrderTimeline,
 
   //Widgets
-  OrderRequests
+  OrderRequests,
+
+  //Image Uploaders
+  ImageUploader,
 };
