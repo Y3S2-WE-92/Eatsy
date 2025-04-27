@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function ProfileButton() {
   const navigate = useNavigate();
@@ -34,6 +34,9 @@ function ProfileButton() {
         </li>
         <li>
           <a>Settings</a>
+        </li>
+        <li>
+          <Link to={"/customer/my-cards"}>My cards</Link>
         </li>
         <li>
           <button onClick={handleLogout} className="btn btn-error">

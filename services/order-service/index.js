@@ -4,13 +4,15 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const deliveryOrderRoutes = require("./routes/delivery.order.route");
 
-if (process.env.NODE_ENV === 'production') {
-  dotenv.config({ path: '.env.production' });
+if (process.env.NODE_ENV === "production") {
+  dotenv.config({ path: ".env.production" });
 } else {
-  dotenv.config({ path: '.env' });
+  dotenv.config({ path: ".env" });
 }
 
 const app = express();
+const http = require("http").createServer(app);
+const io = require("./sockets/socket").init(http);
 
 app.use(cors());
 app.use(express.json());
@@ -41,6 +43,6 @@ mongoose
   });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+http.listen(PORT, () => {
   console.log(`Order Service running on port ${PORT}`);
 });

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ThemeLogo from "../../Logos/ThemeLogo";
 import { styles } from "../../../styles/styles";
@@ -6,8 +6,11 @@ import { userAPI } from "../../../services";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useToast } from "../../../utils/alert-utils/ToastUtil";
+import { useDispatch } from "react-redux";
+import { setLoginRestaurant } from "../../../redux/restaurant/restaurantSlice";
 
 function RestaurantLogin() {
+  const dispatch = useDispatch();
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -58,6 +61,14 @@ function RestaurantLogin() {
           })
         );
 
+        dispatch(
+          setLoginRestaurant({
+            id: decodedToken.id,
+            name: response.data.user.name,
+            username: response.data.user.username,
+          })
+        );
+
         console.log("Login successful", response.data);
         toast.success("Login successful");
         navigate("/restaurant");
@@ -84,7 +95,10 @@ function RestaurantLogin() {
             Please enter your credentials to access your restaurant dashboard.
           </p>
 
-          <form onSubmit={handleSubmit} className="form-control flex flex-col gap-2 mt-4">
+          <form
+            onSubmit={handleSubmit}
+            className="form-control flex flex-col gap-2 mt-4"
+          >
             <input
               type="text"
               name="username"
