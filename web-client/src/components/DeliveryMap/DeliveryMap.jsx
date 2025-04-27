@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
-import MapContainer from '../MapContainer/MapContainer';
-import OrderDetails from '../OrderDetails/OrderDetails';
-import ActiveStatusButton from '../ActiveStatusButton/ActiveStatusButton';
+import MapContainer from './MapContainer';
+import OrderDetails from './OrderDetails';
+import ActiveStatusButton from './ActiveStatusButton';
 import { orderAPI } from '../../services/order-service'; // Fix the import
 import axios from 'axios';
 
