@@ -23,7 +23,7 @@ const notifications = [
 
 function RestaurantNavbar({ sections=[] }) {
   return (
-    <div className={`${styles.paddingX} navbar bg-base-300 shadow-sm`}>
+    <div className={`${styles.paddingX} navbar bg-base-300 shadow-sm sticky top-0 z-50`}>
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">

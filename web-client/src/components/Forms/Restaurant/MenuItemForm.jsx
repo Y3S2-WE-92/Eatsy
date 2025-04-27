@@ -1,101 +1,102 @@
-import React, { useState, useEffect } from 'react';
-import { IoAdd, IoClose } from 'react-icons/io5';
-import { formatCurrency } from '../../../utils/format-utils/CurrencyUtil';
-import { getAllCategories } from '../../../utils/fetch-utils/customer/fetch-restaurant'
+import React, { useState, useEffect } from "react";
+import { getAllCategories } from "../../../utils/fetch-utils/customer/fetch-restaurant";
+import { useToast } from "../../../utils/alert-utils/ToastUtil";
+import { formatCurrency } from "../../../utils/format-utils/CurrencyUtil";
+import { updateMyMenuItem } from "../../../utils/update-utils/restaurant/update-menuItem";
+import { createMenuItems } from "../../../utils/create-utils/restaurant/create-menuItems";
+import ImageUploader from "../../ImageUploaders/ImageUploader";
 
-function MenuItemForm({ isOpen, onClose, mode = 'add', initialData = {}, onSubmit, restaurantID }) {
+function MenuItemForm({
+  isOpen,
+  onClose,
+  mode = "add",
+  initialData = {},
+  refreshTable = () => {},
+}) {
+  const toast = useToast();
+  const [imageUrl, setImageUrl] = useState("");
   const [formData, setFormData] = useState({
-    id: mode === 'edit' ? initialData.id : null,
-    name: '',
-    category: '',
-    description: '',
-    estPreparationTime: '',
+    id: mode === "edit" ? initialData._id : null,
+    name: "",
+    category: "",
+    description: "",
+    estPreperationTime: "",
     sizes: [],
-    image: '',
-    restaurantID: restaurantID || '',
-    //isAvailable: true, // Default to true for new items
+    image: "",
   });
-  const [newSize, setNewSize] = useState('');
-  const [newPrice, setNewPrice] = useState('');
-  const [editingIndex, setEditingIndex] = useState(null); // Track index of size-price pair being edited
-  const [categories, setCategories] = useState([]); 
+  const [categories, setCategories] = useState([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
-  const [categoryError, setCategoryError] = useState(null);
-  const sizeOptions = ['Small', 'Regular', 'Large', 'Medium', 'Extra Large']; 
+  const [newSize, setNewSize] = useState("");
+  const [newPrice, setNewPrice] = useState("");
+  const [editingIndex, setEditingIndex] = useState(null);
 
-// Fetch categories when component mounts
-useEffect(() => {
-  const fetchCategories = async () => {
-    setIsLoadingCategories(true);
-    try {
-      const fetchedCategories = await getAllCategories();
-      setCategories(Array.isArray(fetchedCategories) ? fetchedCategories : []);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-      setCategoryError('Failed to load categories');
-      setCategories([]);
-    } finally {
-      setIsLoadingCategories(false);
-    }
-  };
-  fetchCategories();
-}, []);
-  
-  // Populate form with initial data in edit mode
   useEffect(() => {
-    if (mode === 'edit' && initialData) {
-      const categoryId = initialData.category || ''; // Use _id directly
-        setFormData({
-        id: initialData.id || null,
-        name: initialData.name || '',
-        category: categoryId, // Use category _id
-        description: initialData.description || '',
-        estPreparationTime: initialData.estPreparationTime != null ? String(initialData.estPreperationTime) : '',
+    const fetchCategories = async () => {
+      setIsLoadingCategories(true);
+      try {
+        const fetchedCategories = await getAllCategories();
+        setCategories(
+          Array.isArray(fetchedCategories) ? fetchedCategories : []
+        );
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setIsLoadingCategories(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    if (mode === "edit" && initialData) {
+      setFormData({
+        id: initialData._id || null,
+        name: initialData.name || "",
+        category: initialData.category?._id || "",
+        description: initialData.description || "",
+        estPreperationTime: initialData.estPreperationTime || "",
         sizes: initialData.sizes || [],
-        image: initialData.image || '', 
-        restaurantID: restaurantID || initialData.restaurantID || '',
-        //isAvailable: initialData.isAvailable !== undefined ? initialData.isAvailable : true,
+        image: initialData.image || "",
       });
     }
-  }, [mode, initialData, restaurantID, categories]);
+  }, [initialData, mode]);
 
-  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev,
-       [name]: name === 'estPreparationTime' ? (value ? parseFloat(value) : '') : value, }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        name === "estPreperationTime"
+          ? value
+            ? parseFloat(value)
+            : ""
+          : value,
+    }));
   };
 
-  // // Handle file input
-  // const handleFileChange = (e) => {
-  //   setFormData((prev) => ({ ...prev, image: e.target.files[0] }));
-  // };
-
- // Add or update size-price pair
- const handleSizePriceAction = () => {
-  if (newSize && newPrice) {
-    const price = parseFloat(newPrice);
-    if (isNaN(price)) return; // Validate price
-    if (editingIndex !== null) {
-      setFormData((prev) => ({
-        ...prev,
-        sizes: prev.sizes.map((size, idx) =>
-          idx === editingIndex ? { size: newSize, price } : size
-        ),
-      }));
-      setEditingIndex(null);
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        sizes: [...prev.sizes, { size: newSize, price }],
-      }));
+  const handleSizePriceAction = () => {
+    if (newSize && newPrice) {
+      const price = parseFloat(newPrice);
+      if (isNaN(price)) return;
+      if (editingIndex !== null) {
+        setFormData((prev) => ({
+          ...prev,
+          sizes: prev.sizes.map((size, idx) =>
+            idx === editingIndex ? { size: newSize, price } : size
+          ),
+        }));
+        setEditingIndex(null);
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          sizes: [...prev.sizes, { size: newSize, price }],
+        }));
+      }
+      setNewSize("");
+      setNewPrice("");
     }
-    setNewSize('');
-    setNewPrice('');
-  }
-};
+  };
 
-  // Edit size-price pair
   const handleEditSizePrice = (index) => {
     const { size, price } = formData.sizes[index];
     setNewSize(size);
@@ -103,118 +104,87 @@ useEffect(() => {
     setEditingIndex(index);
   };
 
-  // Delete size-price pair
   const handleDeleteSizePrice = (index) => {
     setFormData((prev) => ({
       ...prev,
       sizes: prev.sizes.filter((_, idx) => idx !== index),
     }));
   };
-
- // Handle form submission
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  const selectedCategory = categories.find((cat) => cat._id === formData.category);
-  const submitData = {
-    name: formData.name,
-    restaurantID: formData.restaurantID,
-    description: formData.description || undefined,
-    category: formData.category || undefined,
-    categoryName: selectedCategory?.name || undefined, // Include category name
-    estPreperationTime: formData.estPreparationTime ? Number(formData.estPreparationTime) : undefined,
-    sizes: formData.sizes.length > 0 ? formData.sizes : undefined,
-    image: formData.image || undefined,
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    // Set the uploaded image URL into the formData
+    const updatedFormData = { ...formData, image: imageUrl || formData.image };
+  
+    try {
+      if (mode === "edit") {
+        const response = await updateMyMenuItem(initialData._id, updatedFormData);
+        if (response?.status === 200) {
+          refreshTable();
+          toast.success("Menu item updated successfully");
+          setFormData({
+            id: "",
+            name: "",
+            category: "",
+            description: "",
+            estPreperationTime: "",
+            sizes: [],
+            image: "",
+          });
+        }
+      } else {
+        const response = await createMenuItems(updatedFormData);
+        if (response?.status === 201) {
+          toast.success("Menu item created successfully");
+          setFormData({
+            id: "",
+            name: "",
+            category: "",
+            description: "",
+            estPreperationTime: "",
+            sizes: [],
+            image: "",
+          });
+          refreshTable();
+        }
+      }
+      onClose();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to submit menu item"
+      );
+    }
   };
-
-  try {
-    await onSubmit(submitData);
-  } catch (error) {
-    console.error('Error submitting form:', error);
-    throw error;
-  }
-};
-
-  // Handle cancel
-  const handleCancel = () => {
-    setFormData({
-      id: null,
-      name: '',
-      category: '',
-      description: '',
-      estPreparationTime: '',
-      sizes: [],
-      image: '',
-      restaurantID: restaurantID || '',
-      //isAvailable: true,
-    });
-    setNewSize('');
-    setNewPrice('');
-    setEditingIndex(null);
-    onClose();
-  };
-
-  // Return null if modal is not open
-  if (!isOpen) return null;
+  
 
   return (
-    <div className="modal modal-open">
-      <div className="modal-box relative max-w-4xl">
-        <h3 className="text-xl font-bold mb-4">
-          {mode === 'edit' ? 'Edit Menu Item' : 'Add New Menu Item'}
-        </h3>
-        <button
-          onClick={onClose}
-          className="btn btn-ghost btn-circle absolute right-2 top-2"
-        >
-          <IoClose size={24} />
-        </button>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Column 1: Image Upload */}
-          <div className="flex flex-col items-center">
-            <label className="block text-sm font-medium mb-2">Image URL</label>
-              <input
-              type="text"
-              name="image"
-              value={formData.image}
-              onChange={handleInputChange}
-              className="input input-bordered w-full max-w-xs"
-              placeholder="Enter image URL"
-            />
-            {formData.image && (
-              <p className="mt-2 text-sm text-gray-500">URL: {formData.image}</p>
-            )}
-          </div>
-
-          {/* Column 2: Input Fields */}
-          <div className="space-y-4">
-            {/* Name */}
-            <div>
-              <label className="block text-sm font-medium mb-1">Name</label>
+    <dialog open={isOpen} className="modal modal-bottom sm:modal-middle">
+      <div className="modal-box min-w-8/10 max-w-5xl">
+        <h2 className="text-2xl mb-4">
+          {mode === "edit" ? "Edit Menu Item" : "Add Menu Item"}
+        </h2>
+        <form>
+          <div className="flex flex-row gap-4">
+            {/* Form fields */}
+            <ImageUploader setImageUrl={setImageUrl} />
+            <div className="flex-1">
               <input
                 type="text"
                 name="name"
+                placeholder="Name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className="input input-bordered w-full"
+                className="input input-bordered w-full mb-2"
                 required
               />
-            </div>
 
-            {/* Category */}
-            <div>
-              <label className="block text-sm font-medium mb-1">Category</label>
-              {isLoadingCategories ? (
-                <p>Loading categories...</p>
-              ) : categoryError ? (
-                <p className="text-red-500">{categoryError}</p>
-              ) : (
               <select
                 name="category"
                 value={formData.category}
                 onChange={handleInputChange}
-                className="select select-bordered w-full"
+                className="select select-bordered w-full mb-2"
+                required
               >
                 <option value="">Select Category</option>
                 {categories.map((cat) => (
@@ -223,135 +193,99 @@ useEffect(() => {
                   </option>
                 ))}
               </select>
-              )}
-            </div>
 
-            {/* Description */}
-            <div>
-              <label className="block text-sm font-medium mb-1">Description</label>
               <textarea
                 name="description"
+                placeholder="Description"
                 value={formData.description}
                 onChange={handleInputChange}
-                className="textarea textarea-bordered w-full"
-                rows={4}
+                className="textarea textarea-bordered w-full mb-2"
               />
-            </div>
 
-            {/* Estimated Preparation Time */}
-            <div>
-              <label className="block text-sm font-medium mb-1">Estimated Preparation Time (minutes)</label>
               <input
                 type="number"
-                name="estPreparationTime"
-                value={formData.estPreparationTime}
+                name="estPreperationTime"
+                placeholder="Estimated Preparation Time (minutes)"
+                value={formData.estPreperationTime}
                 onChange={handleInputChange}
-                className="input input-bordered w-full"
-                placeholder="e.g., 10"
-                step="1"
+                className="input input-bordered w-full mb-2"
               />
-            </div>
 
-            {/* Size and Price Selector */}
-            <div>
-              <label className="block text-sm font-medium mb-1">Size and Price</label>
-              <div className="flex flex-col gap-2">
-                {/* Row 1: Size, Price, Add/Update Button */}
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <select
-                    value={newSize}
-                    onChange={(e) => setNewSize(e.target.value)}
-                    className="select select-bordered w-full sm:w-1/3"
-                  >
-                    <option value="" disabled>
-                      Select Size
-                    </option>
-                    {sizeOptions.map((size) => (
-                      <option key={size} value={size}>
-                        {size}
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    type="number"
-                    value={newPrice}
-                    onChange={(e) => setNewPrice(e.target.value)}
-                    className="input input-bordered w-full sm:w-1/3"
-                    placeholder="Price (LKR)"
-                    step="0.01"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleSizePriceAction}
-                    className="btn btn-accent btn-sm flex items-center gap-2"
-                  >
-                    <IoAdd size={20} />
-                    {editingIndex !== null ? 'Update' : 'Add'}
-                  </button>
-                </div>
+              {/* Size and price management */}
+              <div className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  placeholder="Size (e.g., Small)"
+                  value={newSize}
+                  onChange={(e) => setNewSize(e.target.value)}
+                  className="input input-bordered w-1/2"
+                />
+                <input
+                  type="number"
+                  placeholder="Price"
+                  value={newPrice}
+                  onChange={(e) => setNewPrice(e.target.value)}
+                  className="input input-bordered w-1/2"
+                />
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleSizePriceAction}
+                >
+                  {editingIndex !== null ? "Update" : "Add"}
+                </button>
+              </div>
 
-                {/* Row 2: Size-Price Table */}
-                {formData.sizes.length > 0 && (
-                  <div className="overflow-x-auto">
-                    <table className="table table-xs">
-                      <thead>
-                        <tr>
-                          <th>Size</th>
-                          <th>Price (LKR)</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {formData.sizes.map((size, idx) => (
-                          <tr key={idx}>
-                            <td>{size.size}</td>
-                            <td>{formatCurrency(size.price, 'LKR')}</td>
-                            <td className="flex gap-1">
-                              <button
-                                type="button"
-                                onClick={() => handleEditSizePrice(idx)}
-                                className="btn btn-ghost btn-xs text-xs"
-                              >
-                                Edit
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteSizePrice(idx)}
-                                className="btn btn-ghost btn-xs text-xs"
-                              >
-                                Delete
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+              {/* Display Sizes */}
+              {formData.sizes.map((size, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between mb-1"
+                >
+                  <span>{`${size.size}: ${formatCurrency(
+                    size.price,
+                    "LKR"
+                  )}`}</span>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      className="btn btn-xs btn-info"
+                      onClick={() => handleEditSizePrice(idx)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-xs btn-error"
+                      onClick={() => handleDeleteSizePrice(idx)}
+                    >
+                      Delete
+                    </button>
                   </div>
-                )}
+                </div>
+              ))}
+
+              <div className="flex justify-end gap-2 mt-4">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={handleSubmit}
+                >
+                  {mode === "edit" ? "Update" : "Add"}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={onClose}
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           </div>
         </form>
-
-        {/* Submit and Cancel Buttons */}
-        <div className="modal-action mt-6">
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="btn btn-ghost btn-sm"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            onClick={handleSubmit}
-            className="btn btn-primary btn-sm"
-          >
-            {mode === 'edit' ? 'Update' : 'Submit'}
-          </button>
-        </div>
       </div>
-    </div>
+    </dialog>
   );
 }
 

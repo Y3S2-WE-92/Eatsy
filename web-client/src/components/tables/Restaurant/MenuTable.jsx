@@ -1,63 +1,47 @@
 import React, { useState } from "react";
-import AvailabilityToggleButton from "../../Buttons/Restaurant/AvailabilityToggleButton";
+import MenuItemAvailabilityButton from "../../Buttons/Restaurant/MenuItemAvailabilityButton";
 import { formatCurrency } from "../../../utils/format-utils/CurrencyUtil";
 import MenuItemForm from "../../Forms/Restaurant/MenuItemForm";
+import { deleteMyMenuItem } from "../../../utils/delete-utils/restaurant/delete-menuItem";
+import { useToast } from "../../../utils/alert-utils/ToastUtil";
 
 function MenuTable({
   searchQuery = "",
   menuItems = [],
   isLoading = false,
   error = null,
-  onEdit,
-  onDelete,
-  onToggleAvailability,
-  restaurantID,
+  refreshTable = () => {},
 }) {
+  const toast = useToast();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
-  // Filter menu items based on search query
   const filteredMenuItems = menuItems.filter(
     (item) =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (item.category?.name || "").toLowerCase().includes(searchQuery.toLowerCase())
+      (item.category?.name || "")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
   );
 
-  // Handle edit button click
+  // Open form in edit mode
   const handleEditClick = (item) => {
-    setSelectedItem({
-      id: item._id,
-      name: item.name,
-      category: item.category?._id || "", // Pass category _id
-      categoryName: item.category?.name || "", // Pass category name for edit
-      description: item.description || "",
-      estPreparationTime: item.estPreperationTime || "",
-      sizes: item.sizes || [],
-      image: item.image || "",
-      restaurantID: item.restaurantID,
-      isAvailable: item.availability,
-    });
+    setSelectedItem(item);
     setIsEditModalOpen(true);
   };
 
-  // Handle edit form submission
-  const handleEditSubmit = async (updatedData) => {
-    try {
-      await onEdit(updatedData);
-      setIsEditModalOpen(false);
-      setSelectedItem(null);
-    } catch (error) {
-      console.error("Error updating menu item:", error);
-    }
-  };
-
-  // Handle delete button click
-  const handleDeleteClick = async (itemId, itemName) => {
-    if (window.confirm(`Are you sure you want to delete ${itemName}?`)) {
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this menu item?")) {
       try {
-        await onDelete(itemId);
+        const response = await deleteMyMenuItem(id);
+
+        if (response.status === 200) {
+          toast.success("Menu item deleted successfully!");
+          refreshTable();
+        }
       } catch (error) {
         console.error("Error deleting menu item:", error);
+        toast.error("Couldn't delete menu item");
       }
     }
   };
@@ -82,7 +66,6 @@ function MenuTable({
               <th>Description</th>
               <th className="w-50">Availability</th>
               <th>Actions</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -116,55 +99,47 @@ function MenuTable({
                 </td>
                 <td>
                   {item.sizes.map((size, idx) => (
-                    <div key={size._id || idx}>{formatCurrency(size.price, "LKR")}</div>
+                    <div key={size._id || idx}>
+                      {formatCurrency(size.price, "LKR")}
+                    </div>
                   ))}
                 </td>
-                <td>{item.estPreperationTime ? `${item.estPreperationTime} mins` : "N/A"}</td>
+                <td>
+                  {item.estPreperationTime
+                    ? `${item.estPreperationTime} mins`
+                    : "N/A"}
+                </td>
                 <td className="whitespace-normal break-words max-w-xs">
                   {item.description || "N/A"}
                 </td>
-                <td className="relative w-50 flex items-center mx-2">
-                  <AvailabilityToggleButton
-                    isAvailable={item.availability}
-                    onToggle={(newAvailability) =>
-                      onToggleAvailability(item._id, newAvailability)
-                    }
+                <td>
+                  <MenuItemAvailabilityButton
+                    initialAvailability={item.availability}
+                    menuItemID={item._id}
                   />
                 </td>
-                <th>
-                  <button
-                    className="btn btn-ghost btn-xs text-sm"
-                    onClick={() => handleEditClick(item)}
-                  >
-                    Edit
-                  </button>
-                </th>
-                <th>
-                  <button
-                    className="btn btn-ghost btn-xs text-sm"
-                    onClick={() => handleDeleteClick(item._id, item.name)}
-                  >
-                    Delete
-                  </button>
-                </th>
+                <td>
+                  <div className="flex flex-row gap-2">
+                    <button
+                      className="btn btn-outline btn-xs text-sm"
+                      onClick={() => handleEditClick(item)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-outline btn-error btn-xs text-sm"
+                      onClick={() => handleDelete(item._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
-          <tfoot>
-            <tr>
-              <th>Menu Item</th>
-              <th>Image</th>
-              <th>Size</th>
-              <th>Price</th>
-              <th>Estimated Prep Time</th>
-              <th>Description</th>
-              <th>Availability</th>
-              <th>Actions</th>
-              <th></th>
-            </tr>
-          </tfoot>
         </table>
       )}
+
       {isEditModalOpen && (
         <MenuItemForm
           isOpen={isEditModalOpen}
@@ -174,8 +149,7 @@ function MenuTable({
           }}
           mode="edit"
           initialData={selectedItem}
-          onSubmit={handleEditSubmit}
-          restaurantID={selectedItem?.restaurantID || restaurantID}
+          refreshTable={refreshTable}
         />
       )}
     </div>

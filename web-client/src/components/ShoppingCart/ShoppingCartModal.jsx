@@ -3,23 +3,21 @@ import { IoClose } from "react-icons/io5";
 import Counter from "./Counter";
 import { formatCurrency } from "../../utils/format-utils/CurrencyUtil";
 import LocationSelectButton from "../Buttons/Customer/LocationSelectButton";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { orderAPI } from "../../services";
 import axios from "axios";
 import { useToast } from "../../utils/alert-utils/ToastUtil";
 import { removeCart } from "../../redux/customer/cartSlice";
 import WaitingForRestaurantModal from "../Modals/Customer/WaitingForRestaurantModal";
+import { useCustomer,useCustomerSelectedLocation } from "../../utils/redux-utils/redux-customer";
 
 function ShoppingCartModal({ cart, isOpen, onClose }) {
   const dispatch = useDispatch();
+  const customer = useCustomer();
+  const selectedLocation = useCustomerSelectedLocation();
   const toast = useToast();
   const [items, setItems] = useState(cart.items);
   const [isWaitingForRestaurant, setIsWaitingForRestaurant] = useState(false);
-
-  const customer = useSelector((state) => state.customer.loginCustomer);
-  const selectedLocation = useSelector(
-    (state) => state.customer.loginCustomer?.selectedLocation
-  );
 
   const handleRemoveItem = (itemID, selectedSize) => {
     setItems((prevItems) =>
@@ -72,9 +70,9 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
       deliveryLocation: {
         location: {
           type: "Point",
-          coordinates: selectedLocation.coordinates || [0, 0],
+          coordinates: selectedLocation?.deliveryAddress?.coordinates || [0, 0],
         },
-        address: selectedLocation.address || selectedLocation.name || "",
+        address: selectedLocation?.deliveryAddress?.address || selectedLocation.name || "",
       },
       items: items.map((item) => ({
         itemID: item.itemID,

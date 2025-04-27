@@ -75,6 +75,7 @@ const login = async (req, res) => {
         id: restaurant._id,
         username: restaurant.username,
         name: restaurant.name,
+        availability: restaurant.availability,
         accountStatus: restaurant.accountStatus,
       },
     });
@@ -104,9 +105,45 @@ const getRestaurantByID = async (req, res) => {
   }
 };
 
+const updateRestaurantAvailability = async (req, res) => {
+  try {
+    const { id } = req.user;
+
+    // Find the restaurant by ID
+    const restaurant = await Restaurant.findById(id);
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    // Toggle availability
+    restaurant.availability = !restaurant.availability;
+    
+    // Save the updated restaurant document
+    await restaurant.save();
+
+    // Respond with the updated restaurant data
+    res.json(restaurant);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+const getRestaurantAvailability = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const restaurant = await Restaurant.findById(id);
+    if (!restaurant) return res.status(404).json({ error: "Restaurant not found" });
+    res.json({ availability: restaurant.availability });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   register,
   login,
   getAllRestaurants,
   getRestaurantByID,
+  updateRestaurantAvailability,
+  getRestaurantAvailability
 };
