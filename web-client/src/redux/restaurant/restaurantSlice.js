@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 
 const initialState = {
-  loginRestaurant: {},
+  loginRestaurant: Cookies.get("loginRestaurant") ? JSON.parse(Cookies.get("loginRestaurant")) : {},
 };
 
 export const restaurantSlice = createSlice({
@@ -10,14 +11,15 @@ export const restaurantSlice = createSlice({
   reducers: {
     setLoginRestaurant: (state, action) => {
       state.loginRestaurant = action.payload;
+      Cookies.set("loginRestaurant", JSON.stringify(action.payload), { expires: 1, secure: true, sameSite: 'Strict' });
     },
 
     logoutRestaurant: (state) => {
-      state.loginRestaurant = null;
+      state.loginRestaurant = {};
+      Cookies.remove("loginRestaurant");
     },
   },
 });
 
-export const { setLoginRestaurant, logoutRestaurant } =
-  restaurantSlice.actions;
+export const { setLoginRestaurant, logoutRestaurant } = restaurantSlice.actions;
 export default restaurantSlice.reducer;

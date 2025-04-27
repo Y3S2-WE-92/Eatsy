@@ -5,13 +5,13 @@ import axios from "axios";
 import { userAPI } from "../../../services";
 import { jwtDecode } from "jwt-decode";
 import { useToast } from "../../../utils/alert-utils/ToastUtil";
-import { useDispatch } from "react-redux"; // Import useDispatch
-import { setLoginCustomer } from "../../../redux/customer/customerSlice"; // Import setLoginCustomer action
+import { useDispatch } from "react-redux";
+import { setLoginCustomer } from "../../../redux/customer/customerSlice";
 
 function Login() {
   const toast = useToast();
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // Use dispatch hook
+  const dispatch = useDispatch(); 
   const [loginData, setLoginData] = useState({
     username: "",
     password: "",

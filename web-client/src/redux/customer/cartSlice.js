@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
+import Cookies from 'js-cookie';
 
 const initialState = {
-  carts: [], // each cart is per restaurantID
+  carts: Cookies.get('cartData') ? JSON.parse(Cookies.get('cartData')) : [],
 };
 
 export const cartSlice = createSlice({
@@ -10,31 +11,31 @@ export const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const { restaurantID, items } = action.payload;
-    
+
       let existingCart = state.carts.find(cart => cart.restaurantID === restaurantID);
-    
+
       if (!existingCart) {
-        // If no cart exists for the restaurant, create a new one
         existingCart = {
           restaurantID,
           items: [],
         };
         state.carts.push(existingCart);
       }
-    
-      // Now handle each item in one go
+
       items.forEach((newItem) => {
         const existingItem = existingCart.items.find(
           (i) => i.itemID === newItem.itemID && i.selectedSize === newItem.selectedSize
         );
-    
+
         if (existingItem) {
           existingItem.quantity += newItem.quantity;
         } else {
           existingCart.items.push(newItem);
         }
       });
-    },    
+      Cookies.set('cartData', JSON.stringify(state.carts), { expires: 1, secure: true, sameSite: 'Strict' });
+    },
+
     removeFromCart: (state, action) => {
       const { restaurantID, itemID, selectedSize } = action.payload;
 
@@ -48,15 +49,18 @@ export const cartSlice = createSlice({
       if (cart.items.length === 0) {
         state.carts = state.carts.filter(c => c.restaurantID !== restaurantID);
       }
+      Cookies.set('cartData', JSON.stringify(state.carts), { expires: 1, secure: true, sameSite: 'Strict' });
     },
-    
+        
     removeCart : (state, action) => {
       const { restaurantID } = action.payload;
       state.carts = state.carts.filter(c => c.restaurantID !== restaurantID);
-    },
+      Cookies.set('cartData', JSON.stringify(state.carts), { expires: 1, secure: true, sameSite: 'Strict' }); 
+    },    
 
     clearCart: (state) => {
       state.carts = [];
+      Cookies.remove('cartData');
     },
   },
 });
