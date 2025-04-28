@@ -15,5 +15,6 @@ export const getCustomerMyOrders = async () => {
         }
     } catch (error) {
         console.error("Error fetching locations:", error);
+        throw error;
     }
 };
