@@ -18,6 +18,7 @@ const RestaurantSchema = new mongoose.Schema({
   coverImage: { type: String },
   verifiedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
   accountStatus: { type: String, default: "pending" },
+  rating: { type: Number, default: 0 },
 },
 { timestamps: true });
 

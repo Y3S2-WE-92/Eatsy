@@ -49,9 +49,11 @@ function ShoppingCartButton() {
           >
             <FaCartShopping />
             <span className="hidden lg:inline-flex text-sm">My Carts</span>
-            <div className="badge badge-xs badge-error indicator-menu">
-              {carts.length}
-            </div>
+            {carts.length > 0 && (
+              <div className="badge badge-xs badge-error indicator-menu">
+                {carts.length}
+              </div>
+            )}
           </button>
           <CartMenu carts={carts} onOpenModal={handleOpenViewAllCartsModal} />
         </div>
