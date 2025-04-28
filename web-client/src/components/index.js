@@ -50,6 +50,8 @@ import OrderRequests from "./Widgets/Restaurant/OrderRequests";
 
 import ImageUploader from "./ImageUploaders/ImageUploader";
 
+import StarRating from "./Ratings/StarRating";
+
 export {
   //Navbars
   LandingNavbar,
@@ -81,6 +83,7 @@ export {
   BackButton,
   AvailabilityToggleButton,
   LocationSelectButton,
+  MenuItemAvailabilityButton,
 
   //Cards
   RestaurantCard,
@@ -114,4 +117,7 @@ export {
 
   //Image Uploaders
   ImageUploader,
+
+  // Ratings
+  StarRating,
 };
