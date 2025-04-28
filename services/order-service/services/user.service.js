@@ -12,6 +12,17 @@ const getRestaurantNameById = async (restaurantID) => {
   }
 };
 
+const getCustomerById = async (customerID) => {
+  try {
+    const response = await axios.get(`${USER_SERVICE_BASE_URL}/customer/${customerID}`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch customer from user-service:', error.message);
+    return null;
+  }
+};
+
 module.exports = {
-  getRestaurantNameById
+  getRestaurantNameById,
+  getCustomerById
 };
