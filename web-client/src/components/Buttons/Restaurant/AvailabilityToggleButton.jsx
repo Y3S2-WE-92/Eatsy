@@ -11,7 +11,6 @@ function AvailabilityToggleButton() {
 
   const fetchAvailability = async () => {
     const { availability } = await getMyAvailability();
-    console.log(availability);
 
     if (availability) {
       setChecked(availability);

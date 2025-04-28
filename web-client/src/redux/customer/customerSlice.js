@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
+import Cookies from "js-cookie"; 
 
 const initialState = {
-  loginCustomer: {},
+  loginCustomer: Cookies.get("loginCustomer") ? JSON.parse(Cookies.get("loginCustomer")) : {},
 };
 
 export const customerSlice = createSlice({
@@ -10,6 +11,12 @@ export const customerSlice = createSlice({
   reducers: {
     setLoginCustomer: (state, action) => {
       state.loginCustomer = action.payload;
+      Cookies.set("loginCustomer", JSON.stringify(action.payload), { expires: 1, secure: true, sameSite: 'Strict' });
+    },
+
+    logoutCustomer: (state) => {
+      state.loginCustomer = {};
+      Cookies.remove("loginCustomer");
     },
 
     setSelectedLocation: (state, action) => {
@@ -17,14 +24,10 @@ export const customerSlice = createSlice({
         ...state.loginCustomer,
         selectedLocation: action.payload,
       };
-    },
-
-    logoutCustomer: (state) => {
-      state.loginCustomer = null;
+      Cookies.set("loginCustomer", JSON.stringify(state.loginCustomer), { expires: 1, secure: true, sameSite: 'Strict' });
     },
   },
 });
 
-export const { setLoginCustomer, logoutCustomer, setSelectedLocation } =
-  customerSlice.actions;
+export const { setLoginCustomer, logoutCustomer, setSelectedLocation } = customerSlice.actions;
 export default customerSlice.reducer;

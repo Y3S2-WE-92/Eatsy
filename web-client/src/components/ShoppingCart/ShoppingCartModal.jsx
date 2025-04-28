@@ -116,7 +116,7 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
           <div className="flex flex-col">
             <div className="flex flex-row justify-between items-center">
               <h2 className="card-title text-2xl truncate">
-                {cart.restaurantID}
+                {cart.restaurantName}
               </h2>
               <button className="btn" onClick={onClose}>
                 <IoClose />

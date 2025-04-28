@@ -5,6 +5,13 @@ services/**/npm-debug.log
 services/**/yarn-error.log
 services/**/package-lock.json
 
+# Node.js (API Gateway)
+api-gateway/**/node_modules/
+api-gateway/**/logs/
+api-gateway/**/npm-debug.log
+api-gateway/**/yarn-error.log
+api-gateway/**/package-lock.json
+
 # React Frontend (web-client)
 web-client/node_modules/
 web-client/build/

@@ -52,7 +52,7 @@ function MyMenus() {
         </div>
         <div className="flex justify-center lg:justify-end w-full lg:w-auto">
           <button
-            className="btn btn-accent btn-sm flex items-center gap-2 w-2/5 md:w-2/5 lg:w-auto"
+            className="btn btn-success btn-sm rounded-full px-4 flex items-center gap-2 w-2/5 md:w-2/5 lg:w-auto"
             onClick={handleAddItem}
           >
             <IoAdd size={20} />
