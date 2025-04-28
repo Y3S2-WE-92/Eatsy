@@ -41,6 +41,20 @@ services:
     networks:
       - eatsy-network
 
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user-service
+      - restaurant-service
+      - order-service
+      - delivery-service
+      - payment-service
+      - notification-service
+    networks:
+      - eatsy-network
+
   web-client:
     build: ./web-client
     ports:
