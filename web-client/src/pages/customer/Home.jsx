@@ -8,7 +8,7 @@ import {
   ShoppingCartButton,
   LocationSelectButton,
 } from "../../components";
-import { featuredRestaurants, foodCategories } from "../../constants";
+import { foodCategories } from "../../constants";
 import { getAllRestaurants } from "../../utils/fetch-utils/customer/fetch-user";
 
 function Home() {
@@ -19,6 +19,7 @@ function Home() {
   const fetchAllRestaurants = async () => {
     try {
       const response = await getAllRestaurants();
+      console.log(response);
       return response;
     } catch (error) {
       console.error("Failed to fetch restaurants:", error.message);
@@ -34,19 +35,16 @@ function Home() {
 
   // Filter restaurants based on search query and selected category
   const filteredRestaurants = featuredRestaurants.filter((restaurant) => {
+    // Search query match logic
     const matchesSearch =
       restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      restaurant.description
-        ?.toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      restaurant.foodItems.some(
-        (item) =>
-          item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.category.toLowerCase().includes(searchQuery.toLowerCase())
+      restaurant.menuItems.some(
+        (item) => item.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
+    // Category match logic
     const matchesCategory = selectedCategory
-      ? restaurant.foodItems.some((item) => item.category === selectedCategory)
+      ? restaurant.categories.includes(selectedCategory)
       : true;
 
     return matchesSearch && matchesCategory;
@@ -132,10 +130,10 @@ function Home() {
                 )}
               </div>
               <div className="card-actions">
-                <SeeMoreButton link="/products" />
+                <SeeMoreButton link="/customer" />
               </div>
             </div>
-            <div className="card-content flex flex-row gap-2 overflow-x-auto">
+            <div className="card-content flex flex-row gap-2 mt-2 overflow-x-auto">
               {filteredRestaurants.length > 0 ? (
                 filteredRestaurants.map((restaurant) => (
                   <RestaurantCard restaurant={restaurant} key={restaurant._id} />
