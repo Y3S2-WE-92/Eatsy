@@ -41,6 +41,7 @@ import ShoppingCartButton from "./ShoppingCart/ShoppingCartButton";
 import Counter from "./ShoppingCart/Counter";
 
 import DeliveryMap from "./DeliveryMap/DeliveryMap";
+import DeliveryOrders from "./DeliveryMap/OrderSocket"
 
 import OrderAccordionItem from "./Accordions/Customer/OrderAccordionItem";
 
@@ -105,7 +106,8 @@ export {
 
   //Delivery
   DeliveryMap,
-
+  DeliveryOrders,
+  
   //Timelines
   OrderTimeline,
 

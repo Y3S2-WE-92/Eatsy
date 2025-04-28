@@ -3,8 +3,10 @@ import mapboxgl from 'mapbox-gl';
 import MapContainer from './MapContainer';
 import OrderDetails from './OrderDetails';
 import ActiveStatusButton from './ActiveStatusButton';
+import { deliveryAPI } from '../../services/delivery-service'; // Fix the import
 import { orderAPI } from '../../services/order-service'; // Fix the import
 import axios from 'axios';
+const DELIVERY_API_URL = import.meta.env.VITE_DELIVERY_API_URL
 
 mapboxgl.accessToken = "pk.eyJ1IjoiamFrYWRwIiwiYSI6ImNtOXZqa3V0ODBnNDYycXNjMGZsMDZ6bXEifQ._21wZoGlO774ykfUi1X7Rw";
 
@@ -142,7 +144,7 @@ const DeliveryMap = ({ mode = "delivery", orderData = null }) => {
 
     try {
       await axios.put(
-        `${import.meta.env.VITE_DELIVERY_API_URL}/delivery/${orderDetails.orderId}/status`,
+        deliveryAPI.updateOrderStatus(orderDetails.orderId),
         { status },
         // { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
@@ -169,18 +171,18 @@ const DeliveryMap = ({ mode = "delivery", orderData = null }) => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_DELIVERY_API_URL}/delivery/assign`,
+        `${DELIVERY_API_URL}/delivery/assign`,
         {
           id: orderDetails.orderId,
           restaurantId: orderDetails.restaurantName,
           deliveryPersonId: DELIVERY_PERSON_ID,
           customerId: orderDetails.customerName,
           deliveryAddress: {
-            location: {
-              type: "Point",
-              coordinates: orderDetails.customerLocation,
-            },
-            address: orderDetails.deliveryAddress,
+        location: {
+          type: "Point",
+          coordinates: orderDetails.customerLocation,
+        },
+        address: orderDetails.deliveryAddress,
           },
         }
       );
@@ -213,7 +215,7 @@ const DeliveryMap = ({ mode = "delivery", orderData = null }) => {
       />
       {mode === "delivery" && (
         <>
-          <ActiveStatusButton isActive={isActive} toggleActiveStatus={toggleActiveStatus} />
+          {/* <ActiveStatusButton isActive={isActive} toggleActiveStatus={toggleActiveStatus} /> */}
           <button
             onClick={toggleMyOrders}
             style={{

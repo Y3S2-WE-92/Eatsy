@@ -132,6 +132,28 @@ const updateOrderStatus = async (req, res) => {
     }
     await sendPayback({status, order});
     
+
+    // Notify delivery person when the order is ready
+    if (status === "ready") {
+      console.log("Order is ready for delivery:", order._id);
+
+      order.deliveryPersonID = order.deliveryPersonID || "680a7778b80586911ffda91e"; // Ensure deliveryPersonID is set
+
+      if (order.deliveryPersonID) {
+        // Emit the event to the specific delivery person's room
+        io.to(order.deliveryPersonID).emit("orderReady", {
+          orderID: order._id,
+          refNo: order.refNo,
+          deliveryLocation: order.deliveryLocation,
+          restaurantID: order.restaurantID,
+          items: order.items,
+        });
+        console.log(`Order ready event emitted to deliveryPersonID: ${order.deliveryPersonID}`);
+      } else {
+        console.error("No deliveryPersonID assigned to the order.");
+      }
+    }
+
     res.json(order);
   } catch (err) {
     res.status(400).json({ error: err.message });

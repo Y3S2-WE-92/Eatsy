@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { DeliveryNavBar } from "../../components";
+import { DeliveryNavBar, DeliveryOrders } from "../../components";
 
 import Home from "../../pages/delivery/Home";
 
@@ -15,7 +15,7 @@ function DeliveryLayout() {
       <DeliveryNavBar sections={sections} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/orders" element={<div>Orders</div>} />
+        <Route path="/orders" element={<DeliveryOrders/>} />
       </Routes>
     </div>
   );
