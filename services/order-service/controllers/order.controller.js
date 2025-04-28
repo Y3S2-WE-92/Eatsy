@@ -3,13 +3,31 @@ const generateRefNo = require("../utils/refno.util");
 const { getIO } = require("../sockets/socket");
 const sendPayback = require("../controllers/order-payment.controller");
 const userService = require("../services/user.service");
+const notificationService = require("../services/notification.service");
 
 // Create a new order
 const createOrder = async (req, res) => {
+  const {id} = req.user;
   try {
+    const customerID = id;
+    const customer = await userService.getCustomerById(customerID);
+
+    if (!customer) {
+      return res.status(404).json({ error: "Customer not found" });
+    }
+
     const refNo = generateRefNo();
-    const order = new Order({ ...req.body, refNo });
+    const order = new Order({ ...req.body, refNo, customerID: customer._id });
     const savedOrder = await order.save();
+
+    if(customer.email){
+      await notificationService.sendOrderPlacementNotification({
+        to: customer.email,
+        refNo: savedOrder.refNo,
+        customerName: customer.name,
+        createdAt: savedOrder.createdAt
+      });
+    }
 
     const io = getIO();
     io.to(savedOrder.restaurantID).emit("newOrder", savedOrder);
