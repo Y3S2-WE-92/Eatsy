@@ -3,9 +3,14 @@ import { Link } from "react-router-dom";
 import { formatCurrency } from "../../../utils/format-utils/CurrencyUtil";
 import ImageLoader from "../../Loaders/ImageLoader";
 import { useImageLoaded } from "../../../utils/image-utils/useImageLoaded";
+import StarRating from "../../Ratings/StarRating";
+import { formatMinutesTime } from "../../../utils/format-utils/TimeFormatUtil";
+
+//Remove after function implementation
+import { mimicDeliveryFee, mimicDeliveryTime } from "../../../utils/mimic-utils/mimicDeliveryUtil";
 
 function RestaurantCard({ restaurant }) {
-  const isImageLoaded = useImageLoaded(restaurant.image);
+  const isImageLoaded = useImageLoaded(restaurant.profileImage);
 
   return (
     <Link to={`/customer/restaurant-view/${restaurant._id}`}>
@@ -16,11 +21,11 @@ function RestaurantCard({ restaurant }) {
         <figure>
           {isImageLoaded ? (
             <img
-            src={restaurant.image}
-            alt={restaurant.name}
-            className="w-full h-32 object-cover"
-          />
-          ):(
+              src={restaurant.profileImage}
+              alt={restaurant.name}
+              className="w-full h-32 object-cover"
+            />
+          ) : (
             <div className="w-full h-32 bg-accent/30">
               <ImageLoader />
             </div>
@@ -28,9 +33,14 @@ function RestaurantCard({ restaurant }) {
         </figure>
         <div className="card-body">
           <h2 className="card-title truncate">{restaurant.name}</h2>
-          <p>Delivery Fee: {formatCurrency(restaurant.deliveryFee)}</p>
-          <p>Rating: {restaurant.rating}</p>
-          <p>Delivery Time: {restaurant.deliveryTime}</p>
+          <StarRating rating={restaurant?.rating} />
+          <div className="flex flex-col">
+          <span>
+            {formatCurrency(mimicDeliveryFee())}{" "}|{" "}
+            {formatMinutesTime(mimicDeliveryTime())}
+          </span>
+          <span> for Delivery </span>
+          </div>
         </div>
       </div>
     </Link>

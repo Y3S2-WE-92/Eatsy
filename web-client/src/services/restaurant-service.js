@@ -15,4 +15,6 @@ export const restaurantAPI = {
     updateMyMenuItem: (id) => `${RESTAURANTS_API_URL}/menu/restaurant/my-menu-items/${id}`,
     updateMenuItemAvailability: (id) => `${RESTAURANTS_API_URL}/menu/availability/${id}`,
     deleteMyMenuItem: (id) => `${RESTAURANTS_API_URL}/menu/restaurant/my-menu-items/${id}`,
+
+    getAllRestaurantsWithCategories: `${RESTAURANTS_API_URL}/restaurant`,
 }

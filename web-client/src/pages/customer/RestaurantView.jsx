@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { featuredRestaurants } from "../../constants";
+import { IoSearchSharp } from "react-icons/io5";
 import { styles } from "../../styles/styles";
 import {
   LikeButton,
@@ -13,11 +13,19 @@ import { useImageLoaded } from "../../utils/image-utils/useImageLoaded";
 import ImageLoader from "../../components/Loaders/ImageLoader";
 import { getRestaurantByID } from "../../utils/fetch-utils/customer/fetch-user";
 import { getMenuItemsByRestaurantID } from "../../utils/fetch-utils/customer/fetch-restaurant";
+import { StarRating } from "../../components";
+import { formatCurrency } from "../../utils/format-utils/CurrencyUtil";
+import { formatMinutesTime } from "../../utils/format-utils/TimeFormatUtil";
+
+//Remove after function implementation
+import { mimicDeliveryFee, mimicDeliveryTime } from "../../utils/mimic-utils/mimicDeliveryUtil";
 
 function RestaurantView() {
   const { id } = useParams();
   const [restaurant, setRestaurant] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [error, setError] = useState("");
 
   const isCoverImageLoaded = useImageLoaded(restaurant?.profileImage);
   const isProfileImageLoaded = useImageLoaded(restaurant?.coverImage);
@@ -74,6 +82,10 @@ function RestaurantView() {
     return <div>Restaurant not found</div>;
   }
 
+  const filteredMenuItems = menuItems.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div>
       <ShoppingCartButton />
@@ -114,15 +126,15 @@ function RestaurantView() {
             </div>
           )}
           <div className="flex flex-col md:flex-row md:justify-between w-full gap-2">
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full gap-2">
               <h2 className="text-2xl font-bold">{restaurant.name}</h2>
-              <p className="text-sm text-gray-500">{restaurant.address}</p>
+              <p className="text-sm text-base-content">{restaurant.address}</p>
+              <StarRating rating={restaurant?.rating} />
             </div>
             <div className="flex flex-row gap-8 w-full md:justify-end items-center">
-              <div className="flex flex-col md:gap-2 md:items-end text-sm text-gray-500">
-                <p>Delivery Fee: LKR {restaurant?.deliveryFee}</p>
-                <p>Rating: {restaurant?.rating}</p>
-                <p>Delivery Time: {restaurant?.deliveryTime}</p>
+              <div className="flex flex-col md:gap-2 md:items-end text-sm text-base-content">
+                <p>Delivery Fee: {formatCurrency(mimicDeliveryFee())}</p>
+                <p>Delivery Time: {formatMinutesTime(mimicDeliveryTime())}</p>
               </div>
               <LikeButton />
             </div>
@@ -131,14 +143,29 @@ function RestaurantView() {
         <div className="card w-full rounded-none">
           <div className="card-body">
             <div className="card-header flex flex-row justify-between items-center">
-              <div className="card-title">Featured Food Items</div>
-              <div className="card-actions">
+              <div className="flex flex-row gap-2">
+              <div className="card-title truncate">Featured Food Items</div>
+              <span className="text-xs badge badge-soft badge-primary">
+                  {filteredMenuItems.length} <span className="hidden lg:inline-flex text-sm">Results</span>
+                </span>
+              </div>
+              <div className="flex flex-row gap-2">
+                <div className="search flex flex-row items-center border border-accent rounded-full md:w-sm pl-4">
+                  <IoSearchSharp />
+                  <input
+                    type="text"
+                    placeholder="Search foods, or drinks"
+                    className="search input border-0 rounded-full"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
                 <SeeMoreButton link="" />
               </div>
             </div>
             {menuItems.length > 0 ? (
-              <div className="card-content flex flex-row gap-2 overflow-x-auto">
-                {menuItems.map((item) => (
+              <div className="card-content flex flex-row gap-2 overflow-x-auto mt-2">
+                {filteredMenuItems.map((item) => (
                   <FoodItemCard key={item._id} item={item} />
                 ))}
               </div>

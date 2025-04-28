@@ -26,11 +26,15 @@ function MyOrders() {
       <ShoppingCartButton />
       <PageTitle title="My Orders" backLink="/customer" />
       <div className="join join-vertical bg-base-100">
-        {myOrders.map((order, index) => (
+        {myOrders.length > 0 ? (
+          myOrders.map((order, index) => (
           <div key={order._id}>
             <OrderAccordionItem order={order} isFirstItem={index === 0}/>
           </div>
-        ))}
+        ))) : (
+          <p className="text-center">No orders found</p>
+        )
+        }
       </div>
     </div>
   );
