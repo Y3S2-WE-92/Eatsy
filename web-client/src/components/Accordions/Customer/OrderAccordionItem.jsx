@@ -32,7 +32,7 @@ function OrderAccordionItem({ order, isFirstItem }) {
       <div className="collapse-content text-sm">
         <div className="flex flex-col gap-4 px-4">
           <div>
-            <p className="text-sm">From: {order.restaurantID}</p>
+            <p className="text-sm">From: {order.restaurantName}</p>
             <p className="text-sm">
               Delivery Location: {order.deliveryLocation.address}
             </p>
