@@ -3,6 +3,7 @@ import { formatCustomDate } from "../../../utils/format-utils/DateUtil";
 import { formatStatusBadge } from "../../../utils/format-utils/StatusUtil";
 import { formatCurrency } from "../../../utils/format-utils/CurrencyUtil";
 import OrderTimeline from "../../Timelines/Customer/OrderTimeline";
+import MapViewButton from "../../MapView/MapViewButton";
 
 function OrderAccordionItem({ order, isFirstItem }) {
   const calculateSubtotal = (items) => {
@@ -27,7 +28,10 @@ function OrderAccordionItem({ order, isFirstItem }) {
             {formatStatusBadge(order.status).text}
           </div>
         </div>
-        <small>{formatCustomDate(order.createdAt)}</small>
+        <div className="flex flex-row items-center gap-4">
+          <small>{formatCustomDate(order.createdAt)}</small>
+          <MapViewButton />
+        </div>
       </div>
       <div className="collapse-content text-sm">
         <div className="flex flex-col gap-4 px-4">
