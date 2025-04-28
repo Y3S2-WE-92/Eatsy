@@ -2,6 +2,7 @@ const Order = require("../models/order.model");
 const generateRefNo = require("../utils/refno.util");
 const { getIO } = require("../sockets/socket");
 const sendPayback = require("../controllers/order-payment.controller");
+const userService = require("../services/user.service");
 
 // Create a new order
 const createOrder = async (req, res) => {
@@ -152,7 +153,14 @@ const getMyOrders = async (req, res) => {
   try {
     const { id } = req.user;
     const orders = await Order.find({ customerID: id }).sort({ createdAt: -1 });
-    res.json(orders);
+    //get and append restaurant name for each order
+    const ordersWithRestaurants = await Promise.all(
+      orders.map(async (order) => {
+        const restaurantName = await userService.getRestaurantNameById(order.restaurantID);
+        return { ...order._doc, restaurantName: restaurantName || "Unknown Restaurant" };
+      })
+    );
+    res.json(ordersWithRestaurants);
   } catch (error) {
     console.error("Error in getCustomerOrders:", error);
     res.status(500).json({ error: error.message });
