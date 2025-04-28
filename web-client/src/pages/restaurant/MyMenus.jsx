@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { IoSearchSharp, IoAdd } from "react-icons/io5";
-import MenuTable from "../../components/tables/Restaurant/MenuTable";
+import MenuTable from "../../components/Tables/Restaurant/MenuTable";
 import MenuItemForm from "../../components/Forms/Restaurant/MenuItemForm";
 import { useRestaurant } from "../../utils/redux-utils/redux-restaurant";
 import { getMyMenuItems } from "../../utils/fetch-utils/restaurant/fetch-restaurant";
