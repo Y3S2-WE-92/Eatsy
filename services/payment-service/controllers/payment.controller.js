@@ -22,6 +22,17 @@ const getPaymentsByUser = async (req, res) => {
     }
   };
 
+  const getPaymentByOrderRefNo = async (req, res) => {
+    try {
+      const payment = await Payment.find({refNo: req.params.id});
+      if (!payment) return res.status(404).json({ success: false, error: "Payment not found" });
+  
+      res.json({ success: true, payment });
+    } catch (err) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  };
+
   const getAllPayments = async (req, res) => {
     try {
         const payments = await Payment.find();
@@ -33,4 +44,4 @@ const getPaymentsByUser = async (req, res) => {
     }
   };
   
-  module.exports = {getPaymentsByUser, getPaymentById, getAllPayments}
+  module.exports = {getPaymentsByUser, getPaymentById, getPaymentByOrderRefNo, getAllPayments}

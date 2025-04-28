@@ -6,8 +6,11 @@ import { userAPI } from "../../../services";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useToast } from "../../../utils/alert-utils/ToastUtil";
+import { useDispatch } from "react-redux";
+import { setLoginDelivery } from "../../../redux/delivery/deliverySlice";
 
 function DeliveryLogin() {
+  const dispatch = useDispatch();
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -45,13 +48,20 @@ function DeliveryLogin() {
         }
 
         const decodedToken = jwtDecode(token);
-        // console.log("Decoded JWT:", decodedToken);
 
         localStorage.setItem("token", token);
 
         localStorage.setItem(
           "user",
           JSON.stringify({
+            id: decodedToken.id,
+            name: response.data.user.name,
+            username: response.data.user.username,
+          })
+        );
+
+        dispatch(
+          setLoginDelivery({
             id: decodedToken.id,
             name: response.data.user.name,
             username: response.data.user.username,

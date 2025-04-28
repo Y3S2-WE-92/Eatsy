@@ -70,7 +70,7 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
       deliveryLocation: {
         location: {
           type: "Point",
-          coordinates: selectedLocation?.deliveryAddress?.coordinates || [0, 0],
+          coordinates: selectedLocation?.deliveryAddress?.location?.coordinates || [0, 0],
         },
         address: selectedLocation?.deliveryAddress?.address || selectedLocation.name || "",
       },
