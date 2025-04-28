@@ -1,9 +1,15 @@
 import { userAPI } from "../../../services";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export const getCustomerLocations = async () => {
   try {
     const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("Token not found");
+      return [];
+    }
     const response = await axios.get(userAPI.getCustomerLocations, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -14,7 +20,8 @@ export const getCustomerLocations = async () => {
       return data;
     }
   } catch (error) {
-    console.error("Error fetching locations:", error);
+    toast.error("Error fetching locations");
+    throw error;
   }
 };
 

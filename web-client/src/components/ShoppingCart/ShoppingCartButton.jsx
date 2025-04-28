@@ -14,7 +14,7 @@ function CartMenu({ carts, onOpenModal }) {
         <span className="text-lg font-bold">{carts.length} Carts</span>
         <ul className="menu gap-2">
           {carts.map((cart, index) => (
-            <li key={index}>Restaurant ID: {cart.restaurantID}</li>
+            <li key={index}>Restaurant: {cart.restaurantName}</li>
           ))}
         </ul>
         <div className="card-actions">

@@ -1,7 +1,7 @@
 const Order = require("../models/order.model");
 const generateRefNo = require("../utils/refno.util");
 const { getIO } = require("../sockets/socket");
-const sendPayback = require("../controllers/order-payment.controller")
+const sendPayback = require("../controllers/order-payment.controller");
 
 // Create a new order
 const createOrder = async (req, res) => {
