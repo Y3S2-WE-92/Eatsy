@@ -5,17 +5,29 @@ import OrderDetails from './OrderDetails';
 import ActiveStatusButton from './ActiveStatusButton';
 import { deliveryAPI } from '../../services/delivery-service'; // Fix the import
 import { orderAPI } from '../../services/order-service'; // Fix the import
+import { userAPI } from '../../services/user-service'; // Fix the import
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { assignOrder } from '../../store/actions/orderActions'; // Import the Redux action
+import { toast } from 'react-toastify'; // Import toast for notifications
+
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+
+if (!MAPBOX_TOKEN) {
+  console.error('Mapbox token is missing. Please check your .env file.');
+}
+
+mapboxgl.accessToken = MAPBOX_TOKEN;
+
 const DELIVERY_API_URL = import.meta.env.VITE_DELIVERY_API_URL
 import { useDeliveryPerson } from '../../utils/redux-utils/redux-delivery';
-
-mapboxgl.accessToken = "pk.eyJ1IjoiamFrYWRwIiwiYSI6ImNtOXZqa3V0ODBnNDYycXNjMGZsMDZ6bXEifQ._21wZoGlO774ykfUi1X7Rw";
 
 const DeliveryMap = ({ mode = "delivery", orderData = null }) => {
   const mapRef = useRef(null);
   const deliveryPersonMarkerRef = useRef(null);
   const deliveryPerson = useDeliveryPerson();
   const DELIVERY_PERSON_ID = deliveryPerson.id; // Replace with actual delivery person ID
+  const dispatch = useDispatch(); // Initialize Redux dispatch
 
   const [orderDetails, setOrderDetails] = useState(orderData); // Selected order details
   const [nearbyOrders, setNearbyOrders] = useState([]); // List of nearby orders (for delivery mode)
@@ -50,23 +62,49 @@ const DeliveryMap = ({ mode = "delivery", orderData = null }) => {
       }
     };
 
+    const fetchOrderHistory = async () => {
+      try {
+        const response = await axios.get(deliveryAPI.getDeliveryPersonById(DELIVERY_PERSON_ID));
+        if (response.status !== 200) {
+          throw new Error("Failed to fetch order history");
+        }
+        const historyOrders = response.data.filter(order => order.status !== "pending" && order.status !== "delivered");
+        setMyOrders(historyOrders);
+      } catch (error) {
+        console.error("Error fetching order history:", error);
+        toast.error("Failed to fetch order history.");
+      }
+    };
+
     if (mode === "delivery") {
       // Fetch nearby orders
       axios.get(orderAPI.getNearbyOrders(6.915582, 79.974036))
-        .then((response) => {
-          const orders = response.data.map(order => ({
+        .then(async (response) => {
+          const orders = await Promise.all(response.data.map(async (order) => {
+        try {
+          const restaurantResponse = await axios.get(userAPI.getRestaurantByID(order.restaurantID));
+          const restaurant = restaurantResponse.data;
+
+          return {
             orderId: order._id,
             customerName: order.customerID,
-            restaurantName: order.restaurantID,
-            restaurantLocation: order.deliveryLocation.location.coordinates || [6.900911, 79.917611],
+            restaurantName: restaurant.name,
+            restaurantLocation: restaurant.location.coordinates,
             customerLocation: order.deliveryLocation.location.coordinates,
             items: order.items,
             status: order.status,
             createdAt: order.createdAt,
             updatedAt: order.updatedAt,
+          };
+        } catch (error) {
+          console.error(`Error fetching restaurant details for ID ${order.restaurantID}:`, error);
+          return null;
+        }
           }));
-          setNearbyOrders(orders);
-          console.log('Nearby orders:', orders.length + ' orders found');
+
+          const filteredOrders = orders.filter(order => order !== null);
+          setNearbyOrders(filteredOrders);
+          console.log('Nearby orders:', filteredOrders.length + ' orders found');
         })
         .catch((error) => {
           console.error('Error fetching nearby orders:', error);
@@ -74,13 +112,45 @@ const DeliveryMap = ({ mode = "delivery", orderData = null }) => {
 
       // Fetch delivery person's location
       fetchDeliveryPersonLocation();
+
+      // Fetch order history
+      fetchOrderHistory();
     }
-  }, [mode]);
+  }, [mode, DELIVERY_PERSON_ID]);
 
   const fetchAndDrawRoute = async () => {
     if (!deliveryPersonMarkerRef.current || !orderDetails) {
       console.error('Delivery person marker or order details are not initialized.');
       return;
+    }
+
+    // Check if restaurantLocation and customerLocation are missing
+    if (!orderDetails.restaurantLocation || !orderDetails.customerLocation) {
+      try {
+        const response = await axios.get(orderAPI.getOrderByID(orderDetails.orderId));
+        const order = response.data;
+
+        const restaurantResponse = await axios.get(userAPI.getRestaurantByID(order.restaurantID));
+        const restaurant = restaurantResponse.data;
+
+        const updatedOrderDetails = {
+          orderId: order._id,
+          customerName: order.customerID,
+          restaurantName: restaurant.name,
+          restaurantLocation: restaurant.location.coordinates,
+          customerLocation: order.deliveryLocation.location.coordinates,
+          items: order.items,
+          status: order.status,
+          createdAt: order.createdAt,
+          updatedAt: order.updatedAt,
+        };
+
+        setOrderDetails(updatedOrderDetails);
+        return; // Exit the function after updating state to prevent recursion
+      } catch (error) {
+        console.error('Error fetching order details:', error);
+        return; // Exit the function to prevent further execution
+      }
     }
 
     const deliveryPersonLocation = deliveryPersonMarkerRef.current.getLngLat();
@@ -179,18 +249,23 @@ const DeliveryMap = ({ mode = "delivery", orderData = null }) => {
           deliveryPersonId: DELIVERY_PERSON_ID,
           customerId: orderDetails.customerName,
           deliveryAddress: {
-        location: {
-          type: "Point",
-          coordinates: orderDetails.customerLocation,
-        },
-        address: orderDetails.deliveryAddress,
+            location: {
+              type: "Point",
+              coordinates: orderDetails.customerLocation,
+            },
+            address: orderDetails.deliveryAddress,
           },
         }
       );
 
       const { deliveryPersonId } = response.data;
-      setOrderDetails({ ...orderDetails, status: "assigned", deliveryPersonId });
-      setMyOrders((prevOrders) => [...prevOrders, { ...orderDetails, status: "assigned", deliveryPersonId }]);
+      const updatedOrder = { ...orderDetails, status: "assigned", deliveryPersonId };
+
+      // Dispatch the assigned order to Redux
+      dispatch(assignOrder(updatedOrder));
+
+      setOrderDetails(updatedOrder);
+      setMyOrders((prevOrders) => [...prevOrders, updatedOrder]);
       alert(`Order ${orderDetails.orderId} assigned successfully!`);
       setShowOrderDetails(false);
     } catch (error) {
@@ -207,7 +282,7 @@ const DeliveryMap = ({ mode = "delivery", orderData = null }) => {
     <div style={{ position: 'relative', width: '100%', height: '800px' }}>
       <MapContainer
         mapRef={mapRef}
-        restaurantLocation={orderDetails?.restaurantLocation}
+        restaurantLocation={orderDetails?.restaurantLocation || [79.9171 , 6.9030]}
         customerLocation={orderDetails?.customerLocation}
         deliveryPersonMarkerRef={deliveryPersonMarkerRef}
         showMarkers={showMarkers}
@@ -216,7 +291,7 @@ const DeliveryMap = ({ mode = "delivery", orderData = null }) => {
       />
       {mode === "delivery" && (
         <>
-          {/* <ActiveStatusButton isActive={isActive} toggleActiveStatus={toggleActiveStatus} /> */}
+          <ActiveStatusButton isActive={isActive} toggleActiveStatus={toggleActiveStatus} />
           <button
             onClick={toggleMyOrders}
             style={{
@@ -265,12 +340,13 @@ const DeliveryMap = ({ mode = "delivery", orderData = null }) => {
                     onClick={() => handleOrderClick(order)}
                   >
                     <p><strong>Order ID:</strong> {order.orderId}</p>
-                    <p><strong>Restaurant:</strong> {order.restaurantName}</p>
-                    <p><strong>Customer:</strong> {order.customerName}</p>
+                    <p><strong>Restaurant:</strong> {order.restaurantId}</p>
+                    <p><strong>Customer:</strong> {order.customerId}</p>
+                    <p><strong>Status:</strong> {order.status}</p>
                   </div>
                 ))
               ) : (
-                <p>No orders assigned yet.</p>
+                <p>No orders found in history.</p>
               )}
             </div>
           )}

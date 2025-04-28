@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import mapboxgl from "mapbox-gl";
 import {
   connectDeliverySocket,
   listenNewOrder,
@@ -14,13 +15,107 @@ import {
   RejectOrder,
 } from "../../utils/update-utils/restaurant/update-order";
 import OrderHistoryByPersonId from "./OrderHistoryByPersonId";
+import { useDeliveryPerson } from '../../utils/redux-utils/redux-delivery';
 
 function OrderRequests() {
   const toast = useToast();
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isOrderViewModalOpen, setIsOrderViewModalOpen] = useState(false);
-  const deliveryPersonID = "680a7778b80586911ffda91e"; // Replace with actual delivery person ID
+  
+  const deliveryPerson = useDeliveryPerson();
+  const deliveryPersonID = deliveryPerson.id;
+
+  const mapRef = useRef(null);
+  const deliveryPersonMarkerRef = useRef(null);
+  const restaurantMarkerRef = useRef(null);
+
+  const drawMarkersAndRoute = async (restaurantCoordinates, deliveryPersonCoordinates) => {
+    if (!restaurantCoordinates || !deliveryPersonCoordinates) {
+      console.error("Coordinates for restaurant or delivery person are missing.");
+      return;
+    }
+
+    // Draw restaurant and delivery person markers
+    if (mapRef.current) {
+      const restaurantIcon = "https://cdn-icons-png.flaticon.com/128/3448/3448332.png";
+      const deliveryPersonIcon = "https://cdn-icons-png.flaticon.com/128/8441/8441282.png";
+
+      // Add restaurant marker
+      if (!restaurantMarkerRef.current) {
+        restaurantMarkerRef.current = new mapboxgl.Marker({ color: "red" })
+          .setLngLat(restaurantCoordinates)
+          .setPopup(new mapboxgl.Popup().setText("Restaurant Location"))
+          .addTo(mapRef.current);
+      } else {
+        restaurantMarkerRef.current.setLngLat(restaurantCoordinates);
+      }
+
+      // Add delivery person marker
+      if (!deliveryPersonMarkerRef.current) {
+        deliveryPersonMarkerRef.current = new mapboxgl.Marker({ color: "blue" })
+          .setLngLat(deliveryPersonCoordinates)
+          .setPopup(new mapboxgl.Popup().setText("Delivery Person Location"))
+          .addTo(mapRef.current);
+      } else {
+        deliveryPersonMarkerRef.current.setLngLat(deliveryPersonCoordinates);
+      }
+    }
+
+    // Fetch and draw the route
+    const coordinates = `${restaurantCoordinates[0]},${restaurantCoordinates[1]};${deliveryPersonCoordinates[0]},${deliveryPersonCoordinates[1]}`;
+    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${coordinates}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (!data.routes || data.routes.length === 0) {
+        console.error("No routes found:", data);
+        return;
+      }
+
+      const route = data.routes[0].geometry;
+
+      if (mapRef.current) {
+        if (mapRef.current.getSource("route")) {
+          // Update existing route source
+          mapRef.current.getSource("route").setData({
+            type: "Feature",
+            geometry: route,
+          });
+        } else {
+          // Add new route source and layer
+          mapRef.current.addSource("route", {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              geometry: route,
+            },
+          });
+
+          mapRef.current.addLayer({
+            id: "route",
+            type: "line",
+            source: "route",
+            layout: {
+              "line-join": "round",
+              "line-cap": "round",
+            },
+            paint: {
+              "line-color": "#3887be",
+              "line-width": 5,
+            },
+          });
+        }
+
+        // Fly to the route
+        mapRef.current.flyTo({ center: restaurantCoordinates, zoom: 12 });
+      }
+    } catch (error) {
+      console.error("Error fetching route:", error);
+    }
+  };
 
   useEffect(() => {
     connectDeliverySocket(deliveryPersonID);
@@ -42,6 +137,12 @@ function OrderRequests() {
   const handleItemClick = (order) => {
     setSelectedOrder(order);
     setIsOrderViewModalOpen(true);
+
+    // Example coordinates (replace with actual data)
+    const restaurantCoordinates = order.restaurantLocation?.coordinates || [79.8612, 6.9271]; // Default to Colombo
+    const deliveryPersonCoordinates = [79.865, 6.927]; // Replace with actual delivery person location
+
+    drawMarkersAndRoute(restaurantCoordinates, deliveryPersonCoordinates);
   };
 
   const handleAccept = async (id) => {
