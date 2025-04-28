@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { formatCurrency } from "../../../utils/format-utils/CurrencyUtil";
-import Counter from "../../ShoppingCart/Counter";
 import ImageLoader from "../../Loaders/ImageLoader";
 import { useImageLoaded } from "../../../utils/image-utils/useImageLoaded";
 import FoodItemModal from "../../Modals/Customer/FoodItemModal";
@@ -40,7 +39,7 @@ function FoodItemCard({ item }) {
         <div className="card-body">
           <div className="card-title truncate">{item.name}</div>
           <div className="flex flex-col">
-          <small>Starting from </small><p className="font-bold">{formatCurrency(item.price)}</p>
+          <small>Starting from </small><p className="font-bold">{formatCurrency(item.sizes[0].price)}</p>
           </div>
         </div>
       </div>
