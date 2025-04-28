@@ -44,11 +44,26 @@ const getMenuItemByID = async (req, res) => {
 
 const getMenuItemsByRestaurantID = async (req, res) => {
   try {
+    const { id } = req.params;
+
+    const restaurant = await getRestaurantById(id);
+
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    const restaurantName = restaurant.name;
+
     const menuItems = await MenuItem.find({
       restaurantID: req.params.id,
-    }).populate("category");
+    }).populate("category").lean();
 
-    res.json({ menuItems });
+    const updatedMenuItems = menuItems.map((item) => ({
+      ...item,
+      restaurantName: restaurant.name,
+    }));
+
+    res.json({ menuItems: updatedMenuItems });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
