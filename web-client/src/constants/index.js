@@ -424,44 +424,37 @@ export const orders = [
     deliveryLocation: {
       location: {
         type: "Point",
-        coordinates: [0, 0],
+        coordinates: [80.6378, 7.2906], // Updated coordinates for Kandy
       },
-      address: "Home",
+      address: "456 Park Avenue, Kandy",
     },
-    _id: "680d0f1326f6a7dd94dfd41a",
-    refNo: "REFM9YGJMY",
+    _id: "680e4e6c313e8a0a4f9e09b6",
+    refNo: "REFM9ZT7VZ",
     customerID: "6809d14ff303ed8706d4b234",
     restaurantID: "6809f4e58029922b21942dca",
-    status: "accepted",
-    restaurantCost: 2700,
+    status: "ready",
+    restaurantCost: 1100,
     deliveryCost: 0,
     items: [
       {
-        itemID: "680be1af58afd52f47430768",
-        name: "Margherita Pizza",
-        quantity: 1,
-        selectedSize: "Extra Large",
-        price: 1800,
-        _id: "680d0f1326f6a7dd94dfd41b",
-      },
-      {
-        itemID: "680be1af58afd52f47430768",
-        name: "Margherita Pizza",
+        itemID: "680d74aaf4f35d9af802c843",
+        name: "Chicken Tandoori Pizza",
         quantity: 1,
         selectedSize: "Small",
-        price: 900,
-        _id: "680d0f1326f6a7dd94dfd41c",
+        price: 1100,
+        _id: "680e4e6c313e8a0a4f9e09b7",
       },
     ],
-    createdAt: "2025-04-26T16:51:31.257Z",
-    updatedAt: "2025-04-26T16:55:00.983Z",
+    createdAt: "2025-04-27T15:34:04.230Z",
+    updatedAt: "2025-04-28T15:22:01.329Z",
     __v: 0,
+    readyAt: "2025-04-28T15:22:01.329Z",
   },
   {
     deliveryLocation: {
       location: {
         type: "Point",
-        coordinates: [0, 0],
+        coordinates: [79.8612, 6.9271], // Updated coordinates for Colombo
       },
       address: "Home",
     },
@@ -490,7 +483,7 @@ export const orders = [
     deliveryLocation: {
       location: {
         type: "Point",
-        coordinates: [0, 0],
+        coordinates: [80.6378, 7.2906], // Updated coordinates for Kandy
       },
       address: "Office",
     },
@@ -515,4 +508,4 @@ export const orders = [
     updatedAt: "2025-04-26T16:57:38.550Z",
     __v: 0,
   },
-]
+];
