@@ -5,9 +5,11 @@ export const paymentAPI = {
     PaymentAPIGetPaymentForUser: `${PAYMENT_API_URL}/payment/user/`,
     PaymentAPIGetPaymentById: `${PAYMENT_API_URL}/payment/`,
     PaymentAPIProcessPayment: `${PAYMENT_API_URL}/payment-order/pay`,
-
     
     CardAPIGetCardsByUser: `${PAYMENT_API_URL}/card/user/`,
     CardAPISaveCard: `${PAYMENT_API_URL}/card/save`,
     DeleteCard: `${PAYMENT_API_URL}/card/`,
+
+    
+    PaymentAPIGetPaybackByReceiverId: `${PAYMENT_API_URL}/payback/receiver/`,
 };
