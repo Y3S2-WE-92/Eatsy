@@ -10,7 +10,7 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action) => {
-      const { restaurantID, restaurantName, items } = action.payload;
+      const { restaurantID, restaurantName, deliveryFee, items } = action.payload;
 
       let existingCart = state.carts.find(cart => cart.restaurantID === restaurantID);
 
@@ -18,6 +18,7 @@ export const cartSlice = createSlice({
         existingCart = {
           restaurantID,
           restaurantName,
+          deliveryFee,
           items: [],
         };
         state.carts.push(existingCart);

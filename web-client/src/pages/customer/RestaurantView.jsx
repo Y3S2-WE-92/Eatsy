@@ -16,12 +16,7 @@ import { getMenuItemsByRestaurantID } from "../../utils/fetch-utils/customer/fet
 import { StarRating } from "../../components";
 import { formatCurrency } from "../../utils/format-utils/CurrencyUtil";
 import { formatMinutesTime } from "../../utils/format-utils/TimeFormatUtil";
-
-//Remove after function implementation
-import {
-  mimicDeliveryFee,
-  mimicDeliveryTime,
-} from "../../utils/mimic-utils/mimicDeliveryUtil";
+import { calculateDeliveryTimeInMinutes } from "../../utils/calc-utils/calculateDeliveryTime";
 
 function RestaurantView() {
   const { id } = useParams();
@@ -154,8 +149,8 @@ function RestaurantView() {
             </div>
             <div className="flex flex-row gap-8 w-full md:justify-end items-center">
               <div className="flex flex-col md:gap-2 md:items-end text-sm text-base-content">
-                <p>Delivery Fee: {formatCurrency(mimicDeliveryFee())}</p>
-                <p>Delivery Time: {formatMinutesTime(mimicDeliveryTime())}</p>
+                <p>Delivery Fee: {formatCurrency(restaurant?.deliveryFee)}</p>
+                <p>Delivery Time: {formatMinutesTime(calculateDeliveryTimeInMinutes())}</p>
               </div>
               <LikeButton />
             </div>

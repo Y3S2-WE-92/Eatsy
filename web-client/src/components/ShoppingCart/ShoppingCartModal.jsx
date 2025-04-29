@@ -52,7 +52,7 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
   };
 
   const calculateTotal = () => {
-    return calculateSubtotal() + 0; // Add Delivery fee
+    return calculateSubtotal() + cart.deliveryFee; // Add Delivery fee
   };
 
   const handlePlaceOrder = async (e) => {
@@ -189,7 +189,7 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
                   </tr>
                   <tr>
                     <td colSpan={5}>Delivery Fee</td>
-                    <td>+ {formatCurrency(0)}</td>
+                    <td>+ {formatCurrency(cart.deliveryFee)}</td>
                   </tr>
                   <tr>
                     <td colSpan={5}>Total</td>
