@@ -22,7 +22,18 @@ const getCustomerById = async (customerID) => {
   }
 };
 
+const getAllDeliveryPersons = async () => {
+  try {
+    const response = await axios.get(`${USER_SERVICE_BASE_URL}/deliveryPerson/person/ids`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch customer from user-service:', error.message);
+    return null;
+  }
+};
+
 module.exports = {
   getRestaurantNameById,
-  getCustomerById
+  getCustomerById,
+  getAllDeliveryPersons
 };
