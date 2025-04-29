@@ -1,6 +1,6 @@
 const MenuItem = require("../models/menuItem.model");
 const Category = require("../models/category.model");
-const { getRestaurantById } = require("../utils/user-service.util");
+const userService = require("../services/user.service");
 
 const getAllMenuItems = async (req, res) => {
   try {
@@ -46,7 +46,7 @@ const getMenuItemsByRestaurantID = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const restaurant = await getRestaurantById(id);
+    const restaurant = await userService.getRestaurantById(id);
 
     if (!restaurant) {
       return res.status(404).json({ message: "Restaurant not found" });
@@ -84,7 +84,7 @@ const updateMenuItemAvailability = async (req, res) => {
   const { id } = req.user;
   try {
     // Check if the user is a restaurant owner
-    const restaurant = await getRestaurantById(id);
+    const restaurant = await userService.getRestaurantById(id);
 
     if (!restaurant) {
       return res.status(404).json({ message: "Restaurant not found" });
@@ -117,7 +117,7 @@ const updateMyMenuItem = async (req, res) => {
   const { id } = req.user;
   try {
     // Check if the user is a restaurant owner
-    const restaurant = await getRestaurantById(id);
+    const restaurant = await userService.getRestaurantById(id);
 
     if (!restaurant) {
       return res.status(404).json({ message: "Restaurant not found" });
@@ -151,7 +151,7 @@ const deleteMyMenuItem = async (req, res) => {
   const { id } = req.user;
   try {
     // Check if the user is a restaurant owner
-    const restaurant = await getRestaurantById(id);
+    const restaurant = await userService.getRestaurantById(id);
 
     if (!restaurant) {
       return res.status(404).json({ message: "Restaurant not found" });

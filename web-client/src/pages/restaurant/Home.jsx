@@ -12,17 +12,19 @@ function Home() {
       className={`${styles.paddingX} py-8 relative flex flex-col-2 justify-center gap-4`}
     >
       <AvailabilityToggleButton />
-      <div>
+      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col flex-1 gap-4">
         <OrderRequests />
       </div>
-      <div className="flex flex-col gap-4">
-        <div>
+      <div className="flex flex-col gap-4 flex-1">
+        <div className="flex flex-col lg:flex-row gap-4">
           <Summary />
         </div>
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-col lg:flex-row gap-4">
           <RecentOrders />
           <TopOrders/>
         </div>
+      </div>
       </div>
     </div>
   );

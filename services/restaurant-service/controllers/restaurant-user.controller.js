@@ -1,10 +1,5 @@
 const MenuItem = require("../models/menuItem.model");
-const Category = require("../models/category.model");
-
-const axios = require("axios");
-
-const USER_SERVICE_BASE_URL =
-  process.env.USER_SERVICE_URL || "http://localhost:4000/api";
+const userService = require("../services/user.service");
 
 const getMenuItemsByRestaurantID = async (restaurantID) => {
   try {
@@ -20,8 +15,8 @@ const getMenuItemsByRestaurantID = async (restaurantID) => {
 
 const getAllRestaurantsWithMenuItems = async (req, res) => {
   try {
-    const response = await axios.get(`${USER_SERVICE_BASE_URL}/restaurant`);
-    const restaurants = response.data;
+    const response = await userService.getAllRestaurants();
+    const restaurants = response;
 
     const updatedRestaurants = await Promise.all(
       restaurants.map(async (restaurant) => {
