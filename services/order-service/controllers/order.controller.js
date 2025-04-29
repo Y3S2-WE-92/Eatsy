@@ -109,8 +109,8 @@ const updateDeliveryPersonID = async (req, res) => {
 const updatePaymentID = async (req, res) => {
   try {
     const { paymentID } = req.body;
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
+    const order = await Order.findOneAndUpdate(
+      { refNo: req.params.id },
       { paymentID, status: "paid" },
       { new: true, runValidators: true }
     );
@@ -118,6 +118,7 @@ const updatePaymentID = async (req, res) => {
     res.json(order);
   } catch (err) {
     res.status(400).json({ error: err.message });
+    console.log("Error here: ", error);
   }
 };
 

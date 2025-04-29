@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { mastercard, chip, visa } from "../../../assets/images";
 import ConfirmModal from './ConfirmModal';
 
-const Card = ({ cardName, last4, id, brand, onDelete, menuOpen, onMenuToggle }) => {
+const Card = ({ cardName, last4, id, brand, onDelete, menuOpen, onEdit, onMenuToggle }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const handleDeleteClick = () => {
@@ -17,7 +17,7 @@ const Card = ({ cardName, last4, id, brand, onDelete, menuOpen, onMenuToggle }) 
   return (
     <div className="relative w-[90%] max-w-[490px] h-[225px] sm:h-[130px] md:h-[270px] z-10">
       <div className="absolute w-full h-full p-4 sm:p-6 rounded-[20px] sm:rounded-[25px] backdrop-blur-lg bg-black text-white bg-opacity-10 shadow-[0_25px_45px_rgba(0,0,0,0.25)] border border-white/10 flex flex-col justify-between">
-        
+
         {/* Header */}
         <header className="flex justify-between items-start">
           <span className="flex items-center">
@@ -42,7 +42,7 @@ const Card = ({ cardName, last4, id, brand, onDelete, menuOpen, onMenuToggle }) 
               <div className="absolute right-0 mt-2 w-28 bg-base-300 rounded-box text-black shadow-lg py-2 z-20">
                 <button
                   className="w-full text-left px-4 py-2 hover:bg-gray-100"
-                  onClick={() => onMenuToggle(null)}
+                  onClick={() => onEdit(id)}
                 >
                   Edit
                 </button>
