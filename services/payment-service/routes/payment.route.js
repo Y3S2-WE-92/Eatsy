@@ -4,7 +4,7 @@ const {
   getPaymentsByUser,
   getAllPayments,
   getPaymentByOrderRefNo,
-  getPaymentById
+  getPaymentById,
 } = require("../controllers/payment.controller.js");
 
 
