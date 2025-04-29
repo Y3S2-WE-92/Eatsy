@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import Dashboard from "../pages/Dashboard";
 import UserManagement from "../pages/UserManagement";
 import RestaurantManagement from "../pages/RestaurantManagement";
+import Reports from "../pages/Reports";
 
 function DashboardLayout() {
   return (
@@ -18,6 +19,7 @@ function DashboardLayout() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/users" element={<UserManagement />} />
             <Route path="/restaurants" element={<RestaurantManagement />} />
+            <Route path="/reports" element={<Reports />} />
           </Routes>
         </div>
       </div>

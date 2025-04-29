@@ -117,7 +117,7 @@ const updateRestaurantAvailability = async (req, res) => {
 
     // Toggle availability
     restaurant.availability = !restaurant.availability;
-    
+
     // Save the updated restaurant document
     await restaurant.save();
 
@@ -139,11 +139,32 @@ const getRestaurantAvailability = async (req, res) => {
   }
 };
 
+const verifyRestaurant = async (req, res) => {
+  try {
+    const { id, adminId } = req.params;
+
+    const restaurant = await Restaurant.findByIdAndUpdate(
+      id,
+      { verifiedBy: adminId },
+      { new: true }
+    );
+
+    if (!restaurant) {
+      return res.status(404).json({ error: "Restaurant not found" });
+    }
+
+    res.json({ verified: true, verifiedBy: restaurant.verifiedBy });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   register,
   login,
   getAllRestaurants,
   getRestaurantByID,
   updateRestaurantAvailability,
-  getRestaurantAvailability
+  getRestaurantAvailability,
+  verifyRestaurant
 };
