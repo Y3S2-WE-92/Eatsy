@@ -26,7 +26,7 @@ function RecentOrders() {
           const { text, badgeClass } = formatStatusBadge(order.status);
           return (
             <li className="list-row" key={order._id || order.refNo}>
-              <div>
+              <div className='list-col-grow'>
                 {
                   order.items.map((item, index) => (
                     <div key={index}>{item.name} x {item.quantity}</div>
