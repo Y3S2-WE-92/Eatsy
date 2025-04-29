@@ -18,9 +18,14 @@ router.get('/deliveryPerson/:deliveryPersonId/tasks',
     // authMiddleware('deliveryPerson'), 
     deliveryController.getDeliveryPersonTasks
 );
-router.put('/deliveryPerson/:deliveryPersonId/location', 
+router.put('/deliveryPerson/:id/location', 
     // authMiddleware('deliveryPerson'), 
     deliveryController.updateDeliveryPersonLocation
 );
+router.get('/deliveryPerson/:deliveryPersonId', 
+    // authMiddleware('deliveryPerson'), 
+    deliveryController.getDeliveryPersonById
+);
+
 
 module.exports = router;

@@ -26,6 +26,12 @@ module.exports = {
         socket.join(customerID);
       });
 
+      // Delivery Person joins their room
+      socket.on("joinDeliveryRoom", (deliveryPersonID) => {
+        console.log(`Delivery id:  ${deliveryPersonID} joined room`);
+        socket.join(deliveryPersonID);
+      });
+
       socket.on("disconnect", () => {
         console.log(`Client disconnected: ${socket.id}`);
       });
@@ -40,4 +46,5 @@ module.exports = {
     }
     return io;
   },
+
 };
