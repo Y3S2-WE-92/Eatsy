@@ -1,6 +1,5 @@
 const nodemailer = require("nodemailer");
 const Notification = require("../models/notification.model.js");
-const path = require('path');
 const fs = require("fs");
 
 const transporter = nodemailer.createTransport({
@@ -11,15 +10,13 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const logoPath = path.join(__dirname, "../assets/eatsy-org.png");
-
 const EMAIL_HEADER = `
-<div style="background-color: #f9f9f9;">
-    <div style="text-align: center; padding: 20px;">
-        <img src="cid:logoImage" alt="Eatsy Logo" style="width: 80px; height: auto; margin-bottom: 10px;" />
-        <h1 style="margin: 0; font-size: 24px; color: #333;">Eatsy Notifications</h1>
-        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-    </div>
+    <div style="background-color: #f9f9f9;">
+        <div style="text-align: center; padding: 20px; background-color: #000000; align-items: center;">
+            <img src="https://xqbbqrlljllyfijuxiwg.supabase.co/storage/v1/object/public/eatsy/uploads/eatsy-full-white.png" alt="Eatsy Logo" background-color: #000000; style="width: 120px; height: auto; margin-bottom: 10px;" />
+            <h1 style="margin: 0; font-size: 11px; color: #333;">Eatsy Notification-Service @ ${new Date().toLocaleString()}</h1>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0 0 0;">
+        </div>
 
 `;
 const FINAL_DIV = `</div>`;
@@ -40,13 +37,6 @@ exports.sendNotification = async (req, res) => {
             to,
             subject,
             html: finalHtml,
-            attachments: [
-              {
-                filename: "eatsy-org.png",
-                path: logoPath,
-                cid: "logoImage",
-              }
-            ]
         });
 
         // Save notification log in MongoDB

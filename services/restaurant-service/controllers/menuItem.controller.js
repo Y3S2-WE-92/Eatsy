@@ -52,8 +52,6 @@ const getMenuItemsByRestaurantID = async (req, res) => {
       return res.status(404).json({ message: "Restaurant not found" });
     }
 
-    const restaurantName = restaurant.name;
-
     const menuItems = await MenuItem.find({
       restaurantID: req.params.id,
     }).populate("category").lean();
@@ -61,6 +59,7 @@ const getMenuItemsByRestaurantID = async (req, res) => {
     const updatedMenuItems = menuItems.map((item) => ({
       ...item,
       restaurantName: restaurant.name,
+      deliveryFee: restaurant.deliveryFee,
     }));
 
     res.json({ menuItems: updatedMenuItems });

@@ -55,7 +55,7 @@ function RestaurantNavbar({ sections=[] }) {
       </div>
       <div className="navbar-end gap-3">
         <NotificationsButton notifications={notifications} />
-        <ProfileButton/>
+        <ProfileButton role="restaurant"/>
         <ThemeButton />
       </div>
     </div>

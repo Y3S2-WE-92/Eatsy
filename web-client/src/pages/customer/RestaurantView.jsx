@@ -16,9 +16,7 @@ import { getMenuItemsByRestaurantID } from "../../utils/fetch-utils/customer/fet
 import { StarRating } from "../../components";
 import { formatCurrency } from "../../utils/format-utils/CurrencyUtil";
 import { formatMinutesTime } from "../../utils/format-utils/TimeFormatUtil";
-
-//Remove after function implementation
-import { mimicDeliveryFee, mimicDeliveryTime } from "../../utils/mimic-utils/mimicDeliveryUtil";
+import { calculateDeliveryTimeInMinutes } from "../../utils/calc-utils/calculateDeliveryTime";
 
 function RestaurantView() {
   const { id } = useParams();
@@ -26,6 +24,7 @@ function RestaurantView() {
   const [menuItems, setMenuItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const isCoverImageLoaded = useImageLoaded(restaurant?.profileImage);
   const isProfileImageLoaded = useImageLoaded(restaurant?.coverImage);
@@ -55,6 +54,7 @@ function RestaurantView() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         // Fetch restaurant and menu items concurrently
         const [restaurantData, menuItemsData] = await Promise.all([
@@ -64,22 +64,38 @@ function RestaurantView() {
 
         if (!restaurantData) {
           setError("Restaurant not found");
+          setIsLoading(false);
           return;
         }
 
         setRestaurant(restaurantData);
         setMenuItems(menuItemsData);
+        setIsLoading(false);
       } catch (error) {
         setError("Failed to load restaurant or menu items");
         console.error("Error fetching data:", error.message);
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, [id]);
 
-  if (!restaurant) {
-    return <div>Restaurant not found</div>;
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-4rem)]">
+        <span className="loading loading-spinner loading-xl text-primary"></span>
+        <p>Loading Restaurant...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-4rem)]">
+        <p className="text-error text-lg font-bold">{error}</p>
+      </div>
+    );
   }
 
   const filteredMenuItems = menuItems.filter((item) =>
@@ -100,8 +116,8 @@ function RestaurantView() {
           {/* Cover image */}
           {isCoverImageLoaded ? (
             <img
-              src={restaurant.coverImage}
-              alt={restaurant.name}
+              src={restaurant?.coverImage}
+              alt={restaurant?.name}
               className="w-full h-32 object-cover"
             />
           ) : (
@@ -116,8 +132,8 @@ function RestaurantView() {
         >
           {isProfileImageLoaded ? (
             <img
-              src={restaurant.profileImage}
-              alt={restaurant.name}
+              src={restaurant?.profileImage}
+              alt={restaurant?.name}
               className="w-20 h-20 md:w-30 md:h-30 rounded-full border-2 border-accent/30 object-cover"
             />
           ) : (
@@ -127,14 +143,14 @@ function RestaurantView() {
           )}
           <div className="flex flex-col md:flex-row md:justify-between w-full gap-2">
             <div className="flex flex-col w-full gap-2">
-              <h2 className="text-2xl font-bold">{restaurant.name}</h2>
-              <p className="text-sm text-base-content">{restaurant.address}</p>
+              <h2 className="text-2xl font-bold">{restaurant?.name}</h2>
+              <p className="text-sm text-base-content">{restaurant?.address}</p>
               <StarRating rating={restaurant?.rating} />
             </div>
             <div className="flex flex-row gap-8 w-full md:justify-end items-center">
               <div className="flex flex-col md:gap-2 md:items-end text-sm text-base-content">
-                <p>Delivery Fee: {formatCurrency(mimicDeliveryFee())}</p>
-                <p>Delivery Time: {formatMinutesTime(mimicDeliveryTime())}</p>
+                <p>Delivery Fee: {formatCurrency(restaurant?.deliveryFee)}</p>
+                <p>Delivery Time: {formatMinutesTime(calculateDeliveryTimeInMinutes())}</p>
               </div>
               <LikeButton />
             </div>
@@ -144,9 +160,10 @@ function RestaurantView() {
           <div className="card-body">
             <div className="card-header flex flex-row justify-between items-center">
               <div className="flex flex-row gap-2">
-              <div className="card-title truncate">Featured Food Items</div>
-              <span className="text-xs badge badge-soft badge-primary">
-                  {filteredMenuItems.length} <span className="hidden lg:inline-flex text-sm">Results</span>
+                <div className="card-title truncate">Featured Food Items</div>
+                <span className="text-xs badge badge-soft badge-primary">
+                  {filteredMenuItems.length}{" "}
+                  <span className="hidden lg:inline-flex text-sm">Results</span>
                 </span>
               </div>
               <div className="flex flex-row gap-2">
@@ -165,7 +182,7 @@ function RestaurantView() {
             </div>
             {menuItems.length > 0 ? (
               <div className="card-content flex flex-row gap-2 overflow-x-auto mt-2">
-                {filteredMenuItems.map((item) => (
+                {filteredMenuItems?.map((item) => (
                   <FoodItemCard key={item._id} item={item} />
                 ))}
               </div>

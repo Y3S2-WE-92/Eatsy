@@ -12,4 +12,5 @@ export const paymentAPI = {
 
     
     PaymentAPIGetPaybackByReceiverId: `${PAYMENT_API_URL}/payback/receiver/`,
+    EditDeleteCard: (id) => `${PAYMENT_API_URL}/card/${id}`,
 };

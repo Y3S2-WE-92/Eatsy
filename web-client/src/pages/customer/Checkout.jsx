@@ -22,14 +22,20 @@ function Checkout() {
   }, []);
 
 
-  if (!ready) return <div>Loading Stripe...</div>;
+  if (!ready) {
+    return (
+      <div className="flex justify-center items-center min-h-[300px]">
+        <span className="loading loading-dots loading-lg"></span>
+      </div>
+    );
+  }
 
   return (
     <div className={`${styles.paddingX} flex flex-col`}>
       <PageTitle title='Checkout' backLink='/customer' />
 
       <Elements stripe={stripePromise}>
-        <SelectCardPayment amount = {amount} refNo={cartId}/>
+        <SelectCardPayment amount={amount} refNo={cartId} />
       </Elements>
     </div>
   )

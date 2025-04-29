@@ -65,7 +65,20 @@ const login = async (req, res) => {
   }
 };
 
+const getCustomerByID = async (req, res) => {
+  try {
+    const customer = await Customer.findById(req.params.id).select("-password");
+    if (!customer) {
+      return res.status(404).json({ msg: "Customer not found" });
+    }
+    res.status(200).json(customer);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};
+
 module.exports = {
   register,
   login,
+  getCustomerByID,
 };

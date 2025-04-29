@@ -9,15 +9,20 @@ import axios from "axios";
 import { useToast } from "../../utils/alert-utils/ToastUtil";
 import { removeCart } from "../../redux/customer/cartSlice";
 import WaitingForRestaurantModal from "../Modals/Customer/WaitingForRestaurantModal";
-import { useCustomer,useCustomerSelectedLocation } from "../../utils/redux-utils/redux-customer";
+import {
+  useCustomer,
+  useCustomerSelectedLocation,
+} from "../../utils/redux-utils/redux-customer";
 
 function ShoppingCartModal({ cart, isOpen, onClose }) {
   const dispatch = useDispatch();
   const customer = useCustomer();
   const selectedLocation = useCustomerSelectedLocation();
   const toast = useToast();
+
   const [items, setItems] = useState(cart.items);
   const [isWaitingForRestaurant, setIsWaitingForRestaurant] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRemoveItem = (itemID, selectedSize) => {
     setItems((prevItems) =>
@@ -47,13 +52,16 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
   };
 
   const calculateTotal = () => {
-    return calculateSubtotal() + 0; // Add Delivery fee
+    return calculateSubtotal() + cart.deliveryFee; // Add Delivery fee
   };
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
-    if (!customer?.id) {
+    const token = localStorage.getItem("token");
+
+    if (!customer?.id || !token) {
       toast.error("Customer information is missing");
       return;
     }
@@ -63,16 +71,19 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
     }
 
     const orderPayload = {
-      customerID: customer.id,
       restaurantID: cart.restaurantID,
       restaurantCost: calculateSubtotal(),
       deliveryCost: 0,
       deliveryLocation: {
         location: {
           type: "Point",
-          coordinates: selectedLocation?.deliveryAddress?.location?.coordinates || [0, 0],
+          coordinates: selectedLocation?.deliveryAddress?.location
+            ?.coordinates || [0, 0],
         },
-        address: selectedLocation?.deliveryAddress?.address || selectedLocation.name || "",
+        address:
+          selectedLocation?.deliveryAddress?.address ||
+          selectedLocation.name ||
+          "",
       },
       items: items.map((item) => ({
         itemID: item.itemID,
@@ -84,19 +95,24 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
     };
 
     try {
-      const response = await axios.post(orderAPI.placeOrder, orderPayload);
-
+      const response = await axios.post(orderAPI.placeOrder, orderPayload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.status === 201 || response.status === 200) {
         console.log("Order placed successfully", response.data);
         toast.success("Order placed successfully");
         dispatch(removeCart({ restaurantID: cart.restaurantID }));
         setIsWaitingForRestaurant(true);
+        setIsLoading(false);
       } else {
         toast.error("Unexpected response from server");
       }
     } catch (error) {
       toast.error("Failed to place order");
       console.error("Error placing order:", error);
+      setIsLoading(false);
     }
   };
 
@@ -173,7 +189,7 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
                   </tr>
                   <tr>
                     <td colSpan={5}>Delivery Fee</td>
-                    <td>+ {formatCurrency(0)}</td>
+                    <td>+ {formatCurrency(cart.deliveryFee)}</td>
                   </tr>
                   <tr>
                     <td colSpan={5}>Total</td>
@@ -196,8 +212,12 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
                     {formatCurrency(calculateTotal())}
                   </p>
                 </div>
-                <button className="btn btn-primary" onClick={handlePlaceOrder}>
-                  Place Order
+                <button className="btn btn-primary" onClick={handlePlaceOrder} disabled={isLoading}>
+                  {isLoading ? (
+                    <span className="loading loading-dots loading-lg text-warning"></span>
+                  ) : (
+                    <span>Place Order</span>
+                  )}
                 </button>
               </div>
             </div>

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import CardSelect from "../../../components/Cards/Payment/CardSelect";
 import NewCardForm from "../../../components/Forms/Payment/NewCardForm";
 import axios from "axios";
-import { paymentAPI } from "../../../services";
+import { paymentAPI, orderAPI } from "../../../services";
 import { useStripe } from "@stripe/react-stripe-js";
 import ConfirmModal from "../../../components/Cards/Payment/ConfirmModal";
 import { useToast } from "../../../utils/alert-utils/ToastUtil";
@@ -51,7 +51,17 @@ export default function SelectCardPayment({ amount, refNo }) {
             .then((res) => {
                 if (res.data.success) {
                     toast.success("Payment successful!");
-                    navigate("/customer/my-orders");
+                    axios
+                        .put(orderAPI.updatePaymentID(refNo), { paymentID: res.data.payment._id })
+                        .then((response) => {
+
+                            navigate("/customer/my-orders");
+
+                        })
+                        .catch((error) => {
+                            console.error("Failed to update order status:", error);
+                            toast.error("Failed to update order!");
+                        });
                 } else {
                     console.error("Payment failed");
                 }
@@ -67,6 +77,7 @@ export default function SelectCardPayment({ amount, refNo }) {
     };
 
 
+
     const handleModalCancel = () => {
         setShowModal(false);
         setSelectedCard(null);
@@ -79,24 +90,38 @@ export default function SelectCardPayment({ amount, refNo }) {
     }
 
 
-    const handleNewCardSuccess = async (token) => {
-        // Proceed to payment with new card
-        try {
-            const response = await axios.post(paymentAPI.PaymentAPIProcessPayment, {
+    const handleNewCardSuccess = (token) => {
+        axios
+            .post(paymentAPI.PaymentAPIProcessPayment, {
                 userId: user.id,
                 refNo,
-                amount: amount,
+                amount,
                 cardToken: token,
+            })
+            .then((res) => {
+                if (res.data.success) {
+                    toast.success("Payment successful!");
+                    PaymentSuccess();
+                    axios
+                        .put(orderAPI.updatePaymentID(refNo), { paymentID: res.data.payment._id })
+                        .then((response) => {
+                            navigate("/customer/my-orders");
+                        })
+                        .catch((error) => {
+                            console.error("Failed to update order status:", error);
+                            toast.error("Failed to update order!");
+                        });
+                } else {
+                    toast.error("Payment failed.");
+                    console.error("Payment failed response:", res.data);
+                }
+            })
+            .catch((err) => {
+                console.error("Error processing payment:", err);
+                toast.error("Error processing payment. Please try again.");
             });
-            if (response.data.success) {
-                toast.success("Payment successful!");
-                navigate("/customer/my-orders");
-                PaymentSuccess();
-            }
-        } catch (err) {
-            toast.error("Error processing payment. Please try again.");
-        }
     };
+
 
     return (
         <div className="max-w-xl mx-auto p-4 space-y-4 overflow-auto mb-8 w-2/3 ">
@@ -113,7 +138,7 @@ export default function SelectCardPayment({ amount, refNo }) {
             <ConfirmModal
                 open={showModal}
                 message={<span dangerouslySetInnerHTML={{ __html: `Are you sure you want to pay <strong>${amount}</strong> using <strong>${selectedCard?.cardName}</strong>?` }} />}
-                    header = "Confirm Payment"
+                header="Confirm Payment"
                 onCancel={handleModalCancel}
                 onConfirm={confirmPayment}
             />
