@@ -1,6 +1,7 @@
 const axios = require("axios");
 const Delivery = require("../models/delivery.model");
 const { sendSMS, sendEmail } = require("../services/notification.service");
+// const { getIO } = require("../../order-service/sockets/socket");
 const ORDER_SERVICE_URL =
   process.env.ORDER_SERVICE_URL || "http://localhost:4002";
 const USER_SERVICE_URL =
@@ -8,15 +9,14 @@ const USER_SERVICE_URL =
 
 exports.assignDeliveryPerson = async (req, res) => {
   try {
-    const { id, restaurantId, customerId, deliveryAddress, deliveryPersonId } = req.body;
+    const { id, restaurantId, customerId, deliveryAddress, deliveryPersonId } =
+      req.body;
     console.log("Assigning delivery person for order ID:", id);
 
     // Fetch order from Order Service
     let order;
     try {
-      const response = await axios.get(
-        `${ORDER_SERVICE_URL}/api/order/${id}`
-      );
+      const response = await axios.get(`${ORDER_SERVICE_URL}/api/order/${id}`);
       order = response.data;
       console.log("Fetched order:", order);
     } catch (error) {
@@ -42,11 +42,6 @@ exports.assignDeliveryPerson = async (req, res) => {
       console.log("Error fetching delivery persons:", error.message);
       return res.status(500).json({ error: "Failed to find delivery persons" });
     }
-
-    // if (!deliveryPersons.length) {
-    //   console.log("No available delivery persons found");
-    //   return res.status(404).json({ error: "No available delivery persons" });
-    // }
 
     const deliveryPerson = deliveryPersons;
 
@@ -78,10 +73,17 @@ exports.assignDeliveryPerson = async (req, res) => {
 
     // Update order status in Order Service
     try {
-      await axios.put(
-        `${ORDER_SERVICE_URL}/order/status/${id}`,
-        { status: "assigned" }
-      );
+      await axios.put(`${ORDER_SERVICE_URL}/order/status/${id}`, {
+        status: "ready",
+      });
+
+      // // Emit orderReady event via WebSocket
+      // const io = getIO();
+      // io.to(deliveryPersonId).emit("orderReady", {
+      //   orderId: id,
+      //   deliveryPersonId,
+      //   status: "ready",
+      // });
     } catch (error) {
       console.error("Failed to update order status:", error.message);
     }
@@ -185,9 +187,9 @@ exports.updateDeliveryStatus = async (req, res) => {
 exports.getDeliveryPersonTasks = async (req, res) => {
   try {
     const { deliveryPersonId } = req.params;
-    if (deliveryPersonId !== req.user.id) {
-      return res.status(403).json({ error: "Unauthorized" });
-    }
+    // if (deliveryPersonId !== req.user.id) {
+    //   return res.status(403).json({ error: "Unauthorized" });
+    // }
     const deliveries = await Delivery.find({
       deliveryPersonId,
       status: { $ne: "delivered" },
@@ -262,7 +264,10 @@ exports.updateOrderStatusByDeliveryPerson = async (req, res) => {
         // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
       );
     } catch (error) {
-      console.error("Failed to update order status in Order Service:", error.message);
+      console.error(
+        "Failed to update order status in Order Service:",
+        error.message
+      );
     }
 
     res.json({ message: "Order status updated", status });
@@ -272,36 +277,16 @@ exports.updateOrderStatusByDeliveryPerson = async (req, res) => {
   }
 };
 
-exports.updateOrderStatusByDeliveryPerson = async (req, res) => {
+exports.getDeliveryPersonById = async (req, res) => {
   try {
-    const { orderId } = req.params;
-    const { status } = req.body;
-    const deliveryPersonId = req.user.id;
-
-    // Verify the delivery person is assigned to the order
-    const delivery = await Delivery.findOne({ orderId, deliveryPersonId });
-    if (!delivery) {
-      return res.status(403).json({ error: "Unauthorized or invalid order" });
+    const { deliveryPersonId } = req.params;
+    const deliveryPerson = await Delivery.find({ deliveryPersonId: deliveryPersonId });
+    if (!deliveryPerson) {
+      return res.status(404).json({ error: "Delivery person not found" });
     }
-
-    // Update the delivery status
-    delivery.status = status;
-    await delivery.save();
-
-    // Update the order status in Order Service
-    try {
-      await axios.put(
-        `${ORDER_SERVICE_URL}/api/delivery/order/${orderId}/status`,
-        { status }
-        // { headers: { Authorization: `Bearer ${process.env.SERVICE_JWT}` } }
-      );
-    } catch (error) {
-      console.error("Failed to update order status in Order Service:", error.message);
-    }
-
-    res.json({ message: "Order status updated", status });
+    res.json(deliveryPerson);
   } catch (error) {
-    console.error("Error in updateOrderStatusByDeliveryPerson:", error);
+    console.error("Error in getDeliveryPersonById:", error);
     res.status(500).json({ error: error.message });
   }
 };

@@ -181,6 +181,15 @@ const verifyAccount = async (req, res) => {
   
 }
 
+const getAllDeliveryPersonsIds = async (req, res) => {
+  try {
+    const deliveryPersons = await DeliveryPerson.find({}, "_id");
+    res.json(deliveryPersons.map((person) => person._id));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
 module.exports = {
   register,
   login,
@@ -190,4 +199,5 @@ module.exports = {
   updateAvailability,
   updateLocation,
   getNearbyDeliveryPersons,
+  getAllDeliveryPersonsIds
 };

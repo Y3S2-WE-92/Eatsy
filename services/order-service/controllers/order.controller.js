@@ -2,6 +2,9 @@ const Order = require("../models/order.model");
 const generateRefNo = require("../utils/refno.util");
 const { getIO } = require("../sockets/socket");
 const sendPayback = require("../controllers/order-payment.controller");
+const axios = require("axios");
+
+const UserServiceURL = process.env.USER_SERVICE_URL || "http://localhost:4000";
 const userService = require("../services/user.service");
 const notificationService = require("../services/notification.service");
 
@@ -152,6 +155,28 @@ const updateOrderStatus = async (req, res) => {
     }
     await sendPayback({status, order});
     
+
+    // Notify delivery person when the order is ready
+    if (status === "ready") {
+      console.log("Order is ready for delivery:", order._id);
+      // Fetch all delivery person IDs from the API
+      const response = await axios.get(`${UserServiceURL}/api/deliveryPerson/person/ids`);
+      const deliveryPersonIDs = response.data;
+
+      // Emit the event to all delivery persons
+      deliveryPersonIDs.forEach((id) => {
+        io.to(id).emit("orderReady", {
+          orderID: order._id,
+          refNo: order.refNo,
+          deliveryLocation: order.deliveryLocation,
+          restaurantID: order.restaurantID,
+          items: order.items,
+        });
+      });
+
+      console.log("Order ready event emitted to all delivery persons.");
+    }
+
     res.json(order);
   } catch (err) {
     res.status(400).json({ error: err.message });

@@ -24,6 +24,7 @@ import BackButton from "./Buttons/BackButton";
 import AvailabilityToggleButton from "./Buttons/Restaurant/AvailabilityToggleButton";
 import LocationSelectButton from "./Buttons/Customer/LocationSelectButton";
 import MenuItemAvailabilityButton from "./Buttons/Restaurant/MenuItemAvailabilityButton";
+import MapViewButton from "./MapView/MapViewButton";
 
 import RestaurantCard from "./Cards/Customer/RestaurantCard";
 import FoodItemCard from "./Cards/Customer/FoodItemCard";
@@ -41,6 +42,7 @@ import ShoppingCartButton from "./ShoppingCart/ShoppingCartButton";
 import Counter from "./ShoppingCart/Counter";
 
 import DeliveryMap from "./DeliveryMap/DeliveryMap";
+import DeliveryOrders from "./DeliveryMap/OrderSocket"
 
 import OrderAccordionItem from "./Accordions/Customer/OrderAccordionItem";
 
@@ -83,6 +85,7 @@ export {
   BackButton,
   AvailabilityToggleButton,
   LocationSelectButton,
+  MapViewButton,
   MenuItemAvailabilityButton,
 
   //Cards
@@ -108,7 +111,8 @@ export {
 
   //Delivery
   DeliveryMap,
-
+  DeliveryOrders,
+  
   //Timelines
   OrderTimeline,
 
