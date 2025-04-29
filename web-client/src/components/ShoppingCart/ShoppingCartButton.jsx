@@ -11,10 +11,19 @@ function CartMenu({ carts, onOpenModal }) {
       className="card card-compact dropdown-content bg-base-300 z-1 mb-2 mt-2 w-72 shadow"
     >
       <div className="card-body">
-        <span className="text-lg font-bold">{carts.length} Carts</span>
-        <ul className="menu gap-2">
+        <ul className="list bg-base-100 rounded-box shadow-md">
           {carts.map((cart, index) => (
-            <li key={index}>Restaurant: {cart.restaurantName}</li>
+            <li className="list-row">
+              <div className="text-4xl font-thin opacity-30 tabular-nums">
+                {index + 1}
+              </div>
+              <div className="list-col-grow">
+                <div>{cart.restaurantName}</div>
+                <div className="text-xs font-semibold opacity-60">
+                  {cart.items.length} Items
+                </div>
+              </div>
+            </li>
           ))}
         </ul>
         <div className="card-actions">
@@ -67,10 +76,10 @@ function ShoppingCartButton() {
             <div className="indicator p-2">
               <FaCartShopping />
               {carts.length > 0 && (
-              <div className="badge badge-sm badge-error indicator-item">
-                {carts.length}
-              </div>
-            )}
+                <div className="badge badge-sm badge-error indicator-item">
+                  {carts.length}
+                </div>
+              )}
             </div>
           </button>
           <CartMenu carts={carts} onOpenModal={handleOpenViewAllCartsModal} />
