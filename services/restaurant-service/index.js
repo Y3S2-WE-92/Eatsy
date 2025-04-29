@@ -29,11 +29,13 @@ app.get("/api/health", (req, res) => {
 const categoryRoutes = require("./routes/category.route.js");
 const menuItemRoutes = require("./routes/menuItem.route.js");
 const restaurantUserRoutes = require("./routes/restaurant-user.route.js");
+const restaurantOrderRoutes = require("./routes/restaurant-order.route.js");
 
 // Using category routes
 app.use("/api/category", categoryRoutes);
 app.use("/api/menu", menuItemRoutes);
 app.use("/api/restaurant", restaurantUserRoutes);
+app.use("/api/orders", restaurantOrderRoutes);
 
 // MongoDB connection
 mongoose

@@ -230,6 +230,17 @@ const getMyOrders = async (req, res) => {
   }
 };
 
+const getOrdersByRestuarantID = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const orders = await Order.find({ restaurantID: id }).sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (error) {
+    console.error("Error in getCustomerOrders:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createOrder,
   getOrders,
@@ -240,4 +251,5 @@ module.exports = {
   updateOrderStatus,
   getOrderByRefNo,
   getMyOrders,
+  getOrdersByRestuarantID,
 };

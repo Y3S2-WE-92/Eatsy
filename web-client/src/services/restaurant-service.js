@@ -17,4 +17,6 @@ export const restaurantAPI = {
     deleteMyMenuItem: (id) => `${RESTAURANTS_API_URL}/menu/restaurant/my-menu-items/${id}`,
 
     getAllRestaurantsWithCategories: `${RESTAURANTS_API_URL}/restaurant`,
+    getMyTopOrders: `${RESTAURANTS_API_URL}/orders/top`,
+    getMyRecentOrders: `${RESTAURANTS_API_URL}/orders/recent`,
 }
