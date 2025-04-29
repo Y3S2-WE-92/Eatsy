@@ -196,3 +196,6 @@ This will stop and remove all running containers.
 - **Sandali Dias**
 
 ---
+
+GitHub Repository: [https://github.com/Y3S2-WE-92/Eatsy.git](https://github.com/Y3S2-WE-92/Eatsy.git)  
+Demonstration Video: [https://youtu.be/uNSe-Z4WM6I](https://youtu.be/uNSe-Z4WM6I)
