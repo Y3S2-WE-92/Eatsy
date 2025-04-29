@@ -9,7 +9,7 @@ import { userAPI } from '../../services/user-service'; // Fix the import
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { assignOrder } from '../../store/actions/orderActions'; // Import the Redux action
-import { toast } from 'react-toastify'; // Import toast for notifications
+import { useToast } from '../../utils/alert-utils/ToastUtil';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -23,6 +23,7 @@ const DELIVERY_API_URL = import.meta.env.VITE_DELIVERY_API_URL
 import { useDeliveryPerson } from '../../utils/redux-utils/redux-delivery';
 
 const DeliveryMap = ({ mode = "delivery", orderData = null }) => {
+  const toast = useToast();
   const mapRef = useRef(null);
   const deliveryPersonMarkerRef = useRef(null);
   const deliveryPerson = useDeliveryPerson();
