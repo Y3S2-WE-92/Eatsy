@@ -34,12 +34,12 @@ function NewCardForm({ userId, onSuccess, type }) {
           paymentMethodId: paymentMethod.id,
           cardName,
         });
+        onSuccess(paymentMethod.id);
       } catch (err) {
         toast.error("Error: Couldn't Save Card");
       }
     }
 
-    onSuccess(paymentMethod.id);
   };
 
   return (
