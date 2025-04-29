@@ -6,14 +6,12 @@ import {
   listenOrderReady,
   disconnectSocket,
 } from "../../sockets/delivery.order.socket";
+import axios from "axios";
+import { orderAPI } from '../../services/order-service'; // Fix the import
+const DELIVERY_API_URL = import.meta.env.VITE_DELIVERY_API_URL // Replace with the actual API URL
 import { IoClose, IoCheckmarkSharp } from "react-icons/io5";
-import OrderViewModal from "../Modals/Restaurants/OrderViewModal";
 import { useToast } from "../../utils/alert-utils/ToastUtil";
 import { formatCustomDate } from "../../utils/format-utils/DateUtil";
-import {
-  AcceptOrder,
-  RejectOrder,
-} from "../../utils/update-utils/restaurant/update-order";
 import OrderHistoryByPersonId from "./OrderHistoryByPersonId";
 import { useDeliveryPerson } from '../../utils/redux-utils/redux-delivery';
 
@@ -127,6 +125,15 @@ function OrderRequests() {
 
     listenOrderReady((orderData) => {
       toast.success(`Order ${orderData.refNo} is ready for delivery!`);
+      // Add the ready order to the orders state
+      setOrders((prev) => {
+        // Check if the order already exists in the state
+        const orderExists = prev.some((order) => order._id === orderData._id);
+        if (!orderExists) {
+          return [...prev, orderData];
+        }
+        return prev;
+      });
     });
 
     return () => {
@@ -138,27 +145,67 @@ function OrderRequests() {
     setSelectedOrder(order);
     setIsOrderViewModalOpen(true);
 
-    // Example coordinates (replace with actual data)
+    // Extract restaurant and delivery person coordinates
     const restaurantCoordinates = order.restaurantLocation?.coordinates || [79.8612, 6.9271]; // Default to Colombo
-    const deliveryPersonCoordinates = [79.865, 6.927]; // Replace with actual delivery person location
+    const deliveryPersonCoordinates = deliveryPerson.location?.coordinates || [79.865, 6.927]; // Replace with actual delivery person location
 
-    drawMarkersAndRoute(restaurantCoordinates, deliveryPersonCoordinates);
+    // Ensure valid coordinates before drawing markers and route
+    if (restaurantCoordinates && deliveryPersonCoordinates) {
+      drawMarkersAndRoute(restaurantCoordinates, deliveryPersonCoordinates);
+    } else {
+      console.error("Invalid coordinates for restaurant or delivery person.");
+    }
   };
 
   const handleAccept = async (id) => {
     try {
-      await AcceptOrder(id);
-      setOrders((prev) => prev.filter((order) => order._id !== id));
-      toast.success("Order accepted!");
+      // Fetch order details
+      const orderDetailsResponse = await axios(orderAPI.getOrderByID(id));
+      const orderDetails = orderDetailsResponse.data;
+
+      console.log("Order Details:", orderDetails);
+
+      // Ensure the required fields are present
+      if (!orderDetails._id || !orderDetails.restaurantID || !orderDetails.customerID || !orderDetails.deliveryLocation) {
+        throw new Error("Missing required fields in order details.");
+      }
+
+      // Call the API to assign the order to the delivery person
+      const response = await axios.post(
+        `${DELIVERY_API_URL}/delivery/assign`,
+        {
+          id: orderDetails._id, // Use the correct field for the order ID
+          restaurantId: orderDetails.restaurantID,
+          deliveryPersonId: deliveryPersonID,
+          customerId: orderDetails.customerID,
+          deliveryAddress: {
+            location: orderDetails.deliveryLocation.location,
+            address: orderDetails.deliveryLocation.address,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const updatedOrder = response.data; // Assuming the API returns the updated order
+
+        // Update the orders state to remove the accepted order
+        setOrders((prev) => prev.filter((order) => order._id !== id));
+
+        // Optionally, add the accepted order to another state (e.g., assigned orders)
+        toast.success(`Order ${updatedOrder.refNo} assigned successfully!`);
+      } else {
+        throw new Error("Failed to assign the order.");
+      }
     } catch (error) {
-      console.error("Error accepting order:", error);
+      console.error("Error accepting and assigning order:", error);
+      toast.error("Failed to assign the order.");
     }
   };
 
   const handleReject = async (id) => {
     try {
-      await RejectOrder(id);
-      setOrders((prev) => prev.filter((order) => order._id !== id));
+      // await RejectOrder(id);
+      // setOrders((prev) => prev.filter((order) => order._id !== id));
       toast.error("Order rejected!");
     } catch (error) {
       console.error("Error rejecting order:", error);
@@ -194,13 +241,13 @@ function OrderRequests() {
               </div>
               <div className="flex flex-row gap-2">
                 <button
-                  onClick={() => handleAccept(order._id)}
+                  onClick={() => handleAccept(order.orderID)}
                   className="btn btn-circle btn-success btn-sm text-xl font-bold"
                 >
                   <IoCheckmarkSharp />
                 </button>
                 <button
-                  onClick={() => handleReject(order._id)}
+                  onClick={() => handleReject(order.orderID)}
                   className="btn btn-circle btn-error btn-sm text-xl font-bold"
                 >
                   <IoClose />
@@ -224,14 +271,6 @@ function OrderRequests() {
         <OrderHistoryByPersonId deliveryPersonID={deliveryPersonID} />
       </div>
 
-      {/* Order View Modal */}
-      {isOrderViewModalOpen && (
-        <OrderViewModal
-          isOpen={isOrderViewModalOpen}
-          onClose={() => setIsOrderViewModalOpen(false)}
-          order={selectedOrder}
-        />
-      )}
     </div>
   );
 }
