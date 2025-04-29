@@ -10,32 +10,30 @@ const notificationService = require("../services/notification.service");
 
 // Create a new order
 const createOrder = async (req, res) => {
-  const {id} = req.user;
+  const { id } = req.user;
   try {
     const customerID = id;
     const customer = await userService.getCustomerById(customerID);
 
-    if (!customer) {
-      return res.status(404).json({ error: "Customer not found" });
-    }
+    if (customer) {
+      const refNo = generateRefNo();
+      const order = new Order({ ...req.body, refNo, customerID: customer._id });
+      const savedOrder = await order.save();
 
-    const refNo = generateRefNo();
-    const order = new Order({ ...req.body, refNo, customerID: customer._id });
-    const savedOrder = await order.save();
-
-    if(customer.email){
       await notificationService.sendOrderPlacementNotification({
-        to: customer.email,
+        to: customer._id,
         refNo: savedOrder.refNo,
         customerName: customer.name,
-        createdAt: savedOrder.createdAt
+        createdAt: savedOrder.createdAt,
       });
+
+      const io = getIO();
+      io.to(savedOrder.restaurantID).emit("newOrder", savedOrder);
+
+      res.status(201).json(savedOrder);
+    }else{
+      res.status(404).json({ error: "Customer not found" });
     }
-
-    const io = getIO();
-    io.to(savedOrder.restaurantID).emit("newOrder", savedOrder);
-
-    res.status(201).json(savedOrder);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -71,7 +69,8 @@ const getOrderById = async (req, res) => {
 const getNearbyOrders = async (req, res) => {
   try {
     const { lat, lng, maxDistance = 500000 } = req.query;
-    if (!lat || !lng) return res.status(400).json({ error: 'lat and lng required' });
+    if (!lat || !lng)
+      return res.status(400).json({ error: "lat and lng required" });
 
     const nearbyOrders = await Order.find({
       status: "ready",
@@ -102,7 +101,7 @@ const updateDeliveryPersonID = async (req, res) => {
       { new: true, runValidators: true }
     );
     if (!order) return res.status(404).json({ error: "Order not found" });
-    await sendPayback({status: "assigned", order});
+    await sendPayback({ status: "assigned", order });
     res.json(order);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -152,15 +151,35 @@ const updateOrderStatus = async (req, res) => {
         restaurantCost: order.restaurantCost,
         deliveryCost: order.deliveryCost,
       });
+
+      if (status === "accepted") {
+        await notificationService.sendOrderAcceptanceNotification({
+          to: order.customerID,
+          refNo: order.refNo,
+          customerName: order.customerName,
+          createdAt: order.createdAt,
+        });
+      }
+
+      if (status === "rejected") {
+        await notificationService.sendOrderRejectedNotification({
+          to: order.customerID,
+          refNo: order.refNo,
+          customerName: order.customerName,
+          createdAt: order.createdAt,
+        });
+      }
     }
-    await sendPayback({status, order});
-    
+
+    await sendPayback({ status, order });
 
     // Notify delivery person when the order is ready
     if (status === "ready") {
       console.log("Order is ready for delivery:", order._id);
       // Fetch all delivery person IDs from the API
-      const response = await axios.get(`${UserServiceURL}/api/deliveryPerson/person/ids`);
+      const response = await axios.get(
+        `${UserServiceURL}/api/deliveryPerson/person/ids`
+      );
       const deliveryPersonIDs = response.data;
 
       // Emit the event to all delivery persons
@@ -200,8 +219,13 @@ const getMyOrders = async (req, res) => {
     //get and append restaurant name for each order
     const ordersWithRestaurants = await Promise.all(
       orders.map(async (order) => {
-        const restaurantName = await userService.getRestaurantNameById(order.restaurantID);
-        return { ...order._doc, restaurantName: restaurantName || "Unknown Restaurant" };
+        const restaurantName = await userService.getRestaurantNameById(
+          order.restaurantID
+        );
+        return {
+          ...order._doc,
+          restaurantName: restaurantName || "Unknown Restaurant",
+        };
       })
     );
     res.json(ordersWithRestaurants);
