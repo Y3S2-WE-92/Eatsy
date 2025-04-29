@@ -13,7 +13,7 @@ const {
 } = require("../controllers/order.controller");
 const { protect } = require("../middleware/auth.middleware");
 
-router.post("/", createOrder);
+router.post("/", protect, createOrder);
 router.get("/", getOrders);
 router.get("/nearby", getNearbyOrders);
 router.get("/customer/my-orders", protect, getMyOrders);

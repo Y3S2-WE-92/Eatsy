@@ -53,7 +53,9 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
-    if (!customer?.id) {
+    const token = localStorage.getItem("token");
+
+    if (!customer?.id || !token) {
       toast.error("Customer information is missing");
       return;
     }
@@ -63,7 +65,6 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
     }
 
     const orderPayload = {
-      customerID: customer.id,
       restaurantID: cart.restaurantID,
       restaurantCost: calculateSubtotal(),
       deliveryCost: 0,
@@ -84,8 +85,13 @@ function ShoppingCartModal({ cart, isOpen, onClose }) {
     };
 
     try {
-      const response = await axios.post(orderAPI.placeOrder, orderPayload);
-
+      const response = await axios.post(orderAPI.placeOrder, orderPayload, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.status === 201 || response.status === 200) {
         console.log("Order placed successfully", response.data);
         toast.success("Order placed successfully");
