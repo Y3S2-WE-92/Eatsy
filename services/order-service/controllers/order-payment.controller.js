@@ -4,7 +4,7 @@ const PAYMENT_SERVICE_URL = process.env.PAYMENT_SERVICE_URL || 'http://localhost
 
 const sendPayback =async({status, order}) =>{
     try {
-        if(status === "ready"){
+        if(status === "accepted"){
             await axios.post(`${PAYMENT_SERVICE_URL}/api/payback`, {
                 refNo: order.refNo,
                 receiverId: order.restaurantID,
@@ -12,11 +12,25 @@ const sendPayback =async({status, order}) =>{
                 receiverType: 'restaurant'
                     });
         }
-        if(status == "delivered"){
+        if(status === "assigned"){
             await axios.post(`${PAYMENT_SERVICE_URL}/api/payback`, {
                 refNo: order.refNo,
                 receiverId: order.deliveryPersonID,
                 amount:  order.deliveryCost,
+                receiverType: 'delivery'
+                    });
+        }
+        if(status === "ready"){
+            await axios.post(`${PAYMENT_SERVICE_URL}/api/payback/complete`, {
+                refNo: order.refNo,
+                receiverId: order.restaurantID,
+                receiverType: 'restaurant'
+                    });
+        }
+        if(status === "delivered"){
+            await axios.post(`${PAYMENT_SERVICE_URL}/api/payback/complete`, {
+                refNo: order.refNo,
+                receiverId: order.deliveryPersonID,
                 receiverType: 'delivery'
                     });
         }
