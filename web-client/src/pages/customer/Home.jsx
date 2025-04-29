@@ -15,14 +15,17 @@ function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [featuredRestaurants, setFeaturedRestaurants] = useState([]);
+  const [isRestaurantsLoading, setIsRestaurantsLoading] = useState(true);
 
   const fetchAllRestaurants = async () => {
+    setIsRestaurantsLoading(true);
     try {
       const response = await getAllRestaurants();
-      console.log(response);
+      setIsRestaurantsLoading(false);
       return response;
     } catch (error) {
       console.error("Failed to fetch restaurants:", error.message);
+      setIsRestaurantsLoading(false);
       return [];
     }
   };
@@ -38,8 +41,8 @@ function Home() {
     // Search query match logic
     const matchesSearch =
       restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      restaurant.menuItems.some(
-        (item) => item.toLowerCase().includes(searchQuery.toLowerCase())
+      restaurant.menuItems.some((item) =>
+        item.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
     // Category match logic
@@ -113,19 +116,20 @@ function Home() {
               <div className="flex flex-row items-center justify-center gap-2">
                 <div className="card-title truncate">Featured Restaurants</div>
                 <span className="text-xs badge badge-soft badge-primary">
-                  {filteredRestaurants.length} <span className="hidden lg:inline-flex text-sm">Results</span>
+                  {filteredRestaurants.length}{" "}
+                  <span className="hidden lg:inline-flex text-sm">Results</span>
                 </span>
                 {/* Clear Filters Button */}
                 {(searchQuery || selectedCategory) && (
                   <button
                     className="btn btn-outline rounded-full bg-base-100 btn-xs"
                     onClick={clearFilters}
-                    disabled={
-                      !searchQuery && !selectedCategory
-                    }
+                    disabled={!searchQuery && !selectedCategory}
                   >
                     <FaFilterCircleXmark />
-                    <span className="hidden lg:inline-flex text-sm">Clear Filters</span>
+                    <span className="hidden lg:inline-flex text-sm">
+                      Clear Filters
+                    </span>
                   </button>
                 )}
               </div>
@@ -133,17 +137,29 @@ function Home() {
                 <SeeMoreButton link="/customer" />
               </div>
             </div>
-            <div className="card-content flex flex-row gap-2 mt-2 overflow-x-auto">
-              {filteredRestaurants.length > 0 ? (
-                filteredRestaurants.map((restaurant) => (
-                  <RestaurantCard restaurant={restaurant} key={restaurant._id} />
-                ))
-              ) : (
-                <div className="text-center w-full py-4">
-                  No restaurants found matching your criteria.
+            {!isRestaurantsLoading ? (
+              <div className="card-content flex flex-row gap-2 mt-2 overflow-x-auto">
+                {filteredRestaurants.length > 0 ? (
+                  filteredRestaurants.map((restaurant) => (
+                    <RestaurantCard
+                      restaurant={restaurant}
+                      key={restaurant._id}
+                    />
+                  ))
+                ) : (
+                  <div className="text-center w-full py-4">
+                    No restaurants found matching your criteria.
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="card-content flex flex-row gap-2 mt-2 overflow-x-auto">
+                <div className="flex flex-col items-center justify-center w-full">
+                  <span className="loading loading-spinner loading-xl text-primary"></span>
+                  <p>Loading Restaurants...</p>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

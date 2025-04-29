@@ -66,9 +66,11 @@ function ShoppingCartButton() {
           >
             <div className="indicator p-2">
               <FaCartShopping />
+              {carts.length > 0 && (
               <div className="badge badge-sm badge-error indicator-item">
                 {carts.length}
               </div>
+            )}
             </div>
           </button>
           <CartMenu carts={carts} onOpenModal={handleOpenViewAllCartsModal} />

@@ -55,7 +55,7 @@ function DeliveryNavBar({ sections=[] }) {
       </div>
       <div className="navbar-end gap-3">
         <NotificationsButton notifications={notifications} />
-        <ProfileButton/>
+        <ProfileButton role="delivery"/>
         <ThemeButton />
       </div>
     </div>
