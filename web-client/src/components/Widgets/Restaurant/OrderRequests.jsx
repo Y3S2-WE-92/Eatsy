@@ -61,7 +61,7 @@ function OrderRequests() {
 
   return (
     <>
-      <ul className="list bg-base-100 rounded-box shadow-sm border border-base-300 w-72 md:w-96 flex flex-col overflow-y-auto h-[78vh] gap-2">
+      <ul className="list bg-base-300 rounded-box shadow-sm border border-base-300 md:w-96 flex flex-col min-h-48 overflow-y-auto flex-1 gap-2">
         <li className="p-4 tracking-wide sticky top-0 glass-transparent bg-base-100/80 z-10">
           <div className="flex justify-between items-center">
             <p className="text-sm font-semibold">Order Requests</p>

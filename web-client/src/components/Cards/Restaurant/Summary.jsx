@@ -50,7 +50,7 @@ export default function Summary() {
   const { percent, trend } = compareToLastMonth();
 
   return (
-    <div className="stats stats-vertical lg:stats-horizontal shadow">
+    <div className="stats stats-vertical lg:stats-horizontal shadow bg-base-300">
       <div className="stat">
         <div className="stat-title">Completed Orders Today</div>
         <div className="stat-value">{completedOrdersToday}</div>

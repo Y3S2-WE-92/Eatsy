@@ -20,11 +20,10 @@ function TopOrders() {
   }, []);
 
   return (
-    <ul className="list bg-base-100 rounded-box shadow-md">
+    <ul className="list bg-base-300 rounded-box shadow-md">
       <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
         Top Orders This Week
       </li>
-
       {topOrders.map((order, index) => (
         <li className="list-row" key={order._id}>
           <div className="text-4xl font-thin opacity-30 tabular-nums">{index + 1}</div>
