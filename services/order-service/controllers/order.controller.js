@@ -2,9 +2,6 @@ const Order = require("../models/order.model");
 const generateRefNo = require("../utils/refno.util");
 const { getIO } = require("../sockets/socket");
 const sendPayback = require("../controllers/order-payment.controller");
-const axios = require("axios");
-
-const UserServiceURL = process.env.USER_SERVICE_URL || "http://localhost:4000";
 const userService = require("../services/user.service");
 const notificationService = require("../services/notification.service");
 
@@ -177,10 +174,7 @@ const updateOrderStatus = async (req, res) => {
     if (status === "ready") {
       console.log("Order is ready for delivery:", order._id);
       // Fetch all delivery person IDs from the API
-      const response = await axios.get(
-        `${UserServiceURL}/api/deliveryPerson/person/ids`
-      );
-      const deliveryPersonIDs = response.data;
+      const deliveryPersonIDs = await userService.getAllDeliveryPersons();
 
       // Emit the event to all delivery persons
       deliveryPersonIDs.forEach((id) => {
