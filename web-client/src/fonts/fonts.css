@@ -1,0 +1,30 @@
+
+@font-face {
+  font-family: "UberMove";
+  src: url("./UberMove-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "UberMove";
+  src: url("./UberMove-Light.ttf") format("truetype");
+  font-weight: lighter;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "UberMove";
+  src: url("./UberMove-Medium.ttf") format("truetype");
+  font-weight: medium;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "UberMove";
+  src: url("./UberMove-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+
