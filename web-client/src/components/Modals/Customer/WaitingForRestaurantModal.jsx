@@ -19,11 +19,12 @@ function WaitingForRestaurantModal({ isOpen, onClose }) {
 
   useEffect(() => {
     connectCustomerSocket(customer.id);
+    setSpinnerStyle("loading-ring text-warning");
 
     listenOrderStatusUpdate((data = {status: "accepted"}) => {
       if (data.status === "accepted") {
         setStyles("text-success");
-        setSpinnerStyle("text-success");
+        setSpinnerStyle("loading-spinner text-success");
         setMessage("Restaurant accepted your order!");
         setSubtitle("Redirecting to payment gateway...");
 
@@ -33,7 +34,7 @@ function WaitingForRestaurantModal({ isOpen, onClose }) {
           navigate("/customer/checkout/" + data.refNo + "/" + TotalAmount);
         }, 3000);
       } else if (data.status === "rejected") {
-        setSpinnerStyle("text-error");
+        setSpinnerStyle("loading-spinner text-error");
         setStyles("text-error");
         setMessage("Sorry! Restaurant rejected your order");
         setSubtitle("Please try another restaurant");
@@ -53,7 +54,7 @@ function WaitingForRestaurantModal({ isOpen, onClose }) {
   return (
     <dialog className="modal modal-bottom sm:modal-middle" open={isOpen}>
       <div className="modal-box max-w-5xl flex flex-col items-center gap-4 py-8">
-        <span className={`loading loading-spinner loading-xl ${spinnerStyle}`}></span>
+        <span className={`loading ${spinnerStyle} loading-xl`}></span>
         <div className="flex flex-col items-center">
         <h1 className={`text-xl font-bold ${styles}`}>{message}</h1>
         <small className="text-base-content/80">{subtitle}</small>

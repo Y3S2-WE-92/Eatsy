@@ -27,7 +27,7 @@ export const getCustomerLocations = async () => {
 
 export const getAllRestaurants = async () => {
   try {
-      const response = await axios.get(restaurantAPI.getAllRestaurantsWithCategories);
+      const response = await axios.get(userAPI.getAllRestaurants);
       return response.data;
   } catch (error) {
       console.error("Failed to fetch restaurants:", error.message);

@@ -8,8 +8,6 @@ export const foodCategories = [
   { id: 7, name: "Snacks", icon: "🍿" },
   { id: 8, name: "Breakfast", icon: "🍳" },
   { id: 9, name: "Brunch", icon: "🥂" },
-  { id: 10, name: "Lunch", icon: "🍽️" },
-  { id: 11, name: "Dinner", icon: "🍽️" },
   { id: 12, name: "Takeout", icon: "📦" },
   { id: 13, name: "Delivery", icon: "🚚" },
   { id: 14, name: "Catering", icon: "🍽️" },
