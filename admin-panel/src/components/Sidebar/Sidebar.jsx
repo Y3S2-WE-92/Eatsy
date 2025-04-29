@@ -14,7 +14,7 @@ function Sidebar() {
       link: "/admin-panel/",
     },
     {
-      name: "User Management",
+      name: "Delivery Management",
       icon: "fas fa-users",
       link: "/admin-panel/users",
     },
@@ -23,13 +23,13 @@ function Sidebar() {
       icon: "fas fa-utensils",
       link: "/admin-panel/restaurants",
     },
+    // {
+    //   name: "Settings",
+    //   icon: "fas fa-cog",
+    //   link: "/admin-panel/settings",
+    // },
     {
-      name: "Settings",
-      icon: "fas fa-cog",
-      link: "/admin-panel/settings",
-    },
-    {
-      name: "Reports",
+      name: "Revenue",
       icon: "fas fa-chart-line",
       link: "/admin-panel/reports",
     },

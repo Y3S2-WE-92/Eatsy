@@ -177,9 +177,27 @@ const getNearbyDeliveryPersons = async (req, res) => {
   }
 };
 
-const verifyAccount = async (req, res) => {
-  
-}
+const verifyDeliveryPerson = async (req, res) => {
+  try {
+    const { id, adminId } = req.params;
+
+    const deliveryPerson = await DeliveryPerson.findByIdAndUpdate(
+      id,
+      { verifiedBy: adminId },
+      { new: true }
+    );
+
+    if (!deliveryPerson) {
+      return res.status(404).json({ error: "delivery person not found" });
+    }
+
+    res.json({ verified: true, verifiedBy: deliveryPerson.verifiedBy });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+    console.log("Error ", err);
+  }
+};
+
 
 const getAllDeliveryPersonsIds = async (req, res) => {
   try {
@@ -199,5 +217,6 @@ module.exports = {
   updateAvailability,
   updateLocation,
   getNearbyDeliveryPersons,
-  getAllDeliveryPersonsIds
+  getAllDeliveryPersonsIds,
+  verifyDeliveryPerson
 };
