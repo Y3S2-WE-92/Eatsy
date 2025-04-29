@@ -36,7 +36,7 @@ function CustomerNavBar({ sections = [] }) {
         <ul className="menu menu-horizontal px-1 gap-2 hidden lg:flex">
           {sections.map((section, index) => (
             <li key={index}>
-              <Link to={section.path}>{section.name}</Link>
+              <Link to={section.path} className="btn btn-outline border-base-content/20">{section.name}</Link>
             </li>
           ))}
         </ul>
@@ -53,7 +53,7 @@ function CustomerNavBar({ sections = [] }) {
       {/* Right: Buttons */}
       <div className="navbar-end gap-3">
         <NotificationsButton notifications={notifications} />
-        <ProfileButton />
+        <ProfileButton role="customer" />
         <ThemeButton />
       </div>
     </div>
