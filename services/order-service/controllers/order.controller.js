@@ -99,6 +99,7 @@ const updateDeliveryPersonID = async (req, res) => {
       { new: true, runValidators: true }
     );
     if (!order) return res.status(404).json({ error: "Order not found" });
+    await sendPayback({status: "assigned", order});
     res.json(order);
   } catch (err) {
     res.status(400).json({ error: err.message });

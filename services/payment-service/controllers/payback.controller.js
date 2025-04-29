@@ -29,14 +29,42 @@ const createPayback = async (req, res) => {
             receiverId,
             receiverType,
             amountReceived,
-            platformCommission
+            platformCommission,
+            status: 'pending',
+            date: Date.now()
         });
 
         await payback.save();
 
-        const email = getUserEmailByType({id: receiverId, receiverType})
+        res.status(201).json(payback);
 
-        // Prepare different email content based on receiverType
+    } catch (error) {
+        console.error("Error creating payback:", error.message);
+        res.status(500).json({ message: "Server error while creating payback." });
+    }
+};
+
+const completePayback = async (req, res) => {
+    try {
+        const { refNo, receiverId, receiverType } = req.body;
+        const payback = await Payback.findOne({ refNo, receiverType });
+
+        if (!payback) {
+            return res.status(404).json({ message: "No Payback Found" });
+        }
+        if(payback.status == 'completed'){
+            return res.status(404).json({ message: "Payback already updated" });
+        }
+
+        const updatedPayback = await Payback.findOneAndUpdate(
+            { _id: payback._id },
+            { $set: { status: 'completed' } },
+            { new: true }
+        );
+        
+
+        const email = await getUserEmailByType({ id: receiverId, receiverType });
+
         if (email) {
             const isRestaurant = receiverType === 'restaurant';
             const greeting = isRestaurant ? "Dear Restaurant Partner," : "Dear Delivery Partner,";
@@ -47,22 +75,21 @@ const createPayback = async (req, res) => {
             await sendPaybackNotification({
                 to: email,
                 subject,
-                text: `You have received LKR ${amountReceived} after platform commission for Order ID: ${refNo}.`,
+                text: `You have received LKR ${payback.amountReceived} after platform commission for Order ID: ${refNo}.`,
                 html: `<div style="font-family: Arial, sans-serif; color: #333; padding-left: 20px;">
                     <h3>${greeting}</h3>
                     <h3>We are pleased to inform you that you have received a payment for ${serviceType}.</h3>
-                    <h3><b>Net Amount:</b> LKR ${amountReceived}</h3>
+                    <h3><b>Net Amount:</b> LKR ${payback.amountReceived}</h3>
                     <h3><b>Order ID:</b> ${refNo}</h3>
                     <h3>${thanksMessage}</h3>
                 </div>`
             });
         }
 
-        res.status(201).json(payback);
-
+        return res.status(200).json(updatedPayback);
     } catch (error) {
-        console.error("Error creating payback:", error.message);
-        res.status(500).json({ message: "Server error while creating payback." });
+        console.error("Error completing payback:", error.message);
+        return res.status(500).json({ message: "Server error while completing payback." });
     }
 };
 
@@ -87,4 +114,16 @@ const getPaybackByOrderId = async (req, res) => {
     }
 };
 
-module.exports = { createPayback, getPaybacks, getPaybackByOrderId };
+
+const getPaybackByReceiverId = async (req, res) => {
+    const { type, id } = req.params;
+    try {
+        const paybacks = await Payback.find({ receiverId: id, receiverType: type});
+        res.status(200).json(paybacks);
+    } catch (error) {
+        console.error("Error fetching paybacks:", error.message);
+        res.status(500).json({ message: "Server error while fetching paybacks." });
+    }
+};
+
+module.exports = { createPayback, completePayback, getPaybacks, getPaybackByOrderId, getPaybackByReceiverId };
