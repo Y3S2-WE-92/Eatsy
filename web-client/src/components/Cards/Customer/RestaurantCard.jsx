@@ -5,9 +5,7 @@ import ImageLoader from "../../Loaders/ImageLoader";
 import { useImageLoaded } from "../../../utils/image-utils/useImageLoaded";
 import StarRating from "../../Ratings/StarRating";
 import { formatMinutesTime } from "../../../utils/format-utils/TimeFormatUtil";
-
-//Remove after function implementation
-import { mimicDeliveryFee, mimicDeliveryTime } from "../../../utils/mimic-utils/mimicDeliveryUtil";
+import { calculateDeliveryTimeInMinutes } from "../../../utils/calc-utils/calculateDeliveryTime";
 
 function RestaurantCard({ restaurant }) {
   const isImageLoaded = useImageLoaded(restaurant.profileImage);
@@ -36,8 +34,8 @@ function RestaurantCard({ restaurant }) {
           <StarRating rating={restaurant?.rating} />
           <div className="flex flex-col">
           <span>
-            {formatCurrency(mimicDeliveryFee())}{" "}|{" "}
-            {formatMinutesTime(mimicDeliveryTime())}
+            {formatCurrency(restaurant.deliveryFee)}{" "}|{" "}
+            {formatMinutesTime(calculateDeliveryTimeInMinutes())}
           </span>
           <span> for Delivery </span>
           </div>

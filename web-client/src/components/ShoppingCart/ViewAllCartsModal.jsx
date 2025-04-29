@@ -3,6 +3,7 @@ import { IoClose } from "react-icons/io5";
 import ShoppingCartModal from "./ShoppingCartModal";
 import { useDispatch } from "react-redux";
 import { removeCart } from "../../redux/customer/cartSlice";
+import { IoTrashBin } from "react-icons/io5";
 
 function ViewAllCartsModal({ carts, isOpen, onClose }) {
   const dispatch = useDispatch();
@@ -42,32 +43,35 @@ function ViewAllCartsModal({ carts, isOpen, onClose }) {
             </div>
             <div className="flex flex-col gap-2">
               {carts.length > 0 ? (
-                carts.map((cart, index) => (
-                  <div
-                    key={index}
-                    className="card card-compact bg-base-200 border border-base-content/5"
-                  >
-                    <div className="card-body">
-                      <div className="card-title">
-                        Restaurant: {cart.restaurantName}
+                <ul className="list bg-base-300 rounded-box shadow-md">
+                  {carts.map((cart, index) => (
+                    <li className="list-row">
+                      <div className="text-4xl font-thin opacity-30 tabular-nums">
+                        {index + 1}
                       </div>
-                      <div className="card-actions justify-end">
+                      <div className="list-col-grow">
+                        <div>{cart.restaurantName}</div>
+                        <div className="text-xs font-semibold opacity-60">
+                          {cart.items.length} Items
+                        </div>
+                      </div>
+                      <div className="flex flex-row justify-end gap-2">
                         <button
-                          className="btn btn-primary btn-block"
+                          className="btn btn-success btn-block rounded-full"
                           onClick={() => handleViewCart(cart)}
                         >
                           View Cart
                         </button>
                         <button
                           onClick={() => dispatch(removeCart(cart))}
-                          className="btn btn-outline btn-error btn-block"
+                          className="btn btn-error btn-circle"
                         >
-                          Delete
+                          <IoTrashBin />
                         </button>
                       </div>
-                    </div>
-                  </div>
-                ))
+                    </li>
+                  ))}
+                </ul>
               ) : (
                 <div className="card card-compact bg-base-200 border border-base-content/5">
                   <div className="card-body">

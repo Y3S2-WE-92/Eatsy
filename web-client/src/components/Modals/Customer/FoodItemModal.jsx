@@ -35,6 +35,7 @@ function FoodItemModal({ item, isOpen, onClose }) {
         addToCart({
           restaurantID: item.restaurantID,
           restaurantName: item.restaurantName,
+          deliveryFee: item.deliveryFee,
           items: cartItems,
         })
       );
