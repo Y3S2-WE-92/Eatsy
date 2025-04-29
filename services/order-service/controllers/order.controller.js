@@ -5,13 +5,32 @@ const sendPayback = require("../controllers/order-payment.controller");
 const axios = require("axios");
 
 const UserServiceURL = process.env.USER_SERVICE_URL || "http://localhost:4000";
+const userService = require("../services/user.service");
+const notificationService = require("../services/notification.service");
 
 // Create a new order
 const createOrder = async (req, res) => {
+  const {id} = req.user;
   try {
+    const customerID = id;
+    const customer = await userService.getCustomerById(customerID);
+
+    if (!customer) {
+      return res.status(404).json({ error: "Customer not found" });
+    }
+
     const refNo = generateRefNo();
-    const order = new Order({ ...req.body, refNo });
+    const order = new Order({ ...req.body, refNo, customerID: customer._id });
     const savedOrder = await order.save();
+
+    if(customer.email){
+      await notificationService.sendOrderPlacementNotification({
+        to: customer.email,
+        refNo: savedOrder.refNo,
+        customerName: customer.name,
+        createdAt: savedOrder.createdAt
+      });
+    }
 
     const io = getIO();
     io.to(savedOrder.restaurantID).emit("newOrder", savedOrder);
@@ -178,7 +197,14 @@ const getMyOrders = async (req, res) => {
   try {
     const { id } = req.user;
     const orders = await Order.find({ customerID: id }).sort({ createdAt: -1 });
-    res.json(orders);
+    //get and append restaurant name for each order
+    const ordersWithRestaurants = await Promise.all(
+      orders.map(async (order) => {
+        const restaurantName = await userService.getRestaurantNameById(order.restaurantID);
+        return { ...order._doc, restaurantName: restaurantName || "Unknown Restaurant" };
+      })
+    );
+    res.json(ordersWithRestaurants);
   } catch (error) {
     console.error("Error in getCustomerOrders:", error);
     res.status(500).json({ error: error.message });
